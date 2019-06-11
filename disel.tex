@@ -45,14 +45,14 @@
 
 \newcommand{\ifext}[2]{\ifdefined\extflag{#1}\else{#2}\fi}
 \newcommand{\ifcomm}[1]{\ifdefined\extcomm{#1}\else{}\fi}
- 
+
 %\theoremstyle{remark}
 %\newtheorem{example}{Example}[section]
 
-%\theoremstyle{definition} 
+%\theoremstyle{definition}
 %\newtheorem{definition}{Definition}[section]
 
-% \theoremstyle{plain} 
+% \theoremstyle{plain}
 % \newtheorem{theorem}{Theorem}[section]
 % \newtheorem{lemma}[theorem]{Lemma}
 % \newtheorem{proposition}[theorem]{Proposition}
@@ -146,7 +146,7 @@
 \newcommand{\elsez}{\mathsf{{\bf else}}\xspace{}}
 \newcommand{\Active}{\circ}
 \newcommand{\res}{\mathsf{res}}
-\newcommand{\Consumed}{\bullet} 
+\newcommand{\Consumed}{\bullet}
 \newcommand{\asgn}{\leftarrow}
 \newcommand{\vd}[1] {\mathrel{\oset{~#1}{\vdash}}}
 \newcommand{\blockr}{\mathsf{receive\_req}}
@@ -187,17 +187,17 @@
 \newcommand{\Tag}{\mathsf{Tag}}
 \newcommand{\Nat}{\mathbb{N}}
 \newcommand{\msg}{\mathsf{m}}
-\newcommand{\Mbody}{\mathsf{MBody}} 
+\newcommand{\Mbody}{\mathsf{MBody}}
 
 \newcommand{\Statelet}{\mathsf{Statelet}}
 \newcommand{\State}{\mathsf{State}}
 \newcommand{\LocalState}{\mathsf{LocState}}
 \newcommand{\MessageSoup}{\mathsf{MessageSoup}}
-\newcommand{\Msgs}{\mathit{MS}} 
-\newcommand{\MS}{\Msgs} 
+\newcommand{\Msgs}{\mathit{MS}}
+\newcommand{\MS}{\Msgs}
 \newcommand{\Val}{\mathsf{Val}}
 \newcommand{\DLState}{\mathsf{DistLocState}}
-\newcommand{\Msg}{\mathsf{Msg}} 
+\newcommand{\Msg}{\mathsf{Msg}}
 
 \newcommand{\Protocol}{\mathsf{Protocol}}
 \newcommand{\Prop}{\mathsf{Prop}}
@@ -416,7 +416,7 @@ interaction protocol.
 
 \noindent
 %
-This paper presents \disel, a mechanized framework for
+This chapter presents \disel, a mechanized framework for
 verification and implementation of distributed systems that aims to
 address these challenges.
 
@@ -575,7 +575,7 @@ node will be, thus, indistinguishable from a node that just takes
 program correctness, this behavior will not violate the established
 notion of safety, which is termination-insensitive.
 
-To summarize, this paper makes the following contributions:
+To summarize, this chapter makes the following contributions:
 
 \begin{itemize}
 \item \disel, a domain-specific language and the first
@@ -611,7 +611,7 @@ To summarize, this paper makes the following contributions:
 \end{itemize}
 %
 The implementation of \disel, including its mechanized metatheory and
-proofs of all examples from this paper, is available online:
+proofs of all examples from this chapter, is available online:
 {\small{\href{https://github.com/DistributedComponents/disel}{\texttt{https://github.com/DistributedComponents/disel}}}}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -627,14 +627,14 @@ proofs of all examples from this paper, is available online:
 In this section we illustrate the \disel methodology for specifying,
 implementing, and verifying distributed systems by developing a
 simple distributed calculator.
-% 
+%
 %\hspace{16pt}
 %
 \disel systems are composed of concurrently running nodes
 communicating asynchronously by exchanging messages, which, as in real
 networks, can be reordered and dropped.
 
-\begin{wrapfigure}[12]{h}{0.5\textwidth} 
+\begin{wrapfigure}[12]{h}{0.5\textwidth}
 \vspace{-10pt}
 \includegraphics[width=0.5\textwidth]{Diagrams.pdf}
 \caption{A communication scenario between a server and two client
@@ -656,7 +656,7 @@ containing $\args$ to a server, which will reply with $f(\args)$.
 Fig.~\ref{fig:calco} depicts an example execution for the
 calculator system with one server $S$ and two clients, $C_1$ and $C_2$.
 %
-Note that requests and responses may not be 
+Note that requests and responses may not be
 received in the order they are sent due to network reordering, and the
 server may service requests in any order (\eg, due to implementation
 details such as differing priorities among requests).
@@ -711,11 +711,11 @@ outstanding requests $\Rs$, denoted as $n \ppts{} \Rs$.
 
 
 {
-%\setlength{\belowcaptionskip}{-20pt} 
+%\setlength{\belowcaptionskip}{-20pt}
 \begin{figure}[t]
 
 \begin{tabular}{lc}
-\text{{Send-transitions}}    
+\text{{Send-transitions}}
 \\[3pt]
 {\footnotesize{
 $
@@ -725,19 +725,19 @@ $
 \Trans_s
 &
 \text{Requires}~(m, \To) &
-\text{Ensures} 
+\text{Ensures}
 \\[2pt]\hline\hline
-\!\trans{sreq}\!    
-& 
+\!\trans{sreq}\!
+&
 \!\!\!
 \begin{array}{l}
 \\[-8pt]
-n \in \clients \aand \To \in \servers \aand 
+n \in \clients \aand \To \in \servers \aand
 n \ppts{} \Rs \aand m = (\treq, \args) \aand
 \args~\in~\dom{f}
 \end{array}
 \!\!\!
-& 
+&
 \begin{array}{l@{\ }c}
 \\[-10pt]
 \!\!\!
@@ -745,8 +745,8 @@ n \ppts{} (\To, \args) \uplus \Rs
 \!\!
 \end{array}
 \\[2pt]\hline
-\!\trans{sresp}\! 
-& 
+\!\trans{sresp}\!
+&
 \!\!\!
 \begin{array}{l}
 \\[-8pt]
@@ -754,7 +754,7 @@ n \in \servers \aand f(\args) = v \aand n \ppts{} (\To, \args) \uplus \Rs \aand
 m = (\tresp, v, \args)
 \end{array}
 \!\!\!
-& 
+&
 \begin{array}{l@{\ }c}
 \\[-10pt]
 n \ppts{} \Rs
@@ -764,7 +764,7 @@ n \ppts{} \Rs
 \end{array}
 $
 }}
-\\\\ 
+\\\\
 \text{{Receive-transitions}}
 \\[3pt]
 {\footnotesize{
@@ -774,30 +774,30 @@ $
 \Trans_r
 &
 \text{Requires}~(m, \From) &
-\text{Ensures} 
+\text{Ensures}
 \\[2pt]\hline\hline
-\!\trans{rreq}\!    
-& 
+\!\trans{rreq}\!
+&
 \!\!\!
 \begin{array}{c}
 \\[-8pt]
-n \in \servers ~\aandb~ n \ppts{} \Rs  ~\aandb~ m = (\treq, \args) 
+n \in \servers ~\aandb~ n \ppts{} \Rs  ~\aandb~ m = (\treq, \args)
 \end{array}
 \!\!\!
-& 
+&
 n \ppts{} (\From, \args) \uplus \Rs
 \\[2pt]\hline
-\!\trans{rresp}\! 
-& 
+\!\trans{rresp}\!
+&
 \!\!\!
 \begin{array}{l}
 \\[-8pt]
-n \in \clients ~\aandb~ 
+n \in \clients ~\aandb~
 n \ppts{} (\From, \args) \uplus \Rs ~\aandb~
-m = (\tresp, \ans, \args) 
+m = (\tresp, \ans, \args)
 \end{array}
 \!\!\!
-& 
+&
 n \ppts{} \Rs
 \\[2pt]\hline
 \end{array}
@@ -876,7 +876,7 @@ Similarly, the precondition of $\trans{sresp}$ requires that when a server
 responds to a client request for $\args$, it may only send the correct
 result $f(\args)$. In this case, the initial arguments $\args$ are
 included into the response in order make it possible for the client to
-distinguish between responses to multiple outstanding requests. 
+distinguish between responses to multiple outstanding requests.
 
 The protocol also leaves several details up to the implementation.
 %
@@ -895,7 +895,7 @@ Protocols are basic specification units in \disel, and, as we will
 soon see, a single program can ``span'' multiple protocols.
 %
 Thus, we will annotate each protocol instance with a unique label
-$\lab_i$ (\eg, $\cpr_{\lab_1}$,~$\cpr_{\lab_2}$). 
+$\lab_i$ (\eg, $\cpr_{\lab_1}$,~$\cpr_{\lab_2}$).
 
 
 %% Which kinds of behaviors are unwelcome in the calculator system?
@@ -904,7 +904,7 @@ $\lab_i$ (\eg, $\cpr_{\lab_1}$,~$\cpr_{\lab_2}$).
 %% that does not expect it, \emph{(ii)} a client might send a request
 %% with a arguments at which $f$ is undefined, or, \emph{(iii)} a server
 %% might respond with a \emph{wrong} answer to a client's request.
-%% 
+%%
 %% In order to provide the necessary level of rigor and following a
 %% tradition of specifying distributed systems established by
 %% Lamport~\cite{Lamport:CN78,Lampson:WDAG96}, \disel allows one to
@@ -917,7 +917,7 @@ $\lab_i$ (\eg, $\cpr_{\lab_1}$,~$\cpr_{\lab_2}$).
 %% (denoted by $n \ppts{} \Rs$), representing, the multiset of
 %% outstanding requests in the case of a client and the multiset of
 %% permissions to respond for a server.
-%% 
+%%
 %% Now, we must ensure that a server can only send a response to a client
 %% that has previously requested a computation, and a client can only
 %% receive a response that it expects.
@@ -928,8 +928,8 @@ $\lab_i$ (\eg, $\cpr_{\lab_1}$,~$\cpr_{\lab_2}$).
 %% %
 %% The calculator protocol has two send- and two receive-transitions,
 %% which are defined in Fig.~\ref{fig:ctrans} in terms of their pre-
-%% and postconditions. 
-%% 
+%% and postconditions.
+%%
 %% The precondition of a send-transition constrains the local state of a
 %% sender node $n$, a message $m$ to be sent and a choice of the
 %% addressee node, $\To$. For instance, according to the definition of a
@@ -952,7 +952,7 @@ $\lab_i$ (\eg, $\cpr_{\lab_1}$,~$\cpr_{\lab_2}$).
 %% receive a request, which it then records in its local state, and a
 %% client is only able to process a message if it matches one of its
 %% locally recording outstanding requests.
-%% 
+%%
 %% The important difference between definition of send- and
 %% receive-transitions is that in the former case the precondition can be
 %% an \emph{arbitrary} predicate, whereas in the latter case it should be
@@ -973,11 +973,11 @@ $\lab_i$ (\eg, $\cpr_{\lab_1}$,~$\cpr_{\lab_2}$).
 %% \emph{tag} (\eg, $\treq$ and $\tresp$) uniquely identifies a
 %% receive-transition, and the decidability of preconditions allows to
 %% automatically decide whether the transition can be executed.
-%% 
+%%
 %% In addition to send/receive-transitions, \disel also assumes each
 %% protocol to have a per-node \emph{idle} transition that does not
 %% perform communication and does not affect state.
-%% 
+%%
 %% The definition of a coherent state-space and transitions makes a
 %% calculator protocol $\cpr$. Protocols are basic specification units in
 %% \disel, and, as we will soon see, a single program can ``span''
@@ -1015,10 +1015,10 @@ by server $n$ in the context of the protocol $\cpr_\lab$:
 \[
 \tag{\arabic{tagz}}\refstepcounter{tagz}\label{eq:sresp}
 {\small
-\cpr_\lab \vd{n} \acts[\trans{sresp},\lab](m, \To) : \specK{\!\!\! 
+\cpr_\lab \vd{n} \acts[\trans{sresp},\lab](m, \To) : \specK{\!\!\!
     \begin{array}{l}
      n \in \servers~\aand n \ppts{} ((\To, \args) \uplus \Rs)\\
-     \aand~m = (\tresp, f(\args), \args) 
+     \aand~m = (\tresp, f(\args), \args)
     \end{array}
 \!\!\!} ~~ \specK{n \ppts{} \Rs \aand \res = m}
 }
@@ -1092,8 +1092,8 @@ associated with the tag~$\treq$ of~$\cpr_\lab$:
                      \ifz ~\res = \Some~(\From, (\treq, \args))~ \\
                    \thenz~n \ppts{} ((\From, \args) \uplus \Rs)
                      ~\aand\\
-                     \spa\spa \angled{\From, n, \Consumed, (\treq, \args)} \in \Msgs_{\lab} \\ 
-                    \elsez~n \ppts{} \Rs  
+                     \spa\spa \angled{\From, n, \Consumed, (\treq, \args)} \in \Msgs_{\lab} \\
+                    \elsez~n \ppts{} \Rs
     \end{array}
      \!\!\!}
 \end{array}
@@ -1138,14 +1138,14 @@ assigning this procedure the following specification:
 &\spa r \asgn \actr[\set{\treq}, \set{\lab}];  \\
 &\spa \ifz ~\res = \Some~(\From, m)~\\
 &\spa \thenz~\retz~(\From, m)~\\
-&\spa \elsez~\blockr~()  : 
+&\spa \elsez~\blockr~()  :
 \forall u : \unitz.
 \pre{n \in \servers \aand  n \ppts{} \Rs} ~
 \specK{\!\!\!
     \begin{array}{l}
       n \ppts{} ((\res.1, \res.2) \uplus \Rs)~\aand
-                     \\ 
-                    \angled{\res.1, n, \Consumed, (\treq, \res.2)} \in \Msgs_{\lab} \\ 
+                     \\
+                    \angled{\res.1, n, \Consumed, (\treq, \res.2)} \in \Msgs_{\lab} \\
     \end{array}
      \!\!\!}
 \end{array}
@@ -1174,7 +1174,7 @@ receive~\eqref{eq:rreq}) that are proven to be protocol-compliant.
 \label{sec:elab-calc}
 
 %
-\begin{wrapfigure}[7]{h}{0.44\textwidth} 
+\begin{wrapfigure}[7]{h}{0.44\textwidth}
 \vspace{-10pt}
 \fbox{
 $
@@ -1276,7 +1276,7 @@ not terminate.
 \label{sec:more-impl-free}
 
 {
-\setlength{\belowcaptionskip}{-10pt} 
+\setlength{\belowcaptionskip}{-10pt}
 \begin{figure}[t]
 {\small{
 \!\!\!
@@ -1293,7 +1293,7 @@ not terminate.
 \spb\spa~ \retz~\mathit{fargs} :: \mathit{rest}\\
 \spa \elsez~\retz~[~]
 \end{array}
-\\\\ 
+\\\\
 \begin{array}{l}
 \letrecz~\mathsf{send\_batch}~(\mathit{rs} : \mathsf{[(\mathsf{Node}, \mathsf{[nat]})]}) \triangleq \\
 \spa \ifz~\mathit{rs} = (\From, \args) :: \mathit{rs'} \\
@@ -1301,7 +1301,7 @@ not terminate.
 \spb\spa~~  \acts[\trans{sresp},\lab]((\tresp, v, \args), \From);  \\
 \spb\spa~~ \mathsf{send\_batch}~\mathit{rs'}\\
 \spa \elsez~\retz~()
-\end{array} 
+\end{array}
 \\ \\
 \begin{array}{l}
 \letrecz~\bserver~(\mathit{bsize} : nat) \triangleq \\
@@ -1318,7 +1318,7 @@ not terminate.
 \begin{minipage}{0.5\linewidth}
 \[
 {\footnotesize
-\!\!\!\!\!\! 
+\!\!\!\!\!\!
 \begin{array}{l}
 \letrecz~\mserver~(\mathit{mmap} : \mathsf{map}) \triangleq \\
 \spa (\From, \args) \asgn \blockr~();  \\
@@ -1331,8 +1331,8 @@ not terminate.
 \spb \letz~\ans = f(\args)~\inz\\
 \spb \acts[\trans{sresp},\lab](m, (\tresp, \ans, \args));\\
 \spb \letz~\mathit{mmap'} = \mathsf{update}~\mathit{mmap}~\args~\ans~\inz\\
-\spb \mserver~\mathit{mmap'} 
-\end{array}  
+\spb \mserver~\mathit{mmap'}
+\end{array}
 }
 \]
 \end{minipage}
@@ -1365,20 +1365,20 @@ only composing the verified subroutines.
 \paragraph{Alternative servers.~}
 
 Fig.~\ref{fig:servers} presents two alternative looping server
-implementations. 
+implementations.
 %
 The first one processes requests in batches of a predefined size
 $\mathit{bsize}$.
 %
 This batching may cause $\bserver$ to loop for an unbounded period, until
 $\mathit{bsize}$ requests have been received, but this is perfectly
-safe. 
+safe.
 %
 % \footnote{We leave concerns of liveness to future work.}
 %
 Once this is done, the batch is passed to the second subroutine,
 $\mathsf{send\_batch}$, which delivers the results. Finally, the
-server loop restarts. 
+server loop restarts.
 %
 Another, more efficient server implementation $\mserver$ uses memoization, implemented by means
 of store-passing style, in order to avoid repeating computations. It
@@ -1395,7 +1395,7 @@ context of~$\cpr'_{\lab}$.
 
 % in the context of~$\cpr'_{\lab}$.
 
-\begin{wrapfigure}[5]{h}{0.4\textwidth} 
+\begin{wrapfigure}[5]{h}{0.4\textwidth}
 \vspace{-12pt}
 \fbox{
 $
@@ -1414,7 +1414,7 @@ $
 \paragraph{Implementing a calculator client.}
 %
 Let us now build and verify a simple client-side procedure that
-requests a computation and obtains the result. 
+requests a computation and obtains the result.
 %
 It can be implemented as shown on the right.
 %
@@ -1487,7 +1487,7 @@ Thus, we can prove the following spec for the RPC $\cclient$:
 %
 
 \begin{wrapfigure}[6]{h}{0.44\textwidth}
-\vspace{-10pt} 
+\vspace{-10pt}
 \fbox{
 $
 {\footnotesize
@@ -1512,7 +1512,7 @@ such a possibility by providing an \emph{injection}/\emph{protocol
   framing} mechanism, inspired by the FCSL program
 logic by~\citet{Nanevski-al:ESOP14}, and allowing one to type-check a
 program in the context of several protocols with disjoint
-state-spaces. 
+state-spaces.
 %
 The disjointness of those \emph{does not} mean the
 disjointness of the node sets: one node can be a part of several
@@ -1544,8 +1544,8 @@ protocols, $\cpr''_{\lab_1}$ and~$\cpr''_{\lab_2}$:
 \tag{\arabic{tagz}}\refstepcounter{tagz}\label{eq:dserver-spec}
 {\small
 \!\!\!\!
-  \begin{array}{l@{\ }l} 
-\cpr''_{\lab_1} , \cpr''_{\lab_2} \vd{n} \dserver~(n') ~~: & 
+  \begin{array}{l@{\ }l}
+\cpr''_{\lab_1} , \cpr''_{\lab_2} \vd{n} \dserver~(n') ~~: &
 \pre{(n \in \servers_{\lab_1} \aand
 n \ppts{\lab_1} \Rs) \psep (n \in \clients_{\lab_2}
 \aand n' \in \servers_{\lab_2} \aand n \ppts{\lab_2} \emptyset)}~\post{\Falsez}
@@ -1566,16 +1566,16 @@ should start with an empty set of its own outstanding requests,
 thus $n \ppts{\lab_2} \emptyset$.
 
 {
-%\setlength{\belowcaptionskip}{-10pt} 
+%\setlength{\belowcaptionskip}{-10pt}
 \begin{figure}[t]
 \begin{tabular}{cc}
   \begin{minipage}{0.45\linewidth}
     \centering
     \includegraphics[height=3.4cm]{jamesobjects.pdf}
-    \vspace{-20pt}  
+    \vspace{-20pt}
     \caption{Components of the calculator system.}
     \label{fig:compos}
-  \end{minipage} 
+  \end{minipage}
 &
   \begin{minipage}{0.55\linewidth}
    \centering
@@ -1627,7 +1627,7 @@ composition, Fig.~\ref{fig:exec} depicts the three calculator-based
 programs, described earlier, running concurrently by three different
 nodes, $n_1$, $n_2$, and $n_3$, such that $n_1$ and $n_2$ communicate
 according to the protocol $\cpr''_{\lab_1}$, and $n_2$ and $n_3$
-follow the protocol $\cpr''_{\lab_2}$. 
+follow the protocol $\cpr''_{\lab_2}$.
 %
 Solid arrows between nodes denote message exchange, with the time
 going from left to right.  The initial local states for all the
@@ -1653,7 +1653,7 @@ imposed inter-protocol dependencies.
 
 \begin{figure}[t]
 {\begin{varwidth}{\dimexpr\textwidth+2\fboxsep-2\fboxrule\relax}
-\begin{tabular}{c@{\!\!\!\!\!\!\!\!\!\!}c}  
+\begin{tabular}{c@{\!\!\!\!\!\!\!\!\!\!}c}
 \small{\textbf{State-space components}}
 &
 \small{\textbf{World components}}
@@ -1676,7 +1676,7 @@ l \in \LocalState & \eqdef & \Loc \pmap \Val \\
 \\ \\ \\
 \end{array}
 \]
-}}   
+}}
 \end{minipage}
 &
 \begin{minipage}{0.5\linewidth}
@@ -1700,7 +1700,7 @@ l \in \LocalState & \eqdef & \Loc \pmap \Val \\
   W \in \World & \eqdef & \Context \times \Hooks
 \end{array}
 \]
-}}     
+}}
 \end{minipage}
 \end{tabular}
 \end{varwidth}}
@@ -1738,7 +1738,7 @@ the calculator system example from Section~\ref{sec:overview}, all
 local states had the same type and each carried just one value,
 updated in the course of execution,---a multiset of outstanding
 requests---so we omitted the only location from assertions in the
-program specs. 
+program specs.
 
 
 \paragraph{Protocols, hooks and worlds.}
@@ -1768,7 +1768,7 @@ step function is totally defined.
 We will use the notations $\Trans.\tagi$, $\Trans.\prei$ and
 $\Trans.\stepi$ to refer correspondingly to the tag, precondition and
 step-components of a transition $\Trans$, which might be either send-
-or receive-one. 
+or receive-one.
 
 A \emph{world} $W$ is represented by a pair $\angled{C, H}$, with its
 first component $C$ being a collection of protocols that are assigned
@@ -1804,7 +1804,7 @@ verified distributed client applications on top of verified core
 systems.
 
 {
-\setlength{\belowcaptionskip}{-10pt} 
+\setlength{\belowcaptionskip}{-10pt}
 \begin{figure}
 \centering
 {\begin{varwidth}{\dimexpr\textwidth-2\fboxsep-2\fboxrule\relax}
@@ -1813,7 +1813,7 @@ systems.
 \begin{array}{r@{\ }c@{\ }l@{\ \ }c@{\ \ }l}
   s & \vDash & n \ppts{\lab} l & \text{iff} &
                                                      \exists d, s(\lab) = (-, d) \aand  d(n) = l \\[3pt]
-  s & \vDash & P(\MS_{\lab}) & \text{iff} & \exists \MS, s(\lab) = (\MS, -) \aand 
+  s & \vDash & P(\MS_{\lab}) & \text{iff} & \exists \MS, s(\lab) = (\MS, -) \aand
                                                    P(\MS) \\[3pt]
   s & \vDash & P_1 \psep P_2 & \text{iff} &
                                             \exists s_1~s_2,  s = s_1 \join s_2 \aand  s_1 \vDash P_1 \aand
@@ -1821,7 +1821,7 @@ systems.
   \\[3pt]
   s & \vDash & \This{s'} & \text{iff} & s = s'
 \end{array}
-}}     
+}}
 \]
 \end{varwidth}}
 \caption{Semantics of \disel state assertions.}
@@ -1869,7 +1869,7 @@ The syntax of \disel commands is given below:
 {\footnotesize
 \begin{array}{rcl}
   c & ::= &  \acts[\Trans_s, \lab](e_m, e_{\To}) ~|~ \actr[T, L] ~|~  \readz_{\lab}(v)  ~|~  x \asgn c_1; c_2 ~|~ \retz~e ~|~
-            \ifz~e~\thenz~c_1~\elsez~c_2 ~|~   
+            \ifz~e~\thenz~c_1~\elsez~c_2 ~|~
             F(e)
   \\[2pt]
   F & ::= & f ~|~ \letrecz~f (x : \Type) \eqdef c
@@ -1897,7 +1897,7 @@ respect to a distributed system state that we have used in the
 examples in Section~\ref{sec:overview}, referring to particular
 component of the state constrained by pre- and postconditions of the
 corresponding Hoare specs.
-% 
+%
 Specifically, a local state assertion $n \ppts{\lab} l$ allows one to
 refer to a specific component~$l$ of a local state of a node $n$
 (which might be different from the one running the code), with respect
@@ -1907,7 +1907,7 @@ specific protocol. Finally, the separating conjunction ($\psep$),
 allows one to decompose assertions in the presence of a composite state
 $s$, which can be represented as a disjoint union of sub-states
 $s_1 \join s_2$.
-% 
+%
 The separating conjunction allows one to combine separately proved
 specifications \wrt multiple involved protocols, as we did when
 assigning the type~\eqref{eq:dserver-spec} to $\dserver$.
@@ -1915,7 +1915,7 @@ assigning the type~\eqref{eq:dserver-spec} to $\dserver$.
 As is customary in Separation Logic~\cite{Reynolds:LICS02}, the
 $\psep$ operator distributes over plain conjunction for assertions
 that do not constrain state.
-% 
+%
 $\This{s'}$ allows one to assert that the immediate state is equal
 to a certain fixed state $s'$.
 
@@ -1955,17 +1955,17 @@ into execution of the protocol, and, thus, captured by its definition.
 {\begin{varwidth}{\dimexpr\textwidth-2\fboxsep-2\fboxrule\relax}
 {\footnotesize{
 \begin{tabular}{l}
-\begin{tabular}{c@{\!\!\!}c} 
+\begin{tabular}{c@{\!\!\!}c}
 \begin{minipage}{0.5\linewidth}
 \begin{mathpar}
 \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
 \inferrule[Bind]
 {
-  \begin{array}{c} 
+  \begin{array}{c}
     \Gamma; W \vd{n} c_1: \specK{P}\specK{Q \aand \res : \Type}
     \arcr
     \Gamma, x : \Type; W \vd{n} [x/\res]c_2: \specK{Q}\specK{R}
-    \quad x \notin \FV(R)  
+    \quad x \notin \FV(R)
   \end{array}
 }
 {\Gamma; W \vd{n} x \asgn c_1; c_2 : \specK{P}\specK{R} }
@@ -1974,7 +1974,7 @@ into execution of the protocol, and, thus, captured by its definition.
 &
 \begin{minipage}{0.5\linewidth}
 \begin{mathpar}
-\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\! 
+\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
 \inferrule[Letrec]
 {
     \Gamma, x : \Type, f: \angled{W, \forall x:
@@ -1988,7 +1988,7 @@ into execution of the protocol, and, thus, captured by its definition.
 %
 \\\\[-5pt]
 %
-\begin{tabular}{c@{\!\!\!}c} 
+\begin{tabular}{c@{\!\!\!}c}
 \begin{minipage}{0.5\linewidth}
 \begin{mathpar}
 \!\!\!\!\!\!
@@ -2001,11 +2001,11 @@ W = \angled{C, H}
 \quad
 \Trans_s \in C(\lab).\Transitions_s
 \arcr[2pt]
-\SendEffect(\Trans_s, \lab, n, m, \To, H) \hord (P, Q) 
+\SendEffect(\Trans_s, \lab, n, m, \To, H) \hord (P, Q)
 \end{array}
 }
   {\Gamma; W \vd{n} \acts[\trans{\Trans_s},\lab](m, \To)
-    : \specK{P} \specK{Q}} 
+    : \specK{P} \specK{Q}}
 %
 %
 \end{mathpar}
@@ -2015,18 +2015,18 @@ W = \angled{C, H}
 \begin{mathpar}
 %
 %
-\inferrule[ReceiveWrap] 
+\inferrule[ReceiveWrap]
 {
 \begin{array}{c}
 P, Q~\text{are $W$-stable}
 \quad
 W = \angled{C, H}
 \arcr[2pt]
-\ReceiveEffect(T, L, C) \hord (P, Q) 
+\ReceiveEffect(T, L, C) \hord (P, Q)
 \end{array}
 }
   {\Gamma; W \vd{n} \actr[T, L](m, \To)
-    : \specK{P} \specK{Q}} 
+    : \specK{P} \specK{Q}}
 %
 %
 \end{mathpar}
@@ -2048,21 +2048,21 @@ W = \angled{C, H}
 \arcr[2pt]
   \left(
   \begin{array}{l}
-  \This{s} \aand \coh~s ~\aand 
-   \arcr 
+  \This{s} \aand \coh~s ~\aand
+   \arcr
     v \in \dom{s(\lab)(n)}
   \end{array},
   \begin{array}{l}
-  \This{s} \aand \coh~s ~\aand 
-   \arcr 
-    \res = s(\lab)(n)(v)       
+  \This{s} \aand \coh~s ~\aand
+   \arcr
+    \res = s(\lab)(n)(v)
   \end{array}
  \right)
-\hord (P, Q) 
+\hord (P, Q)
 \end{array}
 }
   {\Gamma; W \vd{n} \readz_{\lab}(v)
-    : \specK{P} \specK{Q}} 
+    : \specK{P} \specK{Q}}
 \end{mathpar}
 \end{minipage}
 %
@@ -2075,7 +2075,7 @@ W = \angled{C, H}
 \inferrule[Frame]
 {
 \begin{array}{c}
-\Gamma; W \vd{n} c : \pre{P} \post{Q} 
+\Gamma; W \vd{n} c : \pre{P} \post{Q}
 \arcr[2pt]
 \NotHooked{W, H}
 \quad
@@ -2100,32 +2100,32 @@ R~\text{is $C$-stable}
 }
 {\Gamma; \angled{\lab \mapsto \withinv(\ppr_{\lab}, I) \join W, H} \vd{n} c
     : \pre{P \aand \mathcal{I}} \post{Q \aand \mathcal{I}}}
-\end{mathpar} 
+\end{mathpar}
 \\
-%\!\!\!\!\!\noindent\rule{13.8cm}{0.4pt} 
-\\ 
+%\!\!\!\!\!\noindent\rule{13.8cm}{0.4pt}
+\\
 \!\!\textbf{Auxiliary definitions}
-\\\\ 
+\\\\
 $
 \begin{array}{l}
 \begin{array}{r@{\ }c@{\ }l}
-\SendEffect(\Trans_s, \lab, n, m, \To, H) &\eqdef &  
+\SendEffect(\Trans_s, \lab, n, m, \To, H) &\eqdef &
   \left(\!\!\!\!\!\begin{array}{l@{\!\!,\!}l}
   \begin{array}{l}
     \This{s} \aand \coh~s ~\aand\arcr
-    \Trans_s.\prei(n, \To, m, s(\lab)) ~\aand\arcr 
+    \Trans_s.\prei(n, \To, m, s(\lab)) ~\aand\arcr
     \AllHooksOk{H, \Trans_s, \lab, n, m, \To}
   \end{array}
     &
       \begin{array}{l}
-      \This{s'} \aand \coh~s' \aand \res = m  ~\aand \arcr 
+      \This{s'} \aand \coh~s' \aand \res = m  ~\aand \arcr
          s' = (s[\lab, n] \mapsto \Trans_s.\stepi(\To, m,
         s(\lab)(n))) ~\aand \arcr
-        s'{\fld}\Msgs_{\lab} = s{\fld}\Msgs_{\lab} \uplus 
-        \angled{n, \To, \Active, ({\Trans_s}.\tagi, m)}       
+        s'{\fld}\Msgs_{\lab} = s{\fld}\Msgs_{\lab} \uplus
+        \angled{n, \To, \Active, ({\Trans_s}.\tagi, m)}
       \end{array}
   \end{array}\!\!\!\!\!\!\right)
-\\\\[-3pt] 
+\\\\[-3pt]
 \ReceiveEffect(T, L, C) & \eqdef &
 \left(\!\!\!\!\!\begin{array}{l@{,\ }l}
   \begin{array}{l}
@@ -2138,14 +2138,14 @@ $
   \thenz~
   \exists \lab \in L, t \in T, \MS', \Trans_r \in
   C(\lab).\Transitions_r,~t = \Trans_r.\tagi &\aand \arcr
-  \spb\spa 
+  \spb\spa
   s{\fld}\MS_{\lab} = \MS' \join \angled{\From, n, \Active, (t, m)} &\aand \arcr
-  \spb\spa 
+  \spb\spa
   s'{\fld}\MS_{\lab} = \MS' \join
   \angled{\From, n, \Consumed, (t, m)} &\aand
   \arcr
   \spb\spa \Trans_r.\prei(\msg, s(\lab)(n)) &\aand \arcr
-  \spb\spa 
+  \spb\spa
   s' = (s[\lab, n] \mapsto \Trans_r.\stepi(m, s(\lab)(n)))
   \arcr
   \elsez~s = s' \arcr
@@ -2155,16 +2155,16 @@ $
 \\\\
 \begin{array}{r@{\ }c@{\ }l}
 \AllHooksOk{H, \Trans_s, \lab_c, s, n, m, \tto} &\eqdef & \forall
-\lab_s~h~z, H(z, \lab_s, \lab_c, \Trans_s.\tagi) = 
-h \implies h (s(\lab_s)(n), s(\lab_c)(n), m, \To) 
-\\[3pt] 
-\NotHooked{W, H} & \eqdef & \exists C,~W = \angled{C, -} \aand 
-\forall (z, \lab_s, \lab_c, t) \in \dom{H}, \lab_c \notin \dom{C}. 
+\lab_s~h~z, H(z, \lab_s, \lab_c, \Trans_s.\tagi) =
+h \implies h (s(\lab_s)(n), s(\lab_c)(n), m, \To)
+\\[3pt]
+\NotHooked{W, H} & \eqdef & \exists C,~W = \angled{C, -} \aand
+\forall (z, \lab_s, \lab_c, t) \in \dom{H}, \lab_c \notin \dom{C}.
 \end{array}
 \end{array}
 $
 \end{tabular}
-}} 
+}}
 \end{varwidth}}
 \caption{Selected logic inference rules of \disel and auxiliary
   predicates.}
@@ -2190,7 +2190,7 @@ typing context $\Gamma$, defined as follows:
 Typing entries for procedures $f$ include the world $W$ in which their
 specification was derived. The top two rules, \Rule{Bind} and
 \Rule{Letrec}, demonstrate the use of typing contexts.
- 
+
 The next two rules, \Rule{SendWrap} and \Rule{ReceiveWrap}, are
 crucial for program verification in \disel, as they allow one to
 assign Hoare specifications to atomic decorated send- and
@@ -2247,13 +2247,13 @@ Q_2$, possibly containing free logical variables, we say $(P_1, Q_1)
 ((\forall\many{x}_1~\res.~s \vDash P_1 \Rightarrow s' \vDash Q_1)
   \Rightarrow
 (\forall\many{x}_2~\res.~s \vDash P_2 \Rightarrow s' \vDash Q_2),
-$} 
+$}
 where $\many{x}_i$ are the free logical variables of both $P_i$ and
 $Q_i$ correspondingly.
 \end{definition}
 
 % The rule \textsc{SendWrap} allows one to derive a Hoare spec for a
-% ``wrapped'' transition $\Trans_s$ of the protocol $W(\lab)$. 
+% ``wrapped'' transition $\Trans_s$ of the protocol $W(\lab)$.
 % %
 % The statement $\AllHooksOk{H, \Trans_s, \lab, s, n, m, \tto}$ asserts
 % that the statement $P$ is strong enough to imply not only the
@@ -2306,7 +2306,7 @@ only applies when the result of $\join$ is defined.
 In Section~\ref{sec:tpc}, we will demonstrate how to make such efforts
 reusable by exploiting Coq's higher-order definitions and abstract
 predicates.
- 
+
 Finally, the rule \Rule{WithInv} allows one to elaborate the context
 assumptions \wrt a specific protocol~$\ppr_\lab$ and also the
 corresponding state assertions for any invariant~$I$, which is
@@ -2332,9 +2332,9 @@ omitted.
 % Definition all_hooks_fire (h : hooks) l st s n (msg : seq nat) to :=
 %   (* For any hook associated with client protocol l and send-tag st *)
 %   forall z lc hk, Some hk = find ((z, lc), (l, st)) h ->
-%   lc \in dom s -> l \in dom s ->               
+%   lc \in dom s -> l \in dom s ->
 %   let: core_local   := getl n (gets s lc) in
-%   let: client_local := getl n (gets s l)  in              
+%   let: client_local := getl n (gets s l)  in
 %   hk core_local client_local msg to.
 
 
@@ -2388,21 +2388,21 @@ specific node, consistend with the network semantics.
 %
 W = \angled{C, H}
 \\
-\Coh{W}{s} 
+\Coh{W}{s}
 \\
-\gbm{\lab} \in \dom{C} 
-\\ 
-\ppr_{\lab} = C(\lab) 
-\\ 
-(\MS, d) = s(\lab) 
+\gbm{\lab} \in \dom{C}
 \\
-%
-\set{n, \gbm{\To}}  \subseteq \dom{d} 
+\ppr_{\lab} = C(\lab)
+\\
+(\MS, d) = s(\lab)
 \\
 %
-\gbm{\Trans_s} \in \ppr_{\lab}.\Transitions_s 
+\set{n, \gbm{\To}}  \subseteq \dom{d}
 \\
-\Trans_s.\mathit{pre}(n, {\To}, \gbm{m}, d) 
+%
+\gbm{\Trans_s} \in \ppr_{\lab}.\Transitions_s
+\\
+\Trans_s.\mathit{pre}(n, {\To}, \gbm{m}, d)
 \\
 \AllHooksOk{H, {\Trans_s}, \lab, s, n, {m}, {\To}}
 \\
@@ -2422,25 +2422,25 @@ s \nstep{W}{n} s[\lab \mapsto (\MS', d[n \mapsto \Trans_s.\mathit{step}(\To, m, 
 %
 W = \angled{C, H}
 \quad
-\Coh{W}{s} 
+\Coh{W}{s}
 \\
-\gbm{\lab} \in \dom{C} 
+\gbm{\lab} \in \dom{C}
 \\
-\ppr_{\lab} = C(\lab) 
+\ppr_{\lab} = C(\lab)
 \\
-(\MS, d) = s(\lab) 
+(\MS, d) = s(\lab)
 \\
-\gbm{\Trans_r} \in \ppr_{\lab}.\Transitions_r 
+\gbm{\Trans_r} \in \ppr_{\lab}.\Transitions_r
 \\
-\MS = \MS' \join \msg 
+\MS = \MS' \join \msg
 \\
-\msg = \angled{\From, n, \Active, ({\Trans_r.\mathit{tag}}, m)} 
+\msg = \angled{\From, n, \Active, ({\Trans_r.\mathit{tag}}, m)}
 \quad
-\set{\From, n}  \subseteq \dom{d} 
+\set{\From, n}  \subseteq \dom{d}
 \quad
-\Trans_r.\mathit{pre}(\msg, d(n)) 
+\Trans_r.\mathit{pre}(\msg, d(n))
 \\
-\MS'' = \MS' \join \angled{\From, n, \Consumed, (\Trans_r.\mathit{tag}, m)} 
+\MS'' = \MS' \join \angled{\From, n, \Consumed, (\Trans_r.\mathit{tag}, m)}
 }
 {
 s \nstep{W}{n} s[\lab \mapsto (\MS'', d[n \mapsto \Trans_r.\mathit{step}(\msg, d(n))])]
@@ -2600,7 +2600,7 @@ A trace $\trace_{\stat}$ is \emph{post-safe} for $n$, $s$ and $Q$ \Iff either
 
 \begin{itemize}
 \item $\trace = [~]$, $\stat = \done~v$ and  $\forall s',
-  \ninf{W}{n}{s}{s'} \implies s' \vDash [v/\res]Q$, or 
+  \ninf{W}{n}{s}{s'} \implies s' \vDash [v/\res]Q$, or
 
 \item $\trace = w :: \trace'$, and for any $s'$, such that $\ninf{W}{n}{s}{s'}$,
   the state $s'$ satisfies $w.\prei$, and for any $s''$, such that
@@ -2700,7 +2700,7 @@ sufficient for conducting modular proofs about core algorithms (\eg,
 To give a better taste of \disel-style programming and verification,
 in this section we abandon mathematical notation and show fragments of
 our development taken, with cosmetic adjustments, from our code.
- 
+
 \subsection{The Protocol: Intuition and Formalization}
 \label{sec:tpc-prot}
 
@@ -2764,9 +2764,9 @@ a participant, is defined as follows:
 %\newpage
 
 \begin{lstlisting}[basicstyle=\footnotesize\ttfamily]
-Definition localCoh (n: nid) := [Pred l | 
+Definition localCoh (n: nid) := [Pred l |
   if n == cn then exists(r: round) (s: CState) (log: Log), l = st :-> (r, s) \+ lg :-> log
-  else if n \in pts 
+  else if n \in pts
         then exists(r: round) (s: PState) (log: Log), l = st :-> (r, s) \+ lg :-> log else True].
 \end{lstlisting}
 %
@@ -2777,7 +2777,7 @@ protocol description) consists of two globally defined locations,
 \code{st} and \code{lg}, which together store a round number
 \texttt{r}, a \emph{coordinator status} \texttt{s}, and a
 \texttt{log}.
-% 
+%
 The state of a participant (\code{n} $\in$ \code{pts}) is similar, except
 that its status is a \emph{participant status}.
 %
@@ -2786,14 +2786,14 @@ a node participating only in other protocols) may have an arbitrary
 local state with respect to \code{TPC}.
 
 The coordinator's status can be in any of the seven states shown in
-shown in Fig.~\ref{fig:tpc-state}(a). 
+shown in Fig.~\ref{fig:tpc-state}(a).
 %
 Between rounds, the coordinator waits in the $\cinit$ state.
 %
 From the initial state, the coordinators enters the \textsf{CSentPrep}
 phase and remains in it until all prepare-requests are sent, after
 which it switches into the receiving state $\mathsf{CWaitPrepResp}~x$
-for the data $x$. 
+for the data $x$.
 %
 Upon receiving all response message to the prepare-requests, the
 coordinator changes either to the commit-state or to the abort-state,
@@ -2812,20 +2812,20 @@ from the coordinator before changing its state.
 \begin{tabular}{c@{\ }c}
 \begin{minipage}{0.5\linewidth}
 \begin{lstlisting}[basicstyle=\scriptsize\ttfamily]
-Definition c_send_step (r: round) (cs: CState) 
+Definition c_send_step (r: round) (cs: CState)
            (log: Log) (to: node) := match cs with
   (* Sending prepare-messages *)
   | CSentPrep x tos => if (* sent all messages *)
         (* switch for receiving responses *)
         then (r, CWaitPrepResp x [::], l)
         (* keep sending requests *)
-        else (r, CSentPrep x (to :: tos), l)                  
-  (* ...more cases depending on cs and to... *) 
+        else (r, CSentPrep x (to :: tos), l)
+  (* ...more cases depending on cs and to... *)
   end.
 
 
 
-\end{lstlisting}   
+\end{lstlisting}
 \end{minipage}
 &
 \begin{minipage}{0.5\linewidth}
@@ -2841,7 +2841,7 @@ Definition c_recv_step (r : round) (cs : CState)
       else (r, CWaitPrepResp, log)
   (* ...more cases depending on cs, tag, mbody... *)
   end.
-\end{lstlisting}    
+\end{lstlisting}
 \vspace{-8pt}
 \end{minipage}
 \end{tabular}
@@ -2885,7 +2885,7 @@ The type \code{\{r\ log\} DHT [cn, TPC] (...)} represents a Hoare
 spec, whose logical variables are \code{r} and \code{log}. The spec is
 parametrized by the dedicated coordinator node id \code{cn} and a
 world with a single protocol instance \code{TPC}, with no hooks.
-% 
+%
 The pre/postconditions (in parentheses) are encoded as Coq functions
 \code{fun s => ...} and \code{fun res s' => ...}, correspondingly, so
 the immediate pre/post-states \code{s}/\code{s'} are made explicit,
@@ -2932,49 +2932,49 @@ assistance in debugging and correcting invariants, and it would be
 interesting to connect \disel to Ivy, which we leave to the future work.
 
 {
-\setlength{\belowcaptionskip}{-10pt} 
+\setlength{\belowcaptionskip}{-10pt}
 \begin{figure}
 \centering
-\begin{tabular}{@{\!\!}c@{\ }c} 
+\begin{tabular}{@{\!\!}c@{\ }c}
 \begin{minipage}{0.5\linewidth}
 \begin{lstlisting}[basicstyle=\scriptsize\ttfamily]
-Definition coordinator_round (d : data) : 
+Definition coordinator_round (d : data) :
 {r log}, DHT [cn, TPC]
 (fun s => loc cn s = st :-> (r, CInit) \+ lg :-> log,
- fun res s' => 
- loc cn s' = st:->(r+1, CInit) \+ lg:->(log++[(res, d)])) 
+ fun res s' =>
+ loc cn s' = st:->(r+1, CInit) \+ lg:->(log++[(res, d)]))
   := Do (r <-- read_round;
          send_prep_loop r d;;
          res <-- receive_prep_loop r;
          b <-- read_resp_result;
-         (if b then send_commits r d;; 
+         (if b then send_commits r d;;
                      receive_commit_loop r
-                else send_aborts r d;; 
+                else send_aborts r d;;
                      receive_abort_loop r);;
            return b).
-\end{lstlisting}   
+\end{lstlisting}
 \vspace{-10pt}
 \caption{Spec and code of a coordinator round.}
 \label{fig:tpc-ccode}
 \end{minipage}
 &
-\setlength{\belowcaptionskip}{-10pt} 
+\setlength{\belowcaptionskip}{-10pt}
 \begin{minipage}{0.5\linewidth}
 \begin{lstlisting}[basicstyle=\scriptsize\ttfamily]
-Definition run_coordinator (data_seq : seq data) :  
-DHT [cn, _]  
+Definition run_coordinator (data_seq : seq data) :
+DHT [cn, _]
 (fun s => s = loc cn s = st :-> (0, CInit) \+ lg :-> [::]
  fun _ s' => exists (choices : seq bool),
    let r  := size data_seq in
    let lg := zip choices data_seq in
    loc cn s' = st :-> (r, CInit) \+ lg :-> log /\
-   forall pt, pt \in pts -> 
+   forall pt, pt \in pts ->
          loc pt s' = st :-> (r, PInit) \+ lg :-> log)
  := Do (with_inv TPCInv (coordinator data_seq)).
 \end{lstlisting}
-\vspace{25pt} 
+\vspace{25pt}
 \caption{Coordinator spec elaborated with {\small\texttt{{TPCInv}}}.}
-\label{fig:tpc-with-inv}    
+\label{fig:tpc-with-inv}
 \end{minipage}
 \end{tabular}
 \end{figure}
@@ -2987,10 +2987,10 @@ DHT [cn, _]
 % \begin{lstlisting}[basicstyle=\footnotesize\ttfamily]
 % Definition pt_PhaseTwoCommit cn pt r x log ms :=
 % (loc pt = st :-> (r, PRespYes x) \+ lg :-> log
-%  /\$ $ msg_spec cn pt commit_req [r] ms 
+%  /\$ $ msg_spec cn pt commit_req [r] ms
 %  /\$ $ no_msg_from_to pt cn ms) \/
-% (loc pt = st:-> (r, PCommitted x) \+$\!$ lg :-> (log++[(true, x)]) 
-%  /\$ $ no_msg_from_to cn pt ms 
+% (loc pt = st:-> (r, PCommitted x) \+$\!$ lg :-> (log++[(true, x)])
+%  /\$ $ no_msg_from_to cn pt ms
 %  /\$ $ no_msg_from_to pt cn ms) \/
 % (st :-> (r + 1, PInit) \+ lg :-> (log ++ [(true, x)])
 %  /\$ $ no_msg_from_to cn pt ms
@@ -3014,10 +3014,10 @@ The invariant also implies a simple statement of \emph{global log agreement},
 shown below:
 %
 \begin{lstlisting}[basicstyle=\footnotesize\ttfamily]
-Lemma cn_log_agreement d r log pt : loc cn d = st :-> (r, CInit) \+ lg :-> log -> 
+Lemma cn_log_agreement d r log pt : loc cn d = st :-> (r, CInit) \+ lg :-> log ->
         coh d -> TPCInv d -> forall pt, pt \in pts -> loc pt d = st :-> (r, PInit) \+ lg :-> log.
 \end{lstlisting}
-%  
+%
 In other words, a coordinator \code{cn} in the $\cinit$ state and a
 round \code{r} can conclude that \emph{all} participants
 {\small{$\mathtt{pt} \in \mathtt{pts}$}} have also reached the current
@@ -3047,7 +3047,7 @@ coordinator's status is~$\cinit$.
   using Hooks}
 \label{sec:composing-two-phase}
 
- 
+
 Even though core consensus protocols, such as \code{TPC}, are not
 designed to exist in isolation, but rather to be used in a context of
 larger applications (\eg, for crash recovery), formal reasoning about
@@ -3077,7 +3077,7 @@ the program then returns as its final result \code{res}.  Ignoring the
 the postcondition asserts that \code{res} is \emph{equal to} the pair
 \code{d} (round, log) stored in the local state of the coordinator
 (which did not crash this time)!
- 
+
 Establishing such validity of the query \wrt \code{TPC}-related state
 is, however, not trivial at all, given how the querying protocol is
 defined. The protocol \code{Query} is very similar to the calculator
@@ -3092,7 +3092,7 @@ specify. In particular, it \emph{does not} enforce any specific shape
 of data being sent in a response to a request.
 
 {
-\setlength{\belowcaptionskip}{-10pt} 
+\setlength{\belowcaptionskip}{-10pt}
 \begin{figure}
 \centering
 \begin{tabular}{c@{\ }c}
@@ -3106,13 +3106,13 @@ Program Definition run_and_query (ds : seq data) pt :
    fun (res : nat * Log) s' => exists (chs : seq bool),
      let d := (size ds, zip chs ds) in
      loc s' = st :-> (d.1, CInit) \+ lg :-> d.2 /\
-     query_init s' $\aand$ res = d) 
-  := Do (run_coordinator ds;;    
+     query_init s' $\aand$ res = d)
+  := Do (run_coordinator ds;;
           rid <-- generate_fresh_request_id pt;
           send_request rid pt;;
           res <-- receive_responce rid pt;
           return res).
-\end{lstlisting}   
+\end{lstlisting}
 \vspace{18pt}
 \caption{Querying after the {\small\texttt{TPC}} coordinator.}
 \label{fig:cn-query}
@@ -3124,23 +3124,23 @@ Parameter core_state : Data -> LocState -> Prop.
 Parameter local_indicator : Data -> LocState -> Prop.
 
 Definition QHook := (1, lab_c, lab_q, resp) :->
- fun lc lq m to => 
- forall rid data, m = rid :: serialize data -> 
+ fun lc lq m to =>
+ forall rid data, m = rid :: serialize data ->
                core_state data lc.
 
 Hypothesis core_state_inj :
-  forall l d d', core_state d l -> 
+  forall l d d', core_state d l ->
              core_state d' l -> d = d'.
 
 Hypothesis core_state_step : forall data s s' n1 n2,
-  n1 != n2 -> local_indicator data (loc lab_c n1 s) 
+  n1 != n2 -> local_indicator data (loc lab_c n1 s)
   -> network_step (lab_c :-> pc, $\emptyset$) n2 s s'
   -> core_state data (loc lab_c n2 s').
 \end{lstlisting}
 \vspace{-10pt}
 
 \caption{Hook definition and abstract predicates.}
-\label{fig:hook-ap}    
+\label{fig:hook-ap}
 \end{minipage}
 \end{tabular}
 \end{figure}
@@ -3202,7 +3202,7 @@ invariant \code{TPCInv} and Lemma~\code{cn_log_agreement}:
 
 \begin{lstlisting}[basicstyle=\footnotesize\ttfamily]
 (* For TPC, abstract Data type is instantiated with a round number (nat) and Log. *)
-Definition Data := nat * Log. 
+Definition Data := nat * Log.
 Definition local_indicator (d : Data) l := l = st :-> (d.1, CInit) \+ log :-> d.2.
 Definition core_state (d : Data) l        := l = st :-> (d.1, PInit) \+ log :-> d.2.
 \end{lstlisting}
@@ -3252,7 +3252,7 @@ enabled by our trusted shim implementation.
 % trusted code base.
 
 \paragraph{Formal development and proof sizes.~}
-% 
+%
 The size of our formalization of the metatheory, inference rules and
 soundness proofs is about 4500 LOC.  Our development builds on
 well-established {Ssreflect}/MathComp libraries
@@ -3261,47 +3261,47 @@ the implementation of partial finite maps and heap theory
 by~\citet{Nanevski-al:POPL10}.
 
 %
-\begin{wraptable}[21]{h}{0.54\textwidth}  
+\begin{wraptable}[21]{h}{0.54\textwidth}
 %\begin{table}[t]
 \begin{minipage}{0.54\textwidth}
 {
-\sffamily\footnotesize 
+\sffamily\footnotesize
 % \centering
 %\vspace{-12pt}
 \begin{tabular}{|l|c|c|c|c|}
 \hline
-{Component} &  
+{Component} &
 { {Defs/Specs}} & {{Impl}} & {{Proofs}} &
 {Build}
-\\ \hline \hline 
+\\ \hline \hline
 % \multicolumn{6}{|c|}{\textbf{Greeter}} \\\hline
 % \emph{protocol} & 95& - & 40 & \multirow{2}{*}{2.5} & \multirow{2}{*}{$<$0.5\!}\\
 % \textsf{hello\_world} &60 & 8 &78 & &  \\\hline
   \multicolumn{5}{|c|}{\textbf{Calculator} (\S\ref{sec:overview})} \\\hline
-  \emph{protocol} (\S\ref{sec:calc-prot}) & \multirow{3}{*}{239} & 
+  \emph{protocol} (\S\ref{sec:calc-prot}) & \multirow{3}{*}{239} &
         \multirow{3}{*}{-} & \multirow{3}{*}{243} &\multirow{3}{*}{4.8}  \\
   $\Inv_1$ (\S\ref{sec:elab-calc}) &&&& \\
   $\Inv_2$ (\S\ref{sec:more-impl-free}) &&&& \\\hline
   \textsf{$\osserver$} (\S\ref{sec:elab-calc}) & \multirow{3}{*}{192}
-                & \multirow{3}{*}{43} & \multirow{3}{*}{153} & 
+                & \multirow{3}{*}{43} & \multirow{3}{*}{153} &
                                                                \multirow{3}{*}{8.6} \\
   \textsf{$\bserver$} (\S\ref{sec:more-impl-free}) &&&& \\
   \textsf{$\mserver$} (\S\ref{sec:more-impl-free}) &&&& \\\hline
   \textsf{$\cclient$} (\S\ref{sec:more-impl-free}) & 120 & 24 & 99 & 4.8 \\
   \textsf{$\dserver$} (\S\ref{sec:more-impl-free}) & 75 & 7 & 49 &2.4 \\\hline
   \multicolumn{5}{|c|}{\textbf{Two-Phase Commit}
-  (\S\ref{sec:tpc-prot}--\S\ref{sec:cons-induct-invar})} 
+  (\S\ref{sec:tpc-prot}--\S\ref{sec:cons-induct-invar})}
   \\\hline
   \emph{protocol} (\S\ref{sec:tpc-prot}) & 465 & - & 231 & 3.9 \\\hline
   \textsf{coordinator} (\S\ref{sec:tpc-impl}) & 236  &  35  & 440 & 18 \\\hline
   \textsf{participant} (\S\ref{sec:tpc-impl}) & 163 & 24 & 198 & 10 \\\hline
   \texttt{\TPCInv} (\S\ref{sec:cons-induct-invar}) & 997 & - & 2113 & 25 \\\hline
-  % 
+  %
   \multicolumn{5}{|c|}{\textbf{{Query}/{TPC}} (\S\ref{sec:composing-two-phase})} \\\hline
   \emph{protocol} & 169 & - & 115 & 2.1 \\\hline
   querying procedures & 326  &  18  & 707 & 19 \\\hline
   {\small\texttt{run\_and\_query}} & 76 & 5 & 89 & 2.6 \\
-  % 
+  %
   [2pt]\hline
 \end{tabular}
 \vspace{5pt}
@@ -3313,7 +3313,7 @@ by~\citet{Nanevski-al:POPL10}.
 \label{tab:locs}
 \end{wraptable}
 %\end{table}
-% 
+%
 Table~\ref{tab:locs} summarizes the proof effort for the calculator,
 \code{TPC}/\code{Query} systems.
 %
@@ -3391,7 +3391,7 @@ is feasible and requires a very small trusted codebase.
 
 What is the correspondence between our denotational semantics,
 presented in Section~\ref{sec:soundness} and the operational one
-implemented by our shim? 
+implemented by our shim?
 %
 % Understanding this relation important in order to gain confidence in
 % the resulting system.
@@ -3401,7 +3401,7 @@ the shim is written in OCaml and uses operating system and network
 components, which have no formal semantics, we argue that the
 extraction is adequate \wrt the denotational semantics for the
 following reasons:
-   
+
 \begin{enumerate}
 
 \item Our denotational semantics is simply a trace-collecting
@@ -3418,7 +3418,7 @@ following reasons:
   in \disel as \emph{functions} on the local state, so they are easy
   to extract and execute. The shim, thus, provides an accurate
   implementation of the protocol-aware network semantics.
- 
+
 \end{enumerate}
 
 \noindent
@@ -3436,7 +3436,7 @@ will never violate the protocol.
 One might wonder, whether we can \emph{hide} implementation-specific
 parts of local state from the clients, \eg, when reasoning about other
 nodes' implementations?
-% 
+%
 At the moment any mutable state in \disel should be manifested
 \emph{in a protocol definition} (and, thus, \emph{known} to all its
 users) and can be only altered by sending/receiving. This is why in
@@ -3486,7 +3486,7 @@ message-passing setting, we consider the notion of ownership to be of
 less use for most of the systems of interest. That said, even though
 \disel does not feature explicit ownership transfer, it can be easily
 encoded on a per-protocol basis, by defining a suitable local state
-and transitions. 
+and transitions.
 
 Composition of modular proofs about protocols is a problem that has
 not received much attention in modern concurrency logics. In FCSL,
@@ -3519,7 +3519,7 @@ distributed systems.
 %
 % that is, not allowing one to make global
 % assertions about a system's state, which is necessary to specify, \eg,
-% consistency properties of \code{TPC}. 
+% consistency properties of \code{TPC}.
 %
 In Villard~\etal's logic, messages do not carry any payload: they are
 simply \emph{tags}, indicating ownership transfer of a certain heap
@@ -3593,10 +3593,10 @@ IronFleet~\cite{Hawblitzel-al:SOSP15} supports proving \emph{liveness}
 in addition to safety, all embedded in Dafny~\cite{Leino:LPAR10}.
 %
 % Its Hoare logic fragment is \emph{local} and does not allow to
-% quantify over global system state. 
+% quantify over global system state.
 %
 IronFleet focuses on layered verification of standalone monolithic
-systems. 
+systems.
 %
 In those systems, each layer is a state-transition system (STS)
 specifying the system's behavior at a certain abstraction level, with
@@ -3616,7 +3616,7 @@ inductive invariants, similar to what we have proven in \disel.
 %
 In our understanding, such specifications do not allow for horizontal
 composition, \ie, reasoning about interaction with separately verified
-systems in a client code. 
+systems in a client code.
 %
 Such an interaction has been, however, explored \wrt
 \emph{shared-memory} concurrency by~\citet{Gu-al:OSDI16}, who built a
@@ -3671,7 +3671,7 @@ Nuprl~\cite{rahli:eventml-avocs}.
 %
 None of these frameworks tackles the challenges of modular reasoning
 about horizontally composed systems~\textbf{(2)} and elaborated
-protocols~\textbf{(3)}, stated in the introduction of this paper.
+protocols~\textbf{(3)}, stated in the introduction of this chapter.
 
 Arguably, our Two-Phase Commit implementation is a relatively small
 case study when compared to the systems verified in IronFleet, Verdi,
@@ -3685,7 +3685,7 @@ primitives and reasoning principles that were employed for \code{TPC}.
 We believe, though, that compositionality, afforded by \disel's
 logical mechanisms, is a key to make the results of future
 verification efforts reusable for building even larger verified
-distributed ecosystems. 
+distributed ecosystems.
 
 \subsection{Future Work}
 
@@ -3713,7 +3713,7 @@ Finally, we are going to investigate possibilities for automating
 proofs of inductive
 invariants~\cite{Padon-al:PLDI16,Padon-al:OOPSLA17}.
 
-\vspace{-5pt}   
+\vspace{-5pt}
 
 \section{Conclusion}
 \label{sec:conclusion}
@@ -3747,14 +3747,14 @@ open-world systems today's reality.
 %   %
 %   We wish to acknowledge the feedback by the OOPSLA'17 reviewers on
 %   the presentation.
-%   % 
+%   %
 %   We thank the POPL'18 PC and AEC reviewers for the careful reading
 %   and many constructive suggestions on the paper and the implementation.
 %   %
 %   Finally, we thank \'{E}ric Tanter for his dedication to bring out
 %   the best of the paper as our shepherd, and Andrew C. Myers for his
 %   efforts as POPL'18 PC chair.
-% 
+%
 %   Sergey's research was supported by EPSRC First Grant EP/P009271/1
 %   ``Program Logics for Compositional Specification and Verification of
 %   Distributed Systems''. Tatlock's research was supported by a

@@ -192,7 +192,7 @@
 Distributed systems serve millions of users in important applications,
 ranging from banking and communications to social networking.
 %
-These systems are difficult to implement correctly because they 
+These systems are difficult to implement correctly because they
 must handle both concurrency and failures: machines may
 crash at arbitrary points and networks may reorder, drop, or duplicate packets.
 Further, the behavior is often too complex to permit exhaustive testing.
@@ -200,7 +200,7 @@ Further, the behavior is often too complex to permit exhaustive testing.
 Thus, despite decades of research,
 % into fault-handling techniques such as state machine replication
 % and non-blocking commit protocols
-% ~\cite{oki:viewstamped,lamport:paxos,ongaro:raft}, 
+% ~\cite{oki:viewstamped,lamport:paxos,ongaro:raft},
 real-world implementations
 often go live with critical fault-handling bugs, leading to data loss and
 service outages~\cite{yuan:aspirator,guo:fail-recover}.
@@ -223,11 +223,11 @@ and \mbox{PBS}~\cite{amazon:apr11-outage,lohr:amazon-apr11,highscalability}.
 Our overarching goal is to ease the burden for programmers to
 implement correct, high-performance, fault-tolerant distributed systems.
 %
-This paper focuses on a key aspect of this agenda: 
+This chapter focuses on a key aspect of this agenda:
 we describe \Verdi, a framework
-for implementing practical fault-tolerant distributed systems and then 
+for implementing practical fault-tolerant distributed systems and then
 formally verifying that the implementations meet their
-specifications. 
+specifications.
 %
 Previous work has shown that formal verification can help produce extremely
 reliable systems, including compilers~\cite{yang:csmith} and
@@ -236,7 +236,7 @@ operating systems~\cite{klein:sel4,yang:verve}.
 \Verdi enables the construction of reliable, fault-tolerant distributed
 systems whose behavior has been formally verified.
 %
-This paper focuses on safety properties for distributed systems;
+This chapter focuses on safety properties for distributed systems;
 we leave proofs of liveness properties for future work.
 
 
@@ -245,12 +245,12 @@ implementations is challenging.
 %
 First, while tools like TLA~\cite{lamport:tla} and
 Alloy~\cite{jackson:alloy} provide techniques for reasoning about
-abstract distributed algorithms, few practical distributed 
+abstract distributed algorithms, few practical distributed
 system \textit{implementations}
 have been formally verified.
 %
-For performance reasons, real-world implementations often diverge 
-in important ways from their high-level 
+For performance reasons, real-world implementations often diverge
+in important ways from their high-level
 descriptions~\cite{chandra:paxos-made-live}.
 Thus, our goal with \Verdi is to verify working code.
 %
@@ -313,23 +313,23 @@ concerns of application correctness and fault tolerance.
 This simplifies the task of providing end-to-end guarantees about
 distributed systems.
 
-To achieve compositionality, we introduce \textit{verified 
+To achieve compositionality, we introduce \textit{verified
 system transformers}.
 %
 A system transformer is a function whose input is an
 implementation of a system and whose output is a new system implementation that
-makes different assumptions about its environment.  
+makes different assumptions about its environment.
 %
 A verified system transformer
-includes a proof that the new system 
+includes a proof that the new system
 satisfies properties analogous to those of the original system.
 %
 For example, a \Verdi programmer can first build and verify a system
 assuming a reliable network, and then apply a transformer to obtain
-another version of their system that correctly and provably 
-tolerates faults in an unreliable network~(e.g., machine crashes). 
+another version of their system that correctly and provably
+tolerates faults in an unreliable network~(e.g., machine crashes).
 
-% Doesn't work to cite sections, if you have a later paragraph on 
+% Doesn't work to cite sections, if you have a later paragraph on
 % "rest of the paper".
 %
 % To demonstrate \Verdi's utility, we implemented and verified several
@@ -345,7 +345,7 @@ tolerates faults in an unreliable network~(e.g., machine crashes).
 
 
 \para{Contributions}
-This paper makes the following contributions:
+This chapter makes the following contributions:
 %
 (1) \Verdi, a publicly available~\cite{verdi-repo} toolchain for
 building provably correct distributed systems,
@@ -367,7 +367,7 @@ Our key conceptual contribution is the use of verified
 systems transformers to enable modular implementation and end-to-end
 verification of systems.
 
-The rest of the paper is organized as follows.
+The rest of the chapter is organized as follows.
 %
 \cref{sec:verdi:overview} overviews the \Verdi system.
 %
@@ -401,14 +401,14 @@ network messages that these nodes respond to, the state each node
 maintains, and the message handling code that each node runs.
 %
 \numcircled{3}~The programmer proves the system correct assuming a
-specific baseline network semantics. In the examples in this paper, 
+specific baseline network semantics. In the examples in this chapter,
 the programmer chooses an idealized reliable model for this proof:
 all packets are delivered exactly once, and there are no node failures.
 %
-\numcircled{4}~The programmer then selects a target network semantics 
-that reflects their environment's fault model, and applies a 
+\numcircled{4}~The programmer then selects a target network semantics
+that reflects their environment's fault model, and applies a
 verified system transformer
-(VST) to transform their implementation into one that is correct in 
+(VST) to transform their implementation into one that is correct in
 that fault model.  This transformation also produces updated
 versions of the specification and proof.
 %
@@ -589,7 +589,7 @@ When an Agent receives an external input that requests to acquire or
 release the lock, it forwards the request to the Server; in the \UnlockIO
 case, it first checks to ensure that the lock is actually held, and it
 resets its local state to \mytt{false}.
-Because the network is assumed to be reliable, no acknowledgment 
+Because the network is assumed to be reliable, no acknowledgment
 of the release is needed from the Server.
 %
 %% This feels redundant to Mike.
@@ -803,7 +803,7 @@ some distributed systems need to handle deduplication and
 retransmission at a higher level, or choose not to trust the
 guarantees provided by unverified TCP implementations.
 
-As another option, a programmer could rewrite the lock service---for 
+As another option, a programmer could rewrite the lock service---for
 instance, by including a unique identifier with
 every \GrantMsg and \UnlockMsg message to ensure that they are
 properly paired.
@@ -841,7 +841,7 @@ version of the system that provably tolerates more realistic faults while
 guaranteeing end-to-end system correctness properties.
 
 % The current lock service application cannot tolerate server crashes.
-\para{Tolerating machine crashes} 
+\para{Tolerating machine crashes}
 \Verdi also provides verified system transformers to tolerate
 machine crashes via replication.  Such replication transformers generally
 create multiple copies of a node in order tolerate machine crashes.
@@ -915,7 +915,7 @@ systems in the appropriate environment model, \Verdi provides a spectrum of
 \emph{network semantics} that encode possible system behaviors using
 small-step style derivation rules.
 
-This section presents the spectrum of network semantics that \Verdi 
+This section presents the spectrum of network semantics that \Verdi
 provides, ranging from single-node systems that do not
 rely on the network, through models of increasingly unreliable packet
 delivery (reordering, drops, and duplication), and culminating with a
@@ -1336,7 +1336,7 @@ replication transformers.
 Sequence numbering is a technique for ensuring that messages are
 delivered at most once. Senders tag each outgoing message with a
 sequence number that is unique among all messages from that
-sender. Message recipients keep track of all 
+sender. Message recipients keep track of all
 \traceelt{\mytt{number},\ \mytt{sender}} pairs they have seen.  If a message arrives with a
 \traceelt{\mytt{number},\ \mytt{sender}} pair that the destination has
 seen before, the message is discarded.
@@ -1557,7 +1557,7 @@ correctly reflects the \putk.
 \label{sec:verdi:casestudy-raft}
 
 Fault-tolerant, consistent state machine replication
-is a classic problem in distributed systems. 
+is a classic problem in distributed systems.
 This problem has been
 solved with \textit{distributed consensus} algorithms, which guarantee
 that all nodes in a system will agree on which commands the replicated
@@ -1971,7 +1971,7 @@ node and do not model faults.
 
 \section{Conclusion}\label{sec:verdi:conclusion}
 
-This paper presented \Verdi, a framework for building formally
+This chapter presented \Verdi, a framework for building formally
 verified distributed systems.  \Verdi's key conceptual contribution is
 the use of verified system transformers to separate concerns of
 application correctness and fault tolerance, which simplifies the task

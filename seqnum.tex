@@ -1,0 +1,28 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PY{c}{(*}\PY{c}{ S describes a system in the reordering semantics }\PY{c}{*)}
+\PY{n+nc}{SeqNum} \PY{o}{(}\PY{n+nc}{S}\PY{o}{)} \PY{o}{:=}
+  \PY{n+nc}{Name} \PY{o}{:=} \PY{n+nn}{S}\PY{p}{.}\PY{n+nc}{Name}
+
+  \PY{n+nc}{Inp} \PY{o}{:=} \PY{n+nn}{S}\PY{p}{.}\PY{n+nc}{Inp}
+  \PY{n+nc}{Out} \PY{o}{:=} \PY{n+nn}{S}\PY{p}{.}\PY{n+nc}{Out}
+  \PY{n+nc}{Msg} \PY{o}{:=} \PY{o}{\PYZob{}} \PY{n}{seqnum}\PY{o}{:} \PY{k+kt}{int}\PY{o}{;} \PY{n}{underlying\PYZus{}msg}\PY{o}{:} \PY{n+nn}{S}\PY{p}{.}\PY{n+nc}{Msg} \PY{o}{\PYZcb{}}
+
+  \PY{n+nc}{State} \PY{o}{(}\PY{n}{n}\PY{o}{:} \PY{n+nc}{Name}\PY{o}{)} \PY{o}{:=} \PY{o}{\PYZob{}} \PY{n}{seen}\PY{o}{:} \PY{k+kt}{list} \PY{o}{(}\PY{n+nc}{Name} \PY{o}{*} \PY{k+kt}{int}\PY{o}{)}\PY{o}{;}
+                       \PY{n}{next\PYZus{}seqnum}\PY{o}{:} \PY{k+kt}{int}\PY{o}{;}
+                       \PY{n}{underlying\PYZus{}state}\PY{o}{:} \PY{n+nn}{S}\PY{p}{.}\PY{n+nc}{State} \PY{n}{n} \PY{o}{\PYZcb{}}
+
+  \PY{n+nc}{InitState} \PY{o}{(}\PY{n}{n}\PY{o}{:} \PY{n+nc}{Name}\PY{o}{)} \PY{o}{:=} \PY{o}{\PYZob{}} \PY{n}{seen} \PY{o}{:=} \PY{n+nb+bp}{[]}\PY{o}{;}
+                           \PY{n}{next\PYZus{}seqnum} \PY{o}{:=} \PY{l+m+mi}{0}\PY{o}{;}
+                           \PY{n}{underlying\PYZus{}state} \PY{o}{:=} \PY{n+nn}{S}\PY{p}{.}\PY{n+nc}{InitState} \PY{n}{n} \PY{o}{\PYZcb{}}
+
+  \PY{n+nc}{HandleInp} \PY{o}{(}\PY{n}{n}\PY{o}{:} \PY{n+nc}{Name}\PY{o}{)} \PY{o}{(}\PY{n}{s}\PY{o}{:} \PY{n+nc}{State} \PY{n}{n}\PY{o}{)} \PY{o}{(}\PY{n}{inp}\PY{o}{:} \PY{n+nc}{Inp}\PY{o}{)} \PY{o}{:=}
+    \PY{n}{wrap\PYZus{}result} \PY{o}{(}\PY{n+nn}{S}\PY{p}{.}\PY{n+nc}{HandleInp} \PY{o}{(}\PY{n}{underlying\PYZus{}state} \PY{n}{s}\PY{o}{)} \PY{n}{inp}\PY{o}{)}
+
+  \PY{n+nc}{HandleMsg} \PY{o}{(}\PY{n}{n}\PY{o}{:} \PY{n+nc}{Name}\PY{o}{)} \PY{o}{(}\PY{n}{s}\PY{o}{:} \PY{n+nc}{State} \PY{n}{n}\PY{o}{)} \PY{o}{(}\PY{n}{src}\PY{o}{:} \PY{n+nc}{Name}\PY{o}{)} \PY{o}{(}\PY{n}{msg}\PY{o}{:} \PY{n+nc}{Msg}\PY{o}{)} \PY{o}{:=}
+    \PY{k}{if} \PY{n}{not} \PY{o}{(}\PY{n}{contains} \PY{n}{s}\PY{o}{.}\PY{n}{seen} \PY{o}{(}\PY{n}{src}\PY{o}{,} \PY{n}{msg}\PY{o}{.}\PY{n}{seqnum}\PY{o}{)}\PY{o}{)} \PY{k}{then}
+      \PY{n}{s}\PY{o}{.}\PY{n}{seen} \PY{o}{:=} \PY{o}{(}\PY{n}{src}\PY{o}{,} \PY{n}{msg}\PY{o}{.}\PY{n}{seqnum}\PY{o}{)} \PY{o}{::} \PY{n}{s}\PY{o}{.}\PY{n}{seen}\PY{o}{;;}
+      \PY{c}{(*}\PY{c}{ wrap\PYZus{}result adds sequence numbers to messages while}
+\PY{c}{         incrementing next\PYZus{}seqnum }\PY{c}{*)}
+      \PY{n}{wrap\PYZus{}result} \PY{o}{(}\PY{n+nn}{S}\PY{p}{.}\PY{n+nc}{HandleMsg} \PY{n}{n} \PY{o}{(}\PY{n}{underlying\PYZus{}state} \PY{n}{s}\PY{o}{)}
+                               \PY{n}{src} \PY{o}{(}\PY{n}{underlying\PYZus{}msg} \PY{n}{msg}\PY{o}{)}\PY{o}{)}
+\end{Verbatim}

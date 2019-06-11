@@ -1,0 +1,11 @@
+*.out
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.pdf
+*.toc
+.mypy_cache/

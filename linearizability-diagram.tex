@@ -1,0 +1,44 @@
+\begin{tikzpicture}[%
+  >=stealth, yscale=0.7,
+  hole/.style={inner sep=0.5mm}]
+  \coordinate (start) at (0,-0.2) {};
+  \coordinate (i1) at (0,-1) {};
+  \coordinate (o1) at (0,-1.5) {};
+  \coordinate (i2) at (0,-2) {};
+  \coordinate (i3) at (0,-2.5) {};
+  \coordinate (o2) at (0,-3) {};
+  \coordinate (o3) at (0,-3.5) {};
+  \coordinate (end) at (0,-4.3) {};
+
+  \def\inp#1#2{%
+    \draw[->] ($(-0.75, 0.5) + #1$) node[left] {#2} -- ($(-0.075, 0.05) + #1$);
+  }
+
+  \def\outp#1#2{%
+    \draw[->] ($(0.075, -0.05) + #1$) -- ($(0.75, -0.5) + #1$) node [right] {#2};
+  }
+
+  \inp{(i1)}{$I_1$}
+  \inp{(i2)}{$I_2$}
+  \inp{(i3)}{$I_3$}
+
+  \outp{(o1)}{$O_1$}
+  \outp{(o2)}{$O_2$}
+  \outp{(o3)}{$O_3$}
+
+  \newcommand{\Cross}{$\mathbin{\tikz [x=1.4ex,y=1.4ex,line width=.2ex, red] \draw (0,0) -- (1,1) (0,1) -- (1,0);}$}%
+
+  \newcommand{\Checkmark}{$\color{green}\checkmark$}
+
+  \draw[->] (start) -- (i1) -- (o1) -- (i2) -- (i3) -- (o2) -- (o3) -- (end);
+
+  \begin{scope}[shift={(4,-0.6)}]
+    \def\op{\ensuremath{\mathrm{op}}}
+    \node (t1) at (0,0) {$[\op_1, \op_2, \op_3]$\ \Checkmark};
+    \node (t2) at (0,-1) {$[\op_1, \op_3, \op_2]$\ \Checkmark};
+    \node (t3) at (0,-2) {$[\op_2, \op_1, \op_3]$\ \Cross};
+    \node (t4) at (0,-3) {$[\op_3, \op_1, \op_2]$\ \Cross};
+  \end{scope}
+
+  \node (tau) at (0, -4.8) {$\tau = [I_1, O_1, I_2, I_3, O_2, O_3]$};
+\end{tikzpicture}

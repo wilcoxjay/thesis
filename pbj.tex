@@ -1,0 +1,32 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PY{n+nc}{PB} \PY{o}{(}\PY{n+nc}{S}\PY{o}{)} \PY{o}{:=}
+  \PY{n+nc}{Name} \PY{o}{:=} \PY{n+nc}{Primary} \PY{o}{|} \PY{n+nc}{Backup}
+
+  \PY{n+nc}{Msg} \PY{o}{:=} \PY{n+nc}{Replicate} \PY{n+nn}{S}\PY{p}{.}\PY{n+nc}{Inp} \PY{o}{|} \PY{n+nc}{Ack}
+  \PY{n+nc}{Inp} \PY{o}{:=} \PY{n+nn}{S}\PY{p}{.}\PY{n+nc}{Inp}
+  \PY{n+nc}{Out} \PY{o}{:=} \PY{o}{\PYZob{}} \PY{n}{request}\PY{o}{:} \PY{n+nn}{S}\PY{p}{.}\PY{n+nc}{Inp}\PY{o}{;} \PY{n}{response}\PY{o}{:} \PY{n+nn}{S}\PY{p}{.}\PY{n+nc}{Out} \PY{o}{\PYZcb{}}
+  \PY{n+nc}{State} \PY{o}{(}\PY{n}{n}\PY{o}{:} \PY{n+nc}{Name}\PY{o}{)} \PY{o}{=} \PY{o}{\PYZob{}} \PY{n}{queue}\PY{o}{:} \PY{k+kt}{list} \PY{n+nn}{S}\PY{p}{.}\PY{n+nc}{Inp}\PY{o}{;}
+                      \PY{n}{underlying\PYZus{}state}\PY{o}{:} \PY{n+nn}{S}\PY{p}{.}\PY{n+nc}{State} \PY{o}{\PYZcb{}}
+
+  \PY{n+nc}{InitState} \PY{o}{(}\PY{n}{n}\PY{o}{:} \PY{n+nc}{Name}\PY{o}{)} \PY{o}{=} \PY{o}{\PYZob{}} \PY{n}{queue} \PY{o}{:=} \PY{n+nb+bp}{[]}\PY{o}{;}
+                          \PY{n}{underlying\PYZus{}state} \PY{o}{:=} \PY{n+nn}{S}\PY{p}{.}\PY{n+nc}{InitState} \PY{n}{n} \PY{o}{\PYZcb{}}
+
+  \PY{n+nc}{HandleInp} \PY{o}{(}\PY{n}{n}\PY{o}{:} \PY{n+nc}{Name}\PY{o}{)} \PY{o}{(}\PY{n}{s}\PY{o}{:} \PY{n+nc}{State} \PY{n}{n}\PY{o}{)} \PY{o}{(}\PY{n}{inp}\PY{o}{:} \PY{n+nc}{Inp}\PY{o}{)} \PY{o}{:=}
+    \PY{k}{if} \PY{n}{n} \PY{o}{=}\PY{o}{=} \PY{n+nc}{Primary} \PY{k}{then}
+      \PY{n}{append\PYZus{}to\PYZus{}queue} \PY{n}{inp}\PY{o}{;;}
+      \PY{k}{if} \PY{n}{length} \PY{n}{s}\PY{o}{.}\PY{n}{queue} \PY{o}{=}\PY{o}{=} \PY{l+m+mi}{1} \PY{k}{then}
+        \PY{c}{(*}\PY{c}{ if not already replicating a request }\PY{c}{*)}
+        \PY{n}{send} \PY{o}{(}\PY{n+nc}{Backup}\PY{o}{,} \PY{n+nc}{Replicate} \PY{o}{(}\PY{n}{head} \PY{n}{s}\PY{o}{.}\PY{n}{queue}\PY{o}{)}\PY{o}{)}
+                          
+  \PY{n+nc}{HandleMsg} \PY{o}{(}\PY{n}{n}\PY{o}{:} \PY{n+nc}{Name}\PY{o}{)} \PY{o}{(}\PY{n}{s}\PY{o}{:} \PY{n+nc}{State} \PY{n}{n}\PY{o}{)} \PY{o}{(}\PY{n}{src}\PY{o}{:} \PY{n+nc}{Name}\PY{o}{)} \PY{o}{(}\PY{n}{msg}\PY{o}{:} \PY{n+nc}{Msg}\PY{o}{)} \PY{o}{:=}
+    \PY{k}{match} \PY{n}{n}\PY{o}{,} \PY{n}{msg} \PY{k}{with}
+      \PY{o}{|} \PY{n+nc}{Primary}\PY{o}{,} \PY{n+nc}{Ack} \PY{o}{=\PYZgt{}}
+        \PY{n}{out} \PY{o}{:=} \PY{n}{apply\PYZus{}entry} \PY{o}{(}\PY{n}{head} \PY{n}{s}\PY{o}{.}\PY{n}{queue}\PY{o}{)}\PY{o}{;;}
+        \PY{n}{output} \PY{o}{\PYZob{}} \PY{n}{request} \PY{o}{:=} \PY{n}{head} \PY{n}{s}\PY{o}{.}\PY{n}{queue}\PY{o}{;} \PY{n}{response} \PY{o}{:=} \PY{n}{out} \PY{o}{\PYZcb{}}\PY{o}{;;}
+        \PY{n}{pop} \PY{n}{s}\PY{o}{.}\PY{n}{queue}\PY{o}{;;}
+        \PY{k}{if} \PY{n}{s}\PY{o}{.}\PY{n}{queue} \PY{o}{!=} \PY{n+nb+bp}{[]} \PY{k}{then}
+          \PY{n}{send} \PY{o}{(}\PY{n+nc}{Backup}\PY{o}{,} \PY{n+nc}{Replicate} \PY{o}{(}\PY{n}{head} \PY{n}{s}\PY{o}{.}\PY{n}{queue}\PY{o}{)}\PY{o}{)}
+      \PY{o}{|} \PY{n+nc}{Backup}\PY{o}{,} \PY{n+nc}{Replicate} \PY{n}{i} \PY{o}{=\PYZgt{}}
+        \PY{n}{apply\PYZus{}entry} \PY{n}{i}\PY{o}{;;}
+        \PY{n}{send} \PY{o}{(}\PY{n+nc}{Primary}\PY{o}{,} \PY{n+nc}{Ack}\PY{o}{)}
+\end{Verbatim}

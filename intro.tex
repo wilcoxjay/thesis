@@ -1,0 +1,134 @@
+\chapter{Introduction}
+
+Distributed systems are widely used but hard to implement correctly.
+These complex systems execute concurrently in unreliable environments
+and are expected to tolerate various faults.
+  Such environments are
+notoriously difficult to adequately model with testing, but because
+of the critical importance of these systems, it is essential that
+they are correct.
+Systems consist of many potentially failing components; it is
+essentially impossible to perform exhaustive testing on the many
+interactions between components in any real-world
+implementation.
+Most known techniques for checking concurrent and
+distributed algorithms work only on models of the system, which
+results in a formality gap between the model and its
+implementation. For example, classical model checking has been shown
+to be extremely effective in finding concurrency and fault-tolerance
+bugs at the design level, but it does not scale to the complex data
+structures used in real systems.
+Formal verification using
+human-guided, automated, machine-checked proofs is the only
+technique that can provide the desired guarantees for such systems.
+
+Applying formal methods is not a panacea, however, due to the
+complexity of the systems involved.  It is not uncommon, \eg, for a
+distributed file system to coordinate thousands of machines using a
+combination of several different protocols to ensure consistency,
+fault tolerance, and high performance.  In order to verify such a
+system, one must break the problem down into smaller parts.
+This decomposition yields benefits of automation in two senses.
+First, a truly compositional proof imposes no additional proof
+burden to put the pieces back together. Second, sufficiently
+decomposed pieces can be reasoned about fully automatically
+using decision procedures. 
+
+The central claim of this dissertation is:
+\begin{center}
+\emph{Programming languages techniques for compositionality
+  lay the foundations for effective, automated verification of
+  distributed systems implementations.
+}
+\end{center}
+
+Chapter 2 presents Verdi, a Coq-based framework for implementing and
+verifying distributed systems.  Verdi models the system execution
+using various \emph{network semantics}, each of which encodes
+assumptions about the environment including possible network faults
+and machine failures.  Network semantics can range from the idealistic
+to the pessimistic. For example, one might assume that all messages
+are eventually delivered and that nodes never fail. On the other hand,
+one might assume that packets can be dropped and duplicated and that
+some nodes behave arbitrarily or maliciously. Different systems are
+designed under different sets of assumptions, and network semantics
+capture those assumptions.
+The main point of defining a particular network semantics in Verdi is to verify
+distributed systems using that semantics as the fault model.
+Assuming the network semantics
+accurately describes all possible behaviors of the system's
+environment, Verdi guarantees that the system is correct for all executions.
+For common network semantics, there are typically generic mechanisms
+that systems use to tolerate faults, \eg sequence numbering to handle
+message reordering and duplication. Another key benefit of clearly
+stating environment assumptions as network semantics is that one
+can then express these generic fault tolerance mechanisms as \emph{transformers}
+between semantics.
+Using transformers, the engineer can implement and reason about their
+application in a fault model
+with relatively few faults, and then automatically transform the system
+into one that provably works in a more adversarial fault model with
+relatively more faults. 
+
+%whose key insight is to treat the network as analogous to the heap in
+%sequential programming.
+
+
+Chapter 3 details Disel, a concurrent separation logic for distributed
+systems.  Whereas Verdi separates fault tolerance reasoning from
+application logic (which we call vertical compositionality), Disel
+separates reasoning about cooperating services by defining interfaces
+that capture protocol-specific invariants (which we call horizontal
+compositionality).  This supports verifying modern distributed systems
+which are typically built by composing several services to provide a
+high-level application.  A proof of correctness for a system composed
+of several services should similarly compose the guarantees of each
+individual service. Using the techniques of Verdi alone, such reasoning
+is not possible. Instead of needing to reason across fault models,
+what we need is the ability to abstract over the low-level details
+provides its guarantee. To achieve this, we take inspiration from
+modern program logics for concurrent programs that manipulate
+heap pointers. These logics allow modular reasoning by separating
+different parts of the heap, each of which can be reasoned about
+independently. Disel applies this insight to distributed systems
+by analogizing the network as the heap. Thus, Disel separates
+the network messages of each protocol from each other, allowing
+independent reasoning. Disel achieves this through several
+novel logical mechanisms that support strengthening the invariants
+of other services with client-specific facts and capturing the
+essential interactions between protocols with \emph{hooks}, which
+allow one protocol's actions to be conditioned on another protocol's
+state.
+
+Experience in Disel and Verdi showed that the manual effort required
+to provide strong guarantees about distributed systems doesn't scale
+with current tooling.  In particular, the key sticking point is
+developing inductive invariants.  Deductive verification techniques,
+such as those used in Disel and Verdi, are highly expressive but
+require the user to provide a great deal of additional input,
+including inductive invariants and their proofs. For example, using
+Verdi to prove an application correct in a relatively nice fault model
+still requires deriving an application-specific invariant, which
+simultaneously (1) summarizes all the reachable states of the
+application, (2) is closed under the transition system's step
+relation, and (3) ensures the absence of safety violations.
+The difficulty of deriving these invariants inspired us to
+investigate techniques for proving and even \emph{inferring}
+inductive invariants automatically.
+
+Chapter 4 describes \mypyvy, a tool for automated reasoning about
+symbolic transition systems in first-order logic and supports a
+variety of automated reasoning tools to analyze systems.
+\mypyvy takes an input file describing a symbolic transition system
+and performs the analysis requested by the user. Three of the most
+interesting analyses include inductive invariant checking,
+invariant inference, and bounded trace reasoning.
+In all cases, \mypyvy loads the transition system and compiles
+it together with the user-requested analysis to a (sequence of) SMT queries,
+which are dispatched by Z3.
+
+Distributed systems remains a crucial topic with many potential avenues
+for future work. In Chapter 5, we summarize our plans for extending
+Verdi, Disel, and \mypyvy to further improve the verification experience.
+We are especially excited to live in a world where more users are
+empowered to verify their distributed systems.

@@ -1,33 +1,115 @@
 \documentclass[11pt, proquest]{uwthesis}[2016/11/22]
  
+\usepackage{amsmath}
+\usepackage{setspace}
+\usepackage{mathpartir}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{alltt}
+\usepackage{textcomp}
+\usepackage{amscd}
+\usepackage{amsfonts}
+\usepackage{varwidth}
+\usepackage{listings}
+\usepackage{float}
+\usepackage[noend]{algorithmic}
+\usepackage{mathrsfs}
+\usepackage{stmaryrd}
+\usepackage{verbatim}
+\usepackage{lipsum}
+\usepackage{wrapfig}
+\newcounter{tags}
+\usepackage{enumitem}
+\usepackage{fancyvrb}
+\fvset{fontsize=\scriptsize}
+\renewcommand{\ttdefault}{txtt} % provide bold tt in alltt
+
+%\usepackage{libertine}
+\usepackage[T1]{fontenc}
+
+\usepackage[numbers]{natbib}
+
+\usepackage{graphicx}
+\usepackage{pifont}
+\usepackage{xspace}
+\usepackage{url}
+\usepackage{relsize}
+\usepackage[colorlinks=true,allcolors=black,breaklinks,draft=false]{hyperref}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+
+
+\usepackage{cleveref}
+\Crefname{thm}{Theorem}{Theorems}
+
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usetikzlibrary{shapes.callouts}
+
+\usepackage{multirow}
+\usepackage{booktabs}
+
 \setcounter{tocdepth}{1}
 
-\def\pgascse{Paul G. Allen School of Computer Science \& Engineering}
+\input{macros}
 
 \begin{document}
  
 \prelimpages
  
-\Title{Compositional Verification of Distributed Systems}
+\Title{Compositional and Automated Verification of Distributed Systems}
 \Author{James R. Wilcox}
 \Year{2019}
 \Program{\pgascse}
 
-\Chair{Zachary Tatlock}{Professor}{\pgascse}
-\Signature{Dan Grossman}
-\Signature{Thomas Anderson}
+% \Chair{Zachary Tatlock}{Professor}{\pgascse}
+% \Signature{Dan Grossman}
+% \Signature{Thomas Anderson}
 
 \titlepage
 
 \copyrightpage
 
-\setcounter{page}{-1}
-\abstract{%
-  Abstract
+\setcounter{page}{-1} \abstract{%
+  Distributed systems provide the backbone for modern computer
+  systems, from cloud computing to air-traffic control.  These complex
+  systems execute concurrently in unreliable environments and are
+  expected to tolerate various faults.  Such environments are
+  notoriously difficult to adequately model with testing, but because
+  of the critical importance of these systems, it is essential that
+  they are correct.  It thus makes sense to turn to more rigorous
+  methods of ensuring correctness, such as formal verification.
+  Applying formal methods is not a panacea, however, due to the
+  complexity of the systems involved.  It is not uncommon, \eg, for a
+  distributed file system to coordinate thousands of machines using a
+  combination of several different protocols to ensure consistency,
+  fault tolerance, and high performance.  In order to verify such a
+  system, one must break the problem down into smaller parts, each of
+  which is individually verifiable, ideally with a high degree of
+  automation.
+
+  This dissertation describes programming languages techniques for
+  doing just that, namely, for verifying distributed systems
+  compositionally and automatically.  First, we present Verdi, a
+  framework for verifying distributed systems in the Coq proof
+  assistant, which allows reasoning about fault tolerance mechanisms
+  as transformers between fault models. Second, we detail Disel, a
+  concurrent separation logic for distributed systems whose key
+  insight is to treat the network as analogous to the heap in
+  sequential programming.  Finally, we report on mypyvy, a
+  domain-specific language for describing symbolic transition systems
+  in first-order logic, which supports a variety of automated
+  reasoning tools to analyze systems.
 }
  
 \tableofcontents
-\listoffigures
+%\listoffigures
 %\listoftables  % I have no tables
  
 \acknowledgments{% \vskip2pc
@@ -36,23 +118,22 @@
   % \par}
 }
 
-\dedication{\begin{center}dedication\end{center}}
+%\dedication{\begin{center}dedication\end{center}}
 
 \textpages
  
-% ========== Chapter 1
- 
-\chapter{Introduction}
- 
-Intro
+\input{intro}
+\input{verdi}
+\input{disel}
+\input{mypyvy}
+\input{conclusion}
 
-\section{The Purpose of This Sample Thesis}
- 
-Section 
- 
+%\vita{
+%  Vita
+%}
 
-\vita{
-  Vita
-}
+\bibliographystyle{plainnat}
+\bibliography{refs}
+
 
 \end{document}

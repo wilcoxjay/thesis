@@ -1575,15 +1575,16 @@ replication transformer using the Raft consensus
 algorithm~\cite{ongaro:raft}. Our implementation of Raft in \Verdi is
 described in~\cref{ssec:verdi:raft-impl}.
 
-A \Verdi system transformer lifts a safety properties of an input
+A \Verdi system transformer lifts a safety property of an input
 system into a new semantics. The consensus transformer provides an
 indistinguishability result for \textit{linearizability}, which states
 that any possible trace of the replicated system is equivalent to some
 valid trace of the underlying system under particular constraints
 about when operations can be re-ordered. We have proved that Raft's
-\textit{state machine safety} property implies linearizability; our proof of
-state machine safety is still in progress as of this writing.  We
-discuss this result further in~\cref{ssec:verdi:raft-proof}.
+\textit{state machine safety} property implies linearizability.
+We also verified the (much more difficult) state machine safety property
+for Raft~\cite{Woos-al:CPP16}.
+We discuss these results further in~\cref{ssec:verdi:raft-proof}.
 
 \subsection{Raft Implementation}\label{ssec:verdi:raft-impl}
 
@@ -1682,8 +1683,12 @@ consequence of Raft's state machine safety property, which
 states that every node applies the same state machine command at a
 given index. We believe that this is the first formal proof
 (machine-checked or otherwise) of Raft's linearizability. A proof that
-state machine safety holds for our implementation is currently in
-progress~\cite{verdi-repo}. A pencil and paper proof of state machine
+state machine safety holds for our implementation
+has also been completed~\cite{verdi-repo}.
+The state machine safety proof was considerably more challenging
+than initially estimated and led to reusable insights on the
+broader challenge of ``proof engineering''~\cite{Woos-al:CPP16}.
+A pencil and paper proof of state machine
 safety for a TLA model of Raft was given in Ongaro's
 thesis~\shortcite{ongaro:phd}.
 
@@ -1720,6 +1725,8 @@ appends entries to the log: if a \mytt{ClientResponse} has already
 been issued, then that entry is already in the log, so any subsequent
 \mytt{ClientRequest} will be ordered after it in the log.
 
+% ztatlock TODO, import SMS proof description from CPP
+
 \section{Evaluation}
 \label{sec:verdi:eval}
 
@@ -1747,10 +1754,13 @@ Key-value store        &  41            & 138            & 337       \\
 Primary-backup         &  20            & 134            & 1155      \\
 KV+PB                  &  5             & N/A            & 19        \\
 Raft (Linearizability) &  170           & 520            & 4144      \\
+Raft (SMS)             &  TODO          & TODO           & TODO      \\
 Verdi                  &  148           & 220            & 2364      \\
 \bottomrule
   \end{tabular}
 \end{table}
+
+% ztatlock TODO get SMS numbers above
 
 \cref{tab:effort} shows the size of the
 specification, implementation, and proof of each case study.
@@ -1797,7 +1807,7 @@ uses Raft internally.
 We used a
 separate node to send 100 random requests using 8~threads; each
 request was either a put or a get on a key uniformly selected from a
-set of 50.
+set of 50 keys.
 
 \begin{table}[t]
   \centering
@@ -1909,7 +1919,7 @@ flexibly specified using a simple domain specific language (see, \eg
 Verified NetCore~\cite{guha:verified-openflow}).  As in \Verdi,
 verifying SDN controllers involves giving a semantics for OpenFlow,
 switch hardware, and network communication. The style of formalization
-and proof in and Verdi are quite similar and address orthogonal
+and proof in Verified NetCore and Verdi are quite similar and address orthogonal
 problems. Verified NetCore is concerned with correct routing protocol
 configuration, while Verdi is concerned with the correctness of
 distributed algorithms that run on top of the network.
@@ -1942,7 +1952,7 @@ Mace~\cite{killian:mace, killian:macemc}, MoDist~\cite{yang:modist},
 and CrystalBall~\cite{yabandeh:crystalball} explore the space of
 executions to detect bugs in distributed systems.  These tools are
 useful for catching bugs and easy to use for developers, as they only
-need to write invariants.  On the other hand, \Verdi's proof provide
+need to write invariants.  On the other hand, \Verdi's proofs provide
 correctness guarantees.
 
 For example, Mace provides a full suite of tools for building and model
@@ -1969,8 +1979,10 @@ levels of proof automation.  Bedrock~\cite{chlipala:bedrock} and
 Ynot~\cite{nanevski:ynot} are verification frameworks based on
 separation logic and are useful for verifying imperative programs in
 Coq, but also consider only the behavior of a single node and do not
-model faults.  These frameworks consider only the behavior of a single
-node and do not model faults.
+model faults.
+
+% These frameworks consider only the behavior of a single
+% node and do not model faults.
 
 \section{Conclusion}\label{sec:verdi:conclusion}
 

@@ -65,12 +65,12 @@
 
 \Title{Compositional and Automated Verification of Distributed Systems}
 \Author{James R. Wilcox}
-\Year{2019}
+\Year{2020}
 \Program{\pgascse}
 
-% \Chair{Zachary Tatlock}{Professor}{\pgascse}
-% \Signature{Dan Grossman}
-% \Signature{Thomas Anderson}
+\Chair{Zachary Tatlock}{Professor}{\pgascse}
+\Signature{Dan Grossman}
+\Signature{Thomas Anderson}
 
 \titlepage
 
@@ -89,21 +89,19 @@
   complexity of the systems involved.  It is not uncommon, \eg, for a
   distributed file system to coordinate thousands of machines using a
   combination of several different protocols to ensure consistency,
-  fault tolerance, and high performance.  In order to verify such a
-  system, one must break the problem down into smaller parts, each of
-  which is individually verifiable, ideally with a high degree of
-  automation.
+  fault tolerance, and high performance.  Verifying such a
+  system requires breaking the problem down into individually
+  verifiable parts, and leveraging automation whenever possible.
 
   This dissertation describes programming languages techniques for
-  doing just that, namely, for verifying distributed systems
+  verifying distributed systems
   compositionally and automatically.  First, we present Verdi, a
-  framework for verifying distributed systems in the Coq proof
-  assistant, which allows reasoning about fault tolerance mechanisms
+  framework for verifying distributed systems that reasons about fault tolerance mechanisms
   as transformers between fault models. Second, we detail Disel, a
   concurrent separation logic for distributed systems whose key
   insight is to treat the network as analogous to the heap in
   sequential programming.  Finally, we report on mypyvy, a
-  domain-specific language for describing symbolic transition systems
+  domain-specific language for symbolic transition systems
   in first-order logic, which supports a variety of automated
   reasoning tools to analyze systems.
 }

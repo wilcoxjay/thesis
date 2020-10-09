@@ -4,8 +4,85 @@
 \section{Introduction}
 
 \begin{verbatim}
+- something something invariant inference
+- something something clean research platform
+\end{verbatim}
+
+\section{Background on Transition Systems}
+
+\begin{verbatim}
+- the crawler
+  - thanks to jon howell for suggesting this example
+  - cute little robot starting at (0, 5) in the plane
+  - there is a circular hole of radius 3 centered at the origin
+  - crawler can take 1 step due north or one diagonal step south-east
+  - prove: the crawler never falls in the hole
+  - model steps as binary relation on "states" (points in the plane)
+  - a state s is reachable if there is some sequence of steps that starts from
+    (0, 5) and ends at s
+  - <draw nice pictures>
+  - inductive invariant vs reachable states vs bad states
 - mathematical transition systems
+  - incrementally formalize the crawler in set theory
+  - a transition system is a state space, a set of initial states,
+    and a binary transition relation on states
+  - an execution of a transition system is a nonempty sequence of states,
+    the first of which is initial, and each adjacent pair of which are
+    related by the transition relation.
+  - a reachable state is one that appears in some execution
+  - alternatively,
+  - an invariant of a transition system is a set of states that contains
+    all reachable states
+  - the way to prove something is an invariant is by induction on executions.
+  - an inductive invariant I is a set of states that:
+    - contains all initial states
+    - is closed under the transition relation;
+      ie, if s \in I and s -> s' then s' \in I
+  - the "safety verification problem for transition systems" is the problem of,
+    given a transition system and a "goal" invariant called the safety property,
+    find an inductive invariant that implies the safety property.
 - first-order symbolic transition systems "on paper"
+  - incrementally formalize the crawler in logic
+  - so far everything is in math/set theory
+  - can formalize transition systems in first-order logic as follows
+  - states will be first-order structures over some vocabulary \sigma
+  - initial states will be described by a FO-formula over \sigma
+  - transition relation is a FO-formula over the "double vocabulary"
+    consisting of two copies of \sigma, the second copy we call "primed"
+  - the safety property is also a (single vocabulary) formula
+  - the goal is to find a (single vocabulary) formula that is an inductive
+    invariant for the system
+  - inductiveness can be checked by checking validity of:
+    - Init => I       (note: single vocab)
+    - I /\ TR => I'   (note: double vocab)
+      where I' is I with all the vocabulary symbols replaced by the primed copy
+\end{verbatim}
+
+\section{The Crawler in \mypyvy}
+
+\begin{verbatim}
+- incrementally formalize the crawler in \mypyvy
+- make a joke about "mutable constant"
+\end{verbatim}
+
+\begin{verbatim}
+mutable constant x: int
+mutable constant y: int
+
+init x = 0 & y = 5
+
+transition north()
+  modifies y
+  new(y) = y + 1
+
+transition south_east()
+  modifies x, y
+  & new(x) = x + 1
+  & new(y) = y - 1
+
+safety x * x + y * y > 9
+
+invariant x + y >= 5
 \end{verbatim}
 
 \section{Expressing Transition Systems in \mypyvy}
@@ -15,6 +92,8 @@
 - immutable/mutable relation/constant/function
 - init
 - transition
+- modifies clauses
+- all the expressions, k-stateness
 - zero/one/twostate definitions
 - attributes
 - typechecking/inference

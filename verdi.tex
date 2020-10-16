@@ -1388,9 +1388,35 @@ replication transformers.
 \subsection{Sequence Numbering Transformer}
 
 \begin{figure}
-\begin{footnotesize}
-  \input{seqnum}
-\end{footnotesize}
+\begin{lstlisting}[language=caml,basicstyle=\scriptsize\tt,morekeywords={output,send,nop}]
+(* S describes a system in the reordering semantics *)
+SeqNum (S) :=
+  Name := S.Name
+
+  Inp := S.Inp
+  Out := S.Out
+  Msg := { seqnum: int; underlying_msg: S.Msg }
+
+  State (n: Name) := { seen: list (Name * int);
+                       next_seqnum: int;
+                       underlying_state: S.State n }
+
+  InitState (n: Name) := { seen := [];
+                           next_seqnum := 0;
+                           underlying_state := S.InitState n }
+
+  HandleInp (n: Name) (s: State n) (inp: Inp) :=
+    wrap_result (S.HandleInp (underlying_state s) inp)
+
+  HandleMsg (n: Name) (s: State n) (src: Name) (msg: Msg) :=
+    if not (contains s.seen (src, msg.seqnum)) then
+      s.seen := (src, msg.seqnum) :: s.seen;;
+      (* wrap_result adds sequence numbers to messages while
+         incrementing next_seqnum *)
+      wrap_result (S.HandleMsg n (underlying_state s)
+                               src (underlying_msg msg))
+
+\end{lstlisting}
 \caption{Pseudocode for the sequence numbering transformer.}
 \label{fig:seqnum}
 \end{figure}
@@ -1560,7 +1586,39 @@ application correctness and fault tolerance.
 
 \begin{figure}[t]
   \centering
-  \input{pbj}
+  \begin{lstlisting}[language=caml,basicstyle=\scriptsize\tt,morekeywords={output,send,nop}]
+PB (S) :=
+  Name := Primary | Backup
+
+  Msg := Replicate S.Inp | Ack
+  Inp := S.Inp
+  Out := { request: S.Inp; response: S.Out }
+  State (n: Name) = { queue: list S.Inp;
+                      underlying_state: S.State }
+
+  InitState (n: Name) = { queue := [];
+                          underlying_state := S.InitState n }
+
+  HandleInp (n: Name) (s: State n) (inp: Inp) :=
+    if n == Primary then
+      append_to_queue inp;;
+      if length s.queue == 1 then
+        (* if not already replicating a request *)
+        send (Backup, Replicate (head s.queue))
+
+  HandleMsg (n: Name) (s: State n) (src: Name) (msg: Msg) :=
+    match n, msg with
+      | Primary, Ack =>
+        out := apply_entry (head s.queue);;
+        output { request := head s.queue; response := out };;
+        pop s.queue;;
+        if s.queue != [] then
+          send (Backup, Replicate (head s.queue))
+      | Backup, Replicate i =>
+        apply_entry i;;
+        send (Primary, Ack)
+
+  \end{lstlisting}
 
   \caption{Pseudocode for the primary-backup transformer. The primary node
     accepts commands from external input and replicates them to the backup

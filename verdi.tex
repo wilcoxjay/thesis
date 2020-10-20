@@ -803,7 +803,7 @@ can produce:
   \iV  \forall\ n,\ \property{lastGrant}(\tau,\ n)
        \leftrightarrow \property{hasLock}(\Sigma,\ n) \BR
 %
-  \property{lastGrant}(\tau, n)\ \coloneq \NL
+  \property{lastGrant}(\tau,\ n)\ \coloneq \exists\ \tau_1\ \tau_2,\NL
   \iV  \tau = \tau_1 \appop
               \tevent{n}{\GrantIO} \consop
               \tau_2 \wedge
@@ -1059,7 +1059,7 @@ The single-node semantics, shown in \cref{fig:state-machine-semantics},
 models systems of a single node that respond to input by modifying their
 state and producing output.
 %
-The node's behavior is described by a handler $H$, which takes the current
+The node's behavior is described by a handler \fHinp, which takes the current
 local state and an input and returns the new state and a list of outputs.
 %
 The state of the world in this semantics is the node's state $\sigma$
@@ -1067,7 +1067,7 @@ paired with a trace $T$ that records the inputs sent to the system along
 with the outputs the system generates.
 %
 The only step, \textsc{Input}, delivers an arbitrary input $i$ to the
-handler $H$ and records the results in the next state.
+handler $\fHinp$ and records the results in the next state.
 %
 The squiggly arrow between two states indicates that a system in the
 state of the world on the left of the arrow may transition to the

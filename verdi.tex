@@ -1082,14 +1082,14 @@ output $o$.
   \begin{footnotesize} \begin{spacing}{1.5} \[
     \inferrule*[right=\textsc{Input}]{
       \fHinp(n,\ \Sigma[n],\ i) = (\sigma',\ o,\ P') \\
-      \Sigma' =\ \Sigma[n \mapsto \sigma']
+      \Sigma' = \Sigma[n \mapsto \sigma']
     }{
       (P,\ \Sigma,\ T) \fastep (P \uplus P',\ \Sigma',\ T \appop \traceelt{i,\ o})
     }
   \]\[
     \inferrule*[right=\textsc{Deliver}]{
-      \fHnet(dst,\ \Sigma[dst],\ src,\ m)\!=\!(\sigma',\ o,\ P') \\
-      \Sigma'\!=\!\Sigma[dst \mapsto \sigma']
+      \fHnet(dst,\ \Sigma[dst],\ src,\ m) = (\sigma',\ o,\ P') \\
+      \Sigma' = \Sigma[dst \mapsto \sigma']
     }{
       (\{(src,\ dst,\ m)\} \uplus P,\ \Sigma,\ T) \fastep (P \uplus P',\ \Sigma',\ T \appop \traceelt{o})
     }

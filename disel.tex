@@ -476,7 +476,7 @@ work.
 We implemented \disel on top of the Coq~\cite{Coq-manual} proof
 assistant, making use of Coq's dependent types and higher-order
 programming features. In the tradition of Hoare Type Theory (HTT)
-by~\citet{Nanevski-al:ICFP06,Nanevski-al:ICFP08,Nanevski-al:POPL10}
+by~\citet{Nanevski-al:ICFP06,nanevski:ynot,Nanevski-al:POPL10}
 and its recent versions for
 concurrency~\cite{LeyWild-Nanevski:POPL13,Nanevski-al:ESOP14}, we give
 the semantics to effectful primitives, such as $\tsend$/$\treceive$,
@@ -3215,7 +3215,7 @@ transitions of \code{TPC}, $\NHooked$ holds.
 Thanks to the parametrization of querying programs with abstract
 predicates and hypotheses from Fig.~\ref{fig:hook-ap}, we can compose
 them with any other instance of a consensus protocol, \eg,
-Paxos~\cite{Lamport:TOPLAS98} or Raft~\cite{Ongaro-Ousterhout:UATC14},
+Paxos~\cite{Lamport:TOPLAS98} or Raft~\cite{ongaro:raft},
 thus, reusing the proofs of their core invariants.
 
 % fig:hook-ap
@@ -3333,7 +3333,7 @@ person-days of work).
 %
 Given that the current version of \disel employs no advanced proof
 automation, beyond what is offered by Coq/Ssreflect, for discharging
-program-level verification conditions~\cite{Chlipala:PLDI11} or
+program-level verification conditions~\cite{chlipala:bedrock} or
 inductive invariant proofs~\cite{Padon-al:PLDI16}, we consider these
 results encouraging for future development.
 
@@ -3628,7 +3628,7 @@ the proofs are usually quite complex, as they involve reasoning about
 %
 In contrast with those systems, \disel's logic does not provide
 machinery to establish STS refinement, but rather explicitly
-identifies valid linearization points~\cite{Herlihy-Wing:TOPLAS90} in
+identifies valid linearization points~\cite{herlihy:linearizability} in
 the implementations, as they correspond precisely to taken protocol
 transitions.
 %
@@ -3657,7 +3657,7 @@ model~\cite{Elrad-Frances:SCP82}. This assumption enables efficient
 proof automation, but prohibits low-level optimizations, such as, \eg,
 batching.
 %
-Mace by~\citet{Killian-al:PLDI07} and DistAlgo
+Mace by~\citet{killian:mace} and DistAlgo
 by~\citet{Liu-al:OOPSLA12} adopt an asynchronous protocol model,
 similar to ours.
 %
@@ -3677,7 +3677,7 @@ Arguably, our Two-Phase Commit implementation is a relatively small
 case study when compared to the systems verified in IronFleet, Verdi,
 and EventML. Nevertheless, we are sure that, given enough time and
 manpower, we can conduct safety proofs of
-Raft~\cite{Ongaro-Ousterhout:UATC14} and
+Raft~\cite{ongaro:raft} and
 MultiPaxos~\cite{vanRenesse-Altinbuken:ACS15} in \disel, as their
 implementations and invariants are based on the same semantic
 primitives and reasoning principles that were employed for \code{TPC}.

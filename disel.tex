@@ -499,7 +499,7 @@ argument~\cite{Lynch-Vaandrager:IC95}.
 In comparison with the refinement-based techniques, the type-based
 verification method makes it easy to account for horizontal
 composition of protocols (necessary, \eg, for reasoning about remote
-procedure calls, as we will show in Section~\ref{sec:overview}) and
+procedure calls, as we will show in \cref{sec:overview}) and
 accommodate advanced programming features, such as higher-order
 functions.
 
@@ -527,7 +527,7 @@ used to store persistent data.
 
 \disel further alleviates the issue of disjoint state and also
 addresses challenge \textbf{(3)} with two novel logical mechanisms,
-described in detail in Section~\ref{sec:logic}.
+described in detail in \cref{sec:logic}.
 %
 The first one supports the possibility of \emph{elaborating protocol
   invariants} via an inference rule, \textsc{WithInv}, allowing one to
@@ -554,7 +554,7 @@ These additional preconditions \emph{do not} require re-verifying any
 core components.
 
 % Finally, we tackle challenge~\textbf{(3)} by providing a novel logical
-% rule \textsc{WithInv}, described in Section~\ref{sec:logic}, allowing
+% rule \textsc{WithInv}, described in \cref{sec:logic}, allowing
 % one to strengthen the \emph{assumptions} about a system's state,
 % resulting in the strengthened \emph{guarantees}, as long as these
 % assumptions form an \emph{inductive invariant} with respect to the
@@ -634,13 +634,13 @@ simple distributed calculator.
 communicating asynchronously by exchanging messages, which, as in real
 networks, can be reordered and dropped.
 
-\begin{wrapfigure}[12]{h}{0.5\textwidth}
-\vspace{-10pt}
+\begin{figure}
+\centering
 \includegraphics[width=0.5\textwidth]{Diagrams.pdf}
 \caption{A communication scenario between a server and two client
   nodes in a distributed calculator.}
 \label{fig:calco}
-\end{wrapfigure}
+\end{figure}
 %
 %\hspace{-6pt}
 %
@@ -653,7 +653,7 @@ $\dom{f}$.
 Given arguments $\args \in \dom{f}$, a client can send a request
 containing $\args$ to a server, which will reply with $f(\args)$.
 %
-Fig.~\ref{fig:calco} depicts an example execution for the
+\Cref{fig:calco} depicts an example execution for the
 calculator system with one server $S$ and two clients, $C_1$ and $C_2$.
 %
 Note that requests and responses may not be
@@ -693,7 +693,7 @@ terms of their protocols rather than their implementations.
 Following the tradition established by~\citet{Lamport:CN78}, \disel
 protocols are defined as \emph{state-transition systems}.
 
-Fig.~\ref{fig:ctrans} depicts the state-transition system for the
+\Cref{fig:ctrans} depicts the state-transition system for the
 calculator example with two send-transitions and two
 receive-transition.
 %
@@ -927,7 +927,7 @@ $\lab_i$ (\eg, $\cpr_{\lab_1}$,~$\cpr_{\lab_2}$).
 %% changes in the local state of a corresponding node $n$.
 %% %
 %% The calculator protocol has two send- and two receive-transitions,
-%% which are defined in Fig.~\ref{fig:ctrans} in terms of their pre-
+%% which are defined in \cref{fig:ctrans} in terms of their pre-
 %% and postconditions.
 %%
 %% The precondition of a send-transition constrains the local state of a
@@ -986,7 +986,7 @@ $\lab_i$ (\eg, $\cpr_{\lab_1}$,~$\cpr_{\lab_2}$).
 
 \subsection{From Protocols to Programs}
 
-The transitions in Fig.~\ref{fig:ctrans} define functions mapping a
+The transitions in \cref{fig:ctrans} define functions mapping a
 state, message, and node id to a new state.
 %
 We can use these functions as basic elements in building implementations of
@@ -1005,8 +1005,8 @@ The generic $\acts[\Trans_s, \lab]$ wrapper from this library takes a
 send-transition $\Trans_s$ of a protocol identified by a label $\lab$
 and yields a program that sends a message.
 %
-For instance, from the description in Fig.~\ref{fig:ctrans} and \disel's
-logic (discussed in Section~\ref{sec:logic}), we can assign the following
+For instance, from the description in \cref{fig:ctrans} and \disel's
+logic (discussed in \cref{sec:logic}), we can assign the following
 Hoare type (specification) to a ``wrapped'' transition $\trans{sresp}$ run
 by server $n$ in the context of the protocol $\cpr_\lab$:
 %
@@ -1051,7 +1051,7 @@ Stability often requires manual proving, but is indeed the case in the
 triple~\eqref{eq:sresp}, as its pres/posts constrain only \emph{local}
 state of the node $n$, which cannot be changed by other nodes. In
 general, Hoare triples in \disel can refer to state of other nodes as
-well, as we will demonstrate in Section~\ref{sec:tpc}.
+well, as we will demonstrate in \cref{sec:tpc}.
 
 Using a wrapper $\actr$ for tying a receive-transition to a
 \emph{non-blocking} receive command is slightly more subtle.
@@ -1110,7 +1110,7 @@ $\angled{\From, n, \Consumed, (\treq, \args)}$ in the \emph{message
 history of the network) of the post-state $s'$ \wrt the protocol
 $\cpr_\lab$.
 %
-Messages in \disel's model (described in detail in Section~\ref{sec:model})
+Messages in \disel's model (described in detail in \cref{sec:model})
 are never ``thrown away''; instead they are added to the soup, where
 they remain \emph{active} ($\Active$) until received, at which points they
 become \emph{consumed} ($\Consumed$).%
@@ -1123,7 +1123,7 @@ become \emph{consumed} ($\Consumed$).%
 
 We can now employ the program~\eqref{eq:rreq} to write a blocking
 receive for request messages via \disel's built-in general recursion
-combinator \textbf{letrec} (explained in Section~\ref{sec:logic}),
+combinator \textbf{letrec} (explained in \cref{sec:logic}),
 assigning this procedure the following specification:
 %
 %\vspace{-5pt}
@@ -1158,7 +1158,7 @@ its precondition. The pre/postconditions of $\blockr$ are derived from
 the type~\eqref{eq:rreq} by application of a typing (inference) rule
 for fixpoint combinator, with an assistance of a human prover and
 according to the inference rules of \disel, described in
-Section~\ref{sec:stat-mess-soups}.
+\cref{sec:stat-mess-soups}.
 %
 Internally, $\blockr$ corresponds to an execution of possibly several
 idle transitions, followed by one receive-transition.
@@ -1174,11 +1174,8 @@ receive~\eqref{eq:rreq}) that are proven to be protocol-compliant.
 \label{sec:elab-calc}
 
 %
-\begin{wrapfigure}[7]{h}{0.44\textwidth}
-\vspace{-10pt}
-\fbox{
-$
-{\footnotesize
+\begin{figure}
+\[
 \begin{array}{ll}
 \num{1} & \letrecz~\osserver~(\_ : \unitz) \triangleq \\
 \num{2} & \spa (\From, \args) \asgn \blockr~();  \\
@@ -1186,15 +1183,17 @@ $
 \num{4} & \spa \acts[\trans{sresp},\lab]((\tresp, v, \args), \From);\\
 \num{5} & \spa \osserver~()  \\
 \num{6} & \inz~\osserver~()
-\end{array}\!
-}
-$
-}
-\end{wrapfigure}
+\end{array}
+\]
+
+\caption{A simple server that responds to one request in each iteration of
+an infinite loop.}
+\label{fig:simple-server}
+\end{figure}
 %
 Let us now use $\blockr$ to implement our first useful component of
 the system: a simple server, which runs an infinite loop, responding
-to one request each iteration (on the right).
+to one request each iteration (see \cref{fig:simple-server}).
 %
 In trying to assign a type to this program in the context of $\cpr_\lab$
 for a node $n \in \servers$, we encounter a problem at line~3.
@@ -1364,7 +1363,7 @@ only composing the verified subroutines.
 
 \paragraph{Alternative servers.~}
 
-Fig.~\ref{fig:servers} presents two alternative looping server
+\Cref{fig:servers} presents two alternative looping server
 implementations.
 %
 The first one processes requests in batches of a predefined size
@@ -1395,28 +1394,25 @@ context of~$\cpr'_{\lab}$.
 
 % in the context of~$\cpr'_{\lab}$.
 
-\begin{wrapfigure}[5]{h}{0.4\textwidth}
-\vspace{-12pt}
-\fbox{
-$
-{\footnotesize
+\begin{figure}
+\[
 \begin{array}{ll}
 \num{1} & \letrecz~\cclient~(\args, \serv) \triangleq \\
 \num{2} & \spa \acts[\trans{sreq},\lab]((\treq, \args), \serv);  \\
 \num{3} & \spa v \asgn \blockresp~();  \\
 \num{4} & \spa \retz~v  \\
 \end{array}
-}
-$
-}
-\end{wrapfigure}
+\]
+\caption{A client in the calculator protocol that asks the server to compute its answer.}
+\label{fig:compute}
+\end{figure}
 %
 \paragraph{Implementing a calculator client.}
 %
 Let us now build and verify a simple client-side procedure that
 requests a computation and obtains the result.
 %
-It can be implemented as shown on the right.
+It can be implemented as shown in \cref{fig:compute}.
 %
 The program $\cclient$ sends a request to a server $\serv$ and then
 runs a blocking procedure $\blockresp$ for a message with the $\tresp$
@@ -1486,11 +1482,8 @@ Thus, we can prove the following spec for the RPC $\cclient$:
 \]
 %
 
-\begin{wrapfigure}[6]{h}{0.44\textwidth}
-\vspace{-10pt}
-\fbox{
-$
-{\footnotesize
+\begin{figure}
+\[
 \begin{array}{ll}
 \letrecz~\dserver~(n' : \mathsf{Node}) \triangleq \\
 \spa (\From, \args) \asgn \blockr_{\lab_1}~();  \\
@@ -1498,10 +1491,10 @@ $
 \spa \acts[\trans{sresp},\lab_1]((\tresp, \ans, \args), \From);  \\
 \spa \dserver~n'  \\
 \end{array}
-}
-$
-}
-\end{wrapfigure}
+\]
+\caption{Delegating calculator server that forwards all requests to an existing server.}
+\label{fig:deleg}
+\end{figure}
 %
 \paragraph{Server as a client.}
 
@@ -1525,7 +1518,7 @@ instead of calculating directly, \emph{delegates} to a server $n'$ in
 annotate the corresponding call to $\cclient$ to emphasize the
 protocol it ``belongs to''), in which $n$ is a client.
 %
-%The \disel implementation of such a server is on the right.
+The \disel implementation of such a server is shown in \cref{fig:deleg}.
 %
 The code of $\dserver$ is almost identical to the code of $\osserver$
 and it has the following type in the context of two independent
@@ -1594,7 +1587,7 @@ thus $n \ppts{\lab_2} \emptyset$.
 \paragraph{Summary of the \disel methodology.}
 
 Our entire development of the calculator-aware applications (\eg,
-servers and clients) is outlined in Fig.~\ref{fig:compos}.
+servers and clients) is outlined in \cref{fig:compos}.
 %
 This is a general layout of structuring the development of
 applications in \disel.
@@ -1615,7 +1608,7 @@ assigned) and provide an initial distributed configuration that
 instantiates the local state for each participant in each protocol and
 satisfies all imposed state-space invariants (\eg,~\eqref{eq:inv1}
 and~\eqref{eq:inv2}). The semantics of Hoare types in \disel, defined
-in Section~\ref{sec:soundness}, specifies what does it mean for a
+in \cref{sec:soundness}, specifies what does it mean for a
 program to be type-safe (\ie, \emph{correct}) in a distributed
 setting: postconditions (even those constraining the global state) of
 well-typed programs are not affected by execution of programs running
@@ -1623,7 +1616,7 @@ concurrently on other nodes, and such programs are always \emph{safe}
 to run when their precondition is stable and satisfied.
 
 As an illustration of one possible finalized protocol/program
-composition, Fig.~\ref{fig:exec} depicts the three calculator-based
+composition, \cref{fig:exec} depicts the three calculator-based
 programs, described earlier, running concurrently by three different
 nodes, $n_1$, $n_2$, and $n_3$, such that $n_1$ and $n_2$ communicate
 according to the protocol $\cpr''_{\lab_1}$, and $n_2$ and $n_3$
@@ -1716,7 +1709,7 @@ l \in \LocalState & \eqdef & \Loc \pmap \Val \\
 
 \paragraph{Distributed state and its components.}
 
-The left part of Fig.~\ref{fig:sspace} defines the components of the
+The left part of \cref{fig:sspace} defines the components of the
 state, subject to manipulation by concurrently executing programs run
 by different nodes. Each global system state $s$ is a finite partial
 mapping from protocol labels $\lab \in \Lab$ to \emph{statelets}. Each
@@ -1734,7 +1727,7 @@ yet~($\Active$).
 The per-node local state maps each node id into protocol-specific
 piece of local state, represented as a mapping from locations
 (isomorphic to natural numbers) to specific values. For instance, in
-the calculator system example from Section~\ref{sec:overview}, all
+the calculator system example from \cref{sec:overview}, all
 local states had the same type and each carried just one value,
 updated in the course of execution,---a multiset of outstanding
 requests---so we omitted the only location from assertions in the
@@ -1744,7 +1737,7 @@ program specs.
 \paragraph{Protocols, hooks and worlds.}
 \label{sec:protocols-worlds}
 
-The right part of Fig.~\ref{fig:sspace} shows the components of \disel
+The right part of \cref{fig:sspace} shows the components of \disel
 protocols and worlds. A protocol $\ppr$ consists of a state-space
 coherence predicate $\coh$, which defines the shape of the
 corresponding statelet (\ie, components of the per-node local state
@@ -1773,14 +1766,14 @@ or receive-one.
 A \emph{world} $W$ is represented by a pair $\angled{C, H}$, with its
 first component $C$ being a collection of protocols that are assigned
 unique labels. For instance, $\dserver$ from
-Section~\ref{sec:overview} was specified in the context of a world
+\cref{sec:overview} was specified in the context of a world
 with two protocols with disjoint state-spaces, $\cpr''_{\lab_1}$ and
 $\cpr''_{\lab_2}$.
 %
 The second component of a world~$H$ contains client-provided
 \emph{send-hooks}, used to impose application-specific restrictions on
 interacting protocols, as we will demonstrate in
-Section~\ref{sec:tpc}.
+\cref{sec:tpc}.
 %
 Each hook $h(l_s, l_c, m, \tto)$ is a predicate,
 relating a local state of a node $l_s$, which belongs to a core (or
@@ -1795,9 +1788,9 @@ hook's predicate holds \wrt $n$'s local state in both server and
 client protocols; in other words hooks allow \emph{strengthening}
 $\Trans_s$'s precondition.  Hooks are discussed in more detail below.
 %
-All examples we have seen so far in Section~\ref{sec:overview} were
+All examples we have seen so far in \cref{sec:overview} were
 defined with $H = \emptyset$ (\ie, without any imposed inter-protocol
-restrictions), but in Section~\ref{sec:tpc} we will show how the
+restrictions), but in \cref{sec:tpc} we will show how the
 mechanism of send-hooks enables modular verification of programs
 operating in a restricted product of protocols, allowing one to build
 verified distributed client applications on top of verified core
@@ -1892,9 +1885,9 @@ $c_2$), a conditional statement, and an application $F(e)$.
 
 \paragraph{Program specifications.~}
 
-Fig.~\ref{fig:dsem} provides the semantics of the assertions with
+\Cref{fig:dsem} provides the semantics of the assertions with
 respect to a distributed system state that we have used in the
-examples in Section~\ref{sec:overview}, referring to particular
+examples in \cref{sec:overview}, referring to particular
 component of the state constrained by pre- and postconditions of the
 corresponding Hoare specs.
 %
@@ -1947,7 +1940,7 @@ closed under observable changes performed by all other nodes, involved
 into execution of the protocol, and, thus, captured by its definition.
 %
 % We define stability in the context of distributed systems
-% Section~\ref{sec:soundness}.
+% \cref{sec:soundness}.
 
 \paragraph{Logic judgements and inference rules.~}
 
@@ -2171,7 +2164,7 @@ $
 \label{fig:semass}
 \end{figure}
 
-The top part of Fig.~\ref{fig:semass} shows selected inference rules
+The top part of \cref{fig:semass} shows selected inference rules
 of \disel.
 %
 In order to account for typed free program variables and functional
@@ -2200,7 +2193,7 @@ be \emph{stable} with respect to interference imposed by the protocols
 in the world $W$. The net effect of sending or receiving a message
 atomically is captured by the two auxiliary assertion tuples
 $\SendEffect$ and $\ReceiveEffect$, defined at the bottom of
-Fig.~\ref{fig:semass}, which relate the states $s$ and $s'$ (captured
+\cref{fig:semass}, which relate the states $s$ and $s'$ (captured
 via free logical variables) immediately before and after sending and
 receiving a message correspondingly.
 
@@ -2228,7 +2221,7 @@ transition has changed the local state of $n$ accordingly, and also
 conjunction with the protocol invariants, relating local state and
 message soup properties, this allows one to infer global assertions
 about the state of the network, as we have shown in
-Section~\ref{sec:elab-calc}.
+\cref{sec:elab-calc}.
 
 The premises of these rules rely on the following definition of
 \emph{Hoare ordering}~$\hord$, allowing one to strengthen the
@@ -2279,7 +2272,7 @@ component~$H$. Specifically, it allows any additions $\angled{C, H}$
 as long as hooks in $H$ cannot invalidate preconditions of
 send-transitions of $W$'s protocols. This check, captured by the
 $\NHooked$ auxiliary predicate defined at the bottom of
-Fig.~\ref{fig:semass}, can be done \emph{syntactically} on the domains
+\cref{fig:semass}, can be done \emph{syntactically} on the domains
 of $W$ and $H$, just by checking the ``intersection'' of their
 ``footprints'', very much in the spirit of ordinary Separation
 Logic.\footnote{This definition of $\NHooked$ is a syntactic
@@ -2292,7 +2285,7 @@ Logic.\footnote{This definition of $\NHooked$ is a syntactic
 Furthermore, if $H = \emptyset$, the rule~\textsc{Frame}
 becomes symmetric and can be used to combine any two worlds that do
 not have mutual inter-protocol restrictions, which is what we did in
-Section~\ref{sec:more-impl-free} when implementing a delegating
+\cref{sec:more-impl-free} when implementing a delegating
 server.
 %
 Typically, the world $W$ contains a number of core protocols (\eg, for
@@ -2303,7 +2296,7 @@ with client-specific protocols and restrictions imposed by the state
 pointwise disjoint union of labeled protocols and hooks, so the rule
 only applies when the result of $\join$ is defined.
 %
-In Section~\ref{sec:tpc}, we will demonstrate how to make such efforts
+In \cref{sec:tpc}, we will demonstrate how to make such efforts
 reusable by exploiting Coq's higher-order definitions and abstract
 predicates.
 
@@ -2314,7 +2307,7 @@ $\ppr_\lab$-inductive, \ie, it, as an assertion, over the global
 network state, is preserved while any node invokes any allowed send-
 or receive-transitions of~$\ppr_\lab$.\footnote{The formal definition
   of inductive invariants is with respect to the protocol-aware
-  network semantics, defined in Section~\ref{sec:soundness}, and is
+  network semantics, defined in \cref{sec:soundness}, and is
   available in the accompanying Coq development.}
 %
 Internally, the \emph{protocol combinator} $\withinv(\ppr_\lab)$
@@ -2346,7 +2339,7 @@ The semantics of programs and the soundness result in \disel are
 closely tied to the notion of \emph{protocol-aware network semantics}.
 %
 This is a non-deterministic small-step operational semantics, and its
-two transition rules are shown in Fig.~\ref{fig:nsem} (ignore the
+two transition rules are shown in \cref{fig:nsem} (ignore the
 gray boxes for now).
 %
 All free variables in the rules other than $s$, $n$ and $W$ are
@@ -2370,7 +2363,7 @@ executes it, updating~$s$'s local state and soup correspondingly.
 One can notice the similarity between the network semantic rules
 \Rule{SendStep} and \Rule{ReceiveStep} and the inference rules
 \Rule{SendWrap} and \Rule{ReceiveWrap} from
-Fig.~\ref{fig:semass}. This should not come as a surprise: indeed, the
+\cref{fig:semass}. This should not come as a surprise: indeed, the
 two mentioned inference rules provide a way to symbolically account
 for corresponding local executions of send- receive-transtions by a
 specific node, consistend with the network semantics.
@@ -2560,7 +2553,7 @@ procedure is defined as the least fixed point of the corresponding
 functional by the Knaster-Tarski theorem. That is, \disel programs are
 not directly executable within Coq, but are rather extracted into the
 corresponding OCaml definitions, as we will outline in
-Section~\ref{sec:eval-impl}.
+\cref{sec:eval-impl}.
 
 
 % \subsection{Semantics of Hoare Types}
@@ -2635,7 +2628,7 @@ postcondition.
 Our implementation comes with a number of lemmas, allowing one to
 reduce a derivation of a Hoare type for a composite program $c$ to
 those of its components, corresponding precisely to inference rules
-(\cf~Fig.~\ref{fig:semass}) in program logics.
+(\cf~\cref{fig:semass}) in program logics.
 %
 The proofs of those lemmas with respect to the denotational semantics
 $\denot{\cdot}$ of specific programming constructs deliver the
@@ -2669,7 +2662,7 @@ establish stability of their preconditions, which should hold over the
 initial state, used to initialize the network.
 %
 For instance, this is the case for the Hoare specifications of the
-calculator servers from Section~\ref{sec:more-impl-free}, whose
+calculator servers from \cref{sec:more-impl-free}, whose
 preconditions mention only the node-local state and are, thus, stable.
 
 \section{Case Study: Two-Phase Commit and Its Client Application}
@@ -2736,7 +2729,7 @@ The protocol proceeds in a series of rounds, each of which makes a
 single decision.
 %
 Each round consists of two phases; an example round execution is
-shown in Fig.~\ref{fig:tpc-execution}.
+shown in \cref{fig:tpc-execution}.
 %
 In phase one, the coordinator begins processing a new transaction by sending
 $\tprep$ messages to all participants.
@@ -2786,7 +2779,7 @@ a node participating only in other protocols) may have an arbitrary
 local state with respect to \code{TPC}.
 
 The coordinator's status can be in any of the seven states shown in
-shown in Fig.~\ref{fig:tpc-state}(a).
+shown in \cref{fig:tpc-state}(a).
 %
 Between rounds, the coordinator waits in the $\cinit$ state.
 %
@@ -2852,7 +2845,7 @@ Definition c_recv_step (r : round) (cs : CState)
 \end{figure}
 }
 
-Fig.~\ref{fig:coordinator-trans} shows how to encode a few of the
+\Cref{fig:coordinator-trans} shows how to encode a few of the
 coordinator's transitions.
 %
 Recall that \disel transitions are computable functions that describe
@@ -2876,7 +2869,7 @@ implement the coordinator and participant and assign them useful
 Hoare-style specifications.
 %
 An implementation of a single round of the coordinator and its Hoare
-type are shown in Fig.~\ref{fig:tpc-ccode}.
+type are shown in \cref{fig:tpc-ccode}.
 %
 The function \code{coordinator_round} takes as an argument the
 transaction data to be processed in this round.
@@ -2893,7 +2886,7 @@ similarly to using the connective $\This{\mathsf{s}}$.
 
 The precondition, which makes use of the \emph{local state getter}
 \code{loc cn s = ...}, equivalent to the connective
-$\mathsf{cn} \ppts{\mathtt{TPC}} \ldots$ from Fig.~\ref{fig:dsem},
+$\mathsf{cn} \ppts{\mathtt{TPC}} \ldots$ from \cref{fig:dsem},
 requires that the coordinator is in the $\cinit$ state, with an
 arbitrary round number and log.
 %
@@ -2911,7 +2904,7 @@ participants.
 \subsection{Protocol Consistency and Inductive Invariant}
 \label{sec:cons-induct-invar}
 
-The spec given to \code{coordinator_round} in Fig.~\ref{fig:tpc-ccode}
+The spec given to \code{coordinator_round} in \cref{fig:tpc-ccode}
 only constrains the local state \code{loc} of the coordinator, but
 in fact the protocol maintains stronger global invariants.
 %
@@ -3027,7 +3020,7 @@ round \code{r} and have logs equal to its own.
 
 We can freely use the elaborated invariant in proofs of programs.
 %
-Fig.~\ref{fig:tpc-with-inv} shows a coordinator program that executes
+\Cref{fig:tpc-with-inv} shows a coordinator program that executes
 a series of rounds based on a given list \code{data_seq} of data
 elements.
 %
@@ -3069,7 +3062,7 @@ building a replicated log of data elements, and a \emph{side-channel
 \code{TPC} participants (\eg, for the purpose of implementing recovery
 after a coordinator's failure).
 %
-Fig.~\ref{fig:cn-query} shows a program that first calls the
+\Cref{fig:cn-query} shows a program that first calls the
 coordinator program \code{run_coordinator}, and then uses the side
 protocol to query the local state of a participant \code{pt}, which
 the program then returns as its final result \code{res}.  Ignoring the
@@ -3081,7 +3074,7 @@ the postcondition asserts that \code{res} is \emph{equal to} the pair
 Establishing such validity of the query \wrt \code{TPC}-related state
 is, however, not trivial at all, given how the querying protocol is
 defined. The protocol \code{Query} is very similar to the calculator
-from Section~\ref{sec:overview}: any node $n_1$ in it can send a
+from \cref{sec:overview}: any node $n_1$ in it can send a
 request to any other node $n_2$, to which $n_2$ may respond with
 \emph{any} arbitrary message (the details of the formal protocol
 definition can be found in our Coq code). This protocol definition is
@@ -3150,14 +3143,14 @@ Hypothesis core_state_step : forall data s s' n1 n2,
 Thus, without imposing the additional restriction that the protocol
 \code{Query} \emph{can only transmit the local state of a node} \wrt
 \code{TPC}, we will not be able to prove the spec in
-Fig.~\ref{fig:cn-query}.
+\cref{fig:cn-query}.
 %
 %This is where the mechanism of \disel's send-hooks comes to rescue.
 %
 The necessary restriction is provided by a send-hook entry
 \code{QHook} that is used when composing the protocols \code{TPC} and
 \code{Query} in the spec of \code{run_and_query}, and is defined in
-Fig.~\ref{fig:hook-ap}.
+\cref{fig:hook-ap}.
 
 In order to make the client verification effort reusable in the
 context of \emph{any} consensus protocol, not just \code{TPC}, we
@@ -3188,14 +3181,14 @@ protocol~\code{pc}---precisely what is ensured by the lemma
 \code{cn_log_agreement} of~\code{TPC}.
 
 Finally, we can use the abstract predicates from
-Fig.~\ref{fig:hook-ap} to provide specifications for querying
-procedures from Fig.~\ref{fig:cn-query}, stating \code{query_init} in
+\cref{fig:hook-ap} to provide specifications for querying
+procedures from \cref{fig:cn-query}, stating \code{query_init} in
 terms of assertions involving \code{local_indicator} and
 \code{query_state}, in the context \emph{parameterized} over a
 ``core'' consensus protocol \code{pc} and restricted with
 \code{QHook}.
 %
-To verify the program in Fig.~\ref{fig:cn-query} against the desired
+To verify the program in \cref{fig:cn-query} against the desired
 spec we only need to instantiate the predicates as follows and prove
 the corresponding hypotheses for \code{TPC}, which follow from the
 invariant \code{TPCInv} and Lemma~\code{cn_log_agreement}:
@@ -3213,7 +3206,7 @@ $H = \text{\code{QHook}}$. Since \code{QHook} does not restrict the
 transitions of \code{TPC}, $\NHooked$ holds.
 %
 Thanks to the parametrization of querying programs with abstract
-predicates and hypotheses from Fig.~\ref{fig:hook-ap}, we can compose
+predicates and hypotheses from \cref{fig:hook-ap}, we can compose
 them with any other instance of a consensus protocol, \eg,
 Paxos~\cite{Lamport:TOPLAS98} or Raft~\cite{ongaro:raft},
 thus, reusing the proofs of their core invariants.
@@ -3390,7 +3383,7 @@ is feasible and requires a very small trusted codebase.
 \paragraph{Adequacy of the extraction.~}
 
 What is the correspondence between our denotational semantics,
-presented in Section~\ref{sec:soundness} and the operational one
+presented in \cref{sec:soundness} and the operational one
 implemented by our shim?
 %
 % Understanding this relation important in order to gain confidence in
@@ -3414,7 +3407,7 @@ following reasons:
     Wilcox-al:PLDI15,Hawblitzel-al:SOSP15,Padon-al:PLDI16}.
 
 \item The shim implementation follows the operational rules from
-  Fig.~\ref{fig:nsem} verbatim, and protocol transitions are encoded
+  \cref{fig:nsem} verbatim, and protocol transitions are encoded
   in \disel as \emph{functions} on the local state, so they are easy
   to extract and execute. The shim, thus, provides an accurate
   implementation of the protocol-aware network semantics.
@@ -3441,7 +3434,7 @@ At the moment any mutable state in \disel should be manifested
 \emph{in a protocol definition} (and, thus, \emph{known} to all its
 users) and can be only altered by sending/receiving. This is why in
 the examples, such as the memoizing calculator from
-Section~\ref{sec:more-impl-free}, we model hidden state by passing a
+\cref{sec:more-impl-free}, we model hidden state by passing a
 functional argument. However, what the framework \emph{does allow} one
 to do is to encode an auxiliary protocol implementing a mutable
 storage, which, once joined (via~$\uplus$) with its client protocol
@@ -3496,7 +3489,7 @@ very specific foresight of how they are going to be composed with
 other protocols, defining \emph{intrinsic} ``ownership communication
 channels'' for \emph{all} involved components, thus, effectively
 prohibiting unforeseen interaction scenarios. This is not the case in
-\disel: as we have shown in Section~\ref{sec:tpc}, ``core'' and
+\disel: as we have shown in \cref{sec:tpc}, ``core'' and
 ``client'' protocols (\eg, \code{TPC} and \code{Query}) can be
 developed and verified independently and then composed in joint
 applications via \emph{extrinsic} client-specified send-hooks.
@@ -3510,7 +3503,7 @@ much for verifying distributed applications, as the resulting proof
 obligations are the same as when proving inductive invariants.  Having
 an \emph{explicit} notion of protocols in the logic, though, allowed
 us to provide the novel protocol-tailored rules \textsc{WithInv} and
-\textsc{Frame} (\cf Fig.~\ref{fig:semass}), which enabled modular
+\textsc{Frame} (\cf \cref{fig:semass}), which enabled modular
 invariant proofs and distributed systems composition.
 
 A related logic by~\citet{Villard-al:APLAS09} only considers protocols
@@ -3526,7 +3519,7 @@ simply \emph{tags}, indicating ownership transfer of a certain heap
 portion in the \emph{same} shared memory space. It is not immediately
 obvious how to use Villard~\etal's specifications for \emph{locally}
 asserting \emph{global} properties of stateful distributed systems
-(e.g., the agreement of \code{TPC} in Fig.~\ref{fig:tpc-with-inv})
+(e.g., the agreement of \code{TPC} in \cref{fig:tpc-with-inv})
 without considering all involved processes.
 %
 In addition to that, Villard~\etal's logic does not provide a
@@ -3635,7 +3628,7 @@ transitions.
 Abstract specifications and the corresponding system properties, usable
 by client code, such as consensus, are encoded in \disel via
 parametrized Hoare types and abstract predicates, as shown in
-Section~\ref{sec:composing-two-phase}.
+\cref{sec:composing-two-phase}.
 
 Verdi~\cite{Wilcox-al:PLDI15, Woos-al:CPP16} provides a form of
 \emph{vertical compositionality} by means of verified system

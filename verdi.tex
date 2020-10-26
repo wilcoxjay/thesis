@@ -211,16 +211,6 @@ Elastic Compute Cloud (EC2) caused a major outage and brought down several
 web sites, including \mbox{Foursquare}, \mbox{Reddit}, \mbox{Quora},
 and \mbox{PBS}~\cite{amazon:apr11-outage,lohr:amazon-apr11,highscalability}.
 
-%
-% Achieving this goal will require a diverse array of tools and techniques.
-%
-
-%   implementing a distributed system and proving that the
-% implementation satisfies its specification.
-% \todo{I'm not satisfied with this description of the challenge;
-%   it's too broad.
-%   (Before, the challenge was ``a framework'', which was worse.)}
-
 Our overarching goal is to ease the burden for programmers to
 implement correct, high-performance, fault-tolerant distributed systems.
 %
@@ -283,15 +273,6 @@ fault-tolerance mechanisms, and to allow these proofs to be easily composed.
   executable.  Programmers deploy the executable over a network for
   execution.}
 
-%% FOR POSTERITY : DO NOT REMOVE
-%% (from mernst)
-%%   (If you don't want to use 3 different colors, you could add a different
-%%   shade of gray.  There must be 50 of them to choose from.  At least that's
-%%   what a friend told me.)
-
-%% Mike hinted at this in the intro.
-% \todo{Somewhere in the paper, mention that the only VSTs we have built so
-%   far are for distributed systems??}
 \label{fig:verdi-components}
 \end{figure*}
 
@@ -480,55 +461,48 @@ Msg := LockMsg | UnlockMsg | GrantMsg
 (* 3 - state *)
 State (n: Name) :=
   match n with
-    | Server => list Name (* head = agent holding lock      *)
-                          (* tail = agents waiting for lock *)
-    | Agent n => bool     (* true iff this agent holds lock *)
+  | Server => list Name (* head = agent holding lock      *)
+                        (* tail = agents waiting for lock *)
+  | Agent n => bool     (* true iff this agent holds lock *)
 
 InitState (n: Name) : State n :=
   match n with
-    | Server => []
-    | Agent n => false
+  | Server => []
+  | Agent n => false
 
-(* 4 - handler for external input *)
+(* 4 - handlers for external input and internal messages *)
 HandleInp (n: Name) (s: State n) (inp: Inp) :=
   match n with
-    | Server => nop   (* server performs no external IO *)
-    | Agent n =>
-      match inp with
-        | Lock =>
-          (* if client requests lock, forward to Server *)
-          send (Server, LockMsg)
-        | Unlock =>
-          (* if client requests unlock and lock held... *)
-          if s == true then (
-            (* update state and tell Server lock freed *)
-            s := false;;
-            send (Server, UnlockMsg))
+  | Server => nop   (* server performs no external IO *)
+  | Agent n =>
+    match inp with
+    | Lock => (* if client requests lock, forward to Server *)
+      send (Server, LockMsg)
+    | Unlock => (* if client requests unlock and lock held... *)
+      if s == true then (
+        (* update state and tell Server lock freed *)
+        s := false;;
+        send (Server, UnlockMsg))
 
-(* 4 - handler for network messages *)
 HandleMsg (n: Name) (s: State n) (src: Name) (msg: Msg) :=
   match n with
-    | Server =>
-      match msg with
-        | LockMsg =>
-          (* if lock not held, immediately grant *)
-          if s == [] then send (src, GrantMsg);;
-          (* add requestor to end of queue *)
-          s := s ++ [src]
-        | UnlockMsg =>
-          (* head of queue no longer holds lock *)
-          s := tail s;;
-          (* grant lock to next waiting agent, if any *)
-          if s != [] then send (head s, GrantMsg)
-        | _ => nop (* never happens *)
-    | Agent n =>
-      match msg with
-        | GrantMsg =>
-          (* we have the lock *)
-          (* update state and notify external listeners *)
-          s := true;;
-          output Grant
-        | _ => nop         (* never happens *)
+  | Server =>
+    match msg with
+    | LockMsg => (* if lock not held, immediately grant *)
+      if s == [] then send (src, GrantMsg);;
+      s := s ++ [src] (* add requestor to end of queue *)
+    | UnlockMsg => (* head of queue no longer holds lock *)
+      s := tail s;;
+      (* grant lock to next waiting agent, if any *)
+      if s != [] then send (head s, GrantMsg)
+    | _ => nop (* never happens *)
+  | Agent n =>
+    match msg with
+    | GrantMsg => (* we have the lock *)
+      (* update state and notify external listeners *)
+      s := true;;
+      output Grant
+    | _ => nop         (* never happens *)
 \end{lstlisting}
 
 \caption{A simple lock service application implemented in \Verdi, under the
@@ -1342,6 +1316,18 @@ confidence in the end-to-end guarantees \Verdi provides.
 \section{Verified System Transformers}
 \label{sec:verdi:libraries}
 
+\begin{figure}
+  \centering
+  \input{vst}
+  \caption{A verified system transformer takes a system ($S_A$) written
+    against some network semantics and returns a new system ($S_B$) in
+    another semantics. Its correctness property states that for any
+    property $\Phi$ of the original system, a lifted version of that
+    property holds on the transformed system.}
+  \label{fig:vst}
+\end{figure}
+\todo{Incorporate \cref{fig:vst}.}
+
 \Verdi's spectrum of network semantics enable the programmer to reason
 about their system running in the fault model corresponding to their
 environment. However, directly verifying a system in a realistic fault
@@ -1703,15 +1689,352 @@ We also verified the (much more difficult) state machine safety property
 for Raft~\cite{Woos-al:CPP16}.
 We discuss these results further in~\cref{ssec:verdi:raft-proof}.
 
+\subsection{Raft Background}\label{ssec:verdi:raft-background}
+
+Raft is a \textit{state machine replication protocol}.
+The state machine is a deterministic program that specifies
+the desired behavior of the cluster as a whole.
+The state machine processes a sequence of \emph{commands},
+which are given by the clients of the cluster.
+External clients interact with
+the system as if it were a single node running
+a single copy of the state machine.
+
+Each node in a Raft cluster simulates a copy of the state machine,
+and the goal of the protocol is to maintain consistency across the copies.
+Replication allows the system to continue
+serving clients whenever a majority of machines are available.
+%because the remaining machines can continue.
+However, maintaining consistency among replicas
+is difficult in the presence of asynchrony,
+network failures (packet drops, duplications, and reordering)
+and node failures (crashes and reboots).
+In particular, the combination of asynchrony and failure means that
+the nodes in the system are never guaranteed
+to be in global agreement~\cite{flp}.
+
+Since Raft requires that the
+state machine it replicates is deterministic,
+the replicas will be consistent
+as long as the same client commands
+are executed on each replica's copy in the same order.
+Raft's main internal correctness invariant,
+called state machine safety,
+captures this property.
+\begin{proposition}[State Machine Safety]\label{prop:sms}
+  Each replicated copy of the state machine executes the same commands in the same order.
+\end{proposition}
+
+The list of commands to execute on the state machine
+is kept in the \emph{log},
+and the position of a command in the log is called its \emph{index}.
+Each node has its own copy of the log,
+and state machine safety reduces to maintaining agreement between
+all copies of the log.
+
+\begin{figure}
+  \centering
+  \input{raft-time}
+  \caption[Terms in Raft]{Two terms of the Raft protocol, each consisting of a leader election phase (orange)
+    followed by a log replication phase (blue).
+    Node 3 is the leader of the first term, and node 1 is the leader of the
+    second term.
+  Messages are RequestVote (RV),
+Vote (V), AppendEntries (AE), or Acknowledgment (Ack).
+\tikz[thick]{ \draw[-{Rays[red]}] (0,0) -- (0.1,0); }
+represents a dropped message and
+\tikz[thick]{ \draw[red] ($(0, 0)$) circle[radius=.6mm]; }
+represents a crashed node.
+}
+  \label{fig:raft-overview}
+\end{figure}
+
+\cref{fig:raft-overview} shows an example execution of the Raft
+protocol.\footnote{\url{https://raft.github.io/} has a visualization of Raft in operation.}
+Time is logically divided into \emph{terms},
+and each term consists of a leader election phase
+followed by a log replication phase.
+During leader election, the cluster chooses a \emph{leader},
+who coordinates the cluster and handles all communication with clients
+during the following log replication phase.
+Nodes are either leaders, \emph{candidates}, or \emph{followers}.
+Candidates are in the process of trying to become leader.
+Followers passively obey the leader of the current term and respond to
+\texttt{RequestVote} messages from candidates.
+
+\paragraph*{Leader Election}
+If the leader node crashes or is isolated by a network
+partition (\eg, node 3 at \cref{event:crash} in \cref{fig:raft-overview}),
+the Raft system elects a new leader.
+When a node times out waiting to hear from a leader
+(as node 1 does at \cref{event:timeout} in \cref{fig:raft-overview}),
+it becomes a candidate.\footnote{Timeouts are randomized and configured so that candidates rarely compete for leadership. See Ongaro's thesis for more detail on the leader election process~\cite{ongaro:phd}.}
+A candidate tries to get itself elected as the new leader
+by sending messages requesting votes from all other nodes.
+Once a candidate receives votes from a majority of nodes in the system,
+it becomes the leader.
+If no candidate successfully wins the election,
+a new election will take place following a timeout.
+Requiring a majority ensures that there is only one leader elected per term.
+\begin{proposition}[Election Safety]
+  There is at most one leader per term.
+\end{proposition}
+
+\paragraph*{Log Replication}
+During normal operation,
+  the cluster is in the log replication phase.
+In log replication,
+  when a client sends an input to
+  the leader\footnote{Raft implementations have various mechanisms
+    for clients to locate the leader. In our implementation, clients
+    can send their operations to every node in the cluster until the
+    leader is found.}
+  (\eg, at \cref{event:request} in \cref{fig:raft-overview}),
+  the leader first appends a new \emph{log entry}
+  containing that command to its local log.
+Then the leader sends an \emph{AppendEntries} message
+  containing the entry to the other nodes in the Raft system.
+Each other node appends the entries to its log
+  (\eg, at \cref{event:request-received} in \cref{fig:raft-overview}),
+  and responds to the leader with an acknowledgment.
+To ensure that follower logs stay consistent
+  with the log at the leader,
+  AppendEntries messages include the index and term
+  of the \textit{previous} entry in the leader's log;
+  the follower checks that
+  it too has an entry at that index and term
+  before appending the new entries to its log.
+This consistency check guarantees the following property:
+\begin{proposition}[Log Matching]
+  If two logs contain entries at a particular index and term,
+  then the logs are identical up to and including that index.
+\end{proposition}
+
+
+Once the leader learns that a majority of nodes (including itself)
+have received the new entry
+(\eg, at \cref{event:commit} in \cref{fig:raft-overview}),
+the leader marks the entry as \emph{committed}.\footnote{Committing
+  old entries (those from leaders who failed before completely
+  replicating them) is more complex; see the Raft
+  paper~\cite{ongaro:raft} for details.}
+Note that the leader need not receive acknowledgments
+from all nodes before proceeding
+(\eg, an acknowledgment is dropped at \cref{event:drop} in \cref{fig:raft-overview},
+but nodes 2 and 3 constitute a majority).
+The leader then executes the command contained in the committed entry on the state machine and
+responds to the client with the output of the command.
+The followers are also informed that they can safely execute
+the command on their state machines.
+
+Once an entry is committed, it becomes \emph{durable},
+in the sense that its effect will never be forgotten by the cluster.
+To ensure that leader elections do not violate this property,
+a new leader must have heard of
+all committed entries created by the previous leader.
+Therefore, Raft specifies that a node only votes for candidates whose
+log is at least as advanced as the voter's.
+Because a newly elected leader was voted in by a majority,
+it has a log that is at least as advanced
+as a majority of the cluster.
+Since any committed entry is present on a majority,
+every committed entry is present on at least one node that voted for the candidate.
+The successful candidate's log thus contains every committed entry.
+\begin{proposition}[Leader Completeness]\label{prop:leader-completeness}
+  A successfully elected candidate's log contains every committed entry.
+\end{proposition}
+
+\paragraph*{Client-facing correctness}
+Clients expect to interact with Raft nodes
+as if the nodes were collectively a single state machine.
+More formally, clients see a
+\textit{linearizable} view of the replicated state~\cite{herlihy:linearizability},
+\ie, if any node responds to a client command $c$,
+all subsequently requested commands will execute on a state machine
+that reflects the execution of $c$.
+\cref{ssec:verdi:raft-proof} gives a precise definition of linearizability.
+\begin{proposition}
+  Raft implements a linearizable state machine.
+\end{proposition}
+
+Raft also provides a liveness guarantee:
+if there are sufficiently few failures,
+then the system will eventually process and respond to
+all client commands.
+To date, we have only verified Raft's safety properties,
+leaving liveness for future work.
+
 \subsection{Raft Implementation}\label{ssec:verdi:raft-impl}
 
-% \begin{outline}
-%   Recall high level from previous section
-%   describe impl including decomposition
-%   flesh out description of how raft works
-%   include something about clients view of the raft cluster
-%   discuss limitations of the impl eg log compaction and other unbounded state with forward pointer to eval
-% \end{outline}
+\begin{figure}[ht!]
+  \centering
+  \small
+\begin{lstlisting}[language=caml,basicstyle=\scriptsize\tt,morekeywords={output,send,nop}]
+input := ClientRequest (c : cmd) (uid : nat)...
+
+output := ClientResponse (uid : nat) (r : result) ...
+        | NotLeader
+
+handleInput (i : input) :=
+  match i with
+  | ClientRequest ...
+  end;
+  leaderHeartbeat();
+  executeEntries()
+
+(* internal Raft messages *)
+msg := RequestVote ...
+     | Vote ...
+     | AppendEntries ...
+     | Acknowledgment ...
+
+handleMessage (m : msg) :=
+  match m with
+  | AppendEntries ...
+  | Acknowledgment ...
+  | RequestVote ...
+  | Vote ...
+  end;
+  leaderHeartbeat();
+  executeEntries()
+
+handleTimeout :=
+   ...; leaderHeartbeat(); executeEntries()
+
+leaderHeartbeat :=
+  (* send AppendEntries to followers *)
+  (* mark entries as committed *)
+  ...
+
+executeEntries :=
+  (* execute entries on the local state machine *)
+  (* respond to clients if necessary *)
+
+logEntry := { c     : cmd;
+              index : nat;
+              term  : nat; ... }
+
+nodeType := Leader | Candidate | Follower
+
+data := { log : list logEntry;
+          commitIndex : nat;
+          term : nat;
+          type : nodeType;
+          sm : stateMachine; ... }
+
+init : data := { log := [];
+                 commitIndex := 0;
+                 term := 0;
+                 type := Follower;
+                 sm := initialStateMachine; ... }
+\end{lstlisting}
+  \caption{Signatures of key parts of our Raft implementation.}
+\label{fig:raft-pseudocode}
+\end{figure}
+
+We implemented Raft as a verified system transformer
+from a single node semantics with no faults
+to a multi-node semantics with network and machine faults.
+To use the transformer,
+a programmer first implements an algorithm as a (non-distributed) state machine
+in which a single process responds to input from the outside world.
+Then, Raft transforms this into a system where the original state machine
+is consistently replicated across a number of nodes.
+As a result, the programmer can prove properties about the replicated system
+by reasoning only about the underlying state machine.
+The Raft transformer produces a system that is proven correct in
+an environment in which
+all messages can be arbitrarily reordered, duplicated, delayed, or dropped,
+and in which nodes can crash and reboot.
+These faults correspond to the real world failure scenarios
+that Raft is designed to tolerate.
+
+\cref{fig:raft-pseudocode} shows signatures for key parts of
+Raft as implemented in Verdi.\footnote{For
+    more detail, see \texttt{raft/Raft.v} at
+    \url{https://github.com/uwplse/verdi/tree/cpp2015}.}
+There are two classes of messages:
+\textit{external} messages (inputs from clients) and
+\textit{internal} messages exchanged between nodes in the system.
+
+Raft has three kinds of external messages.
+Nodes running Raft receive \texttt{ClientRequest} messages from external clients;
+each such message contains a command of type \texttt{cmd},
+which is a parameter of the system. These are delivered in the
+\texttt{step\_input} step in \cref{fig:failure-semantics}.\todo{is this the right figure to cite}
+Nodes respond with \texttt{NotLeader}
+to indicate that the client should find the current leader
+or \texttt{ClientResponse}, containing the result of the command,
+once the system has successfully processed a client command.
+To ensure that network failures do not cause
+a single client command to be executed multiple times,
+each \texttt{ClientRequest} includes a unique identifier,
+shown as \texttt{uid} in \cref{fig:raft-pseudocode}.
+Raft guarantees that a request with a given identifier
+will only be executed once.
+Clients can thus repeatedly retry a request;
+when a client receives a \texttt{ClientResponse}
+with the same \texttt{uid},
+it knows the command has executed exactly once on the state machine.
+
+Raft has four kinds of internal messages:
+\texttt{AppendEntries} and \texttt{Acknowledgment},
+used in log replication,
+and \texttt{RequestVote} and \texttt{Vote},
+used in leader election.
+These messages correspond directly to the behavior described
+in \cref{ssec:verdi:raft-background}.
+
+\begin{sloppypar}
+Our Raft implementation consists of event handlers
+for external messages, internal messages, and timeouts.
+Each of these handlers begins with some event-specific code
+and then calls two bookkeeping functions,
+\texttt{leaderHeartbeat} and \texttt{executeEntries}.
+\texttt{leaderHeartbeat} performs leader-specific tasks,
+such as sending \texttt{AppendEntries} messages to followers
+and marking entries as committed.
+\texttt{executeEntries} performs tasks
+that should be done by every server,
+such as executing committed entries on the state machine.
+\end{sloppypar}
+
+
+The local state of each Raft node is given in \cref{fig:raft-pseudocode}
+by the type \texttt{data}
+and includes the log,
+the index of the most recently committed entry,
+the node's current term,
+the node's type (\texttt{Leader}, \texttt{Candidate}, or \texttt{Follower}),
+and its copy of the state machine.
+The log is a list of entries,
+each of which contains
+a command to be executed on the state machine,
+its index (position in the log),
+and the term in which the entry was initially received by the cluster.
+
+The initial state of each node is given
+  by the value \texttt{init}.
+The log is initially empty,
+  no entries are committed,
+  the current term is 0,
+  every node is a follower
+  (nodes will time out and start an election in term 1 to determine the first leader),
+  and the state machine is in its initial state,
+  having not yet processed any commands.
+
+Our verified implementation of Raft in Coq
+  consists 530 lines of code
+  and 50,000 lines of proof,
+  excluding code from
+  the core Verdi framework. It does not support extensions to Raft
+  which are useful in practice, such as dynamic reconfiguration and
+  log compaction. It also includes more data on \texttt{Acknowledgment}
+  messages than is necessary. These limitations are not fundamental,
+  but addressing them would increase the proof burden.
+
+
+\hrule\todo{merge with old PLDI text below}
 
 \begin{table}
   \centering
@@ -1764,15 +2087,223 @@ and removed from a Raft cluster. We leave these features for future
 work.
 
 \subsection{Raft Proof}\label{ssec:verdi:raft-proof}
-% \begin{outline}
-%   describe refinement
-%   describe how linearizability follows from state machine safety
-%   describe other 4 properties from raft paper
-%   describe proof techniques
-%   decomposition as custom induction principle
-%   ghost variables as VST
-%   something about generalizing to inductive invariants
-% \end{outline}
+The behavior of a Verdi system is described by \emph{traces},
+   which record the interaction between the system and its clients.
+Internal messages sent between nodes of the system
+  are \emph{not} included in the trace,
+  as they are not observable by clients of the cluster.
+For example, if Raft is used to replicate a simple key-value store,
+  a valid trace of the resulting system might be:
+\begin{verbatim}
+     [ClientRequest (Put "x" "hello") 1;
+      ClientResponse 1 "";
+      ClientRequest (Get "x") 2;
+      ClientResponse 2 "hello"].
+\end{verbatim}
+In this execution, a client first sends a \texttt{ClientRequest}
+  containing a command to set the key \verb|"x"| to the value \verb|"hello"|;
+  this request is assigned the unique identifier 1.
+The system then sends a response containing the empty string as its result,
+  which serves as an acknowledgment that the \texttt{Put} has taken place.
+The client then sends a request to read the value of the key \verb|"x"|;
+  the request is assigned the unique identifier 2.
+Finally, the system responds with the value \verb|"hello"|.
+
+The correctness of a system \textit{transformer} such as Raft
+  is a \textit{relation} that must hold between
+  the traces generated by the transformed system
+  and those generated by the original system.
+In \cref{fig:vst}, this relation is called \textit{lift}.
+
+\todo{clarify traces: types are tricky.}
+The relational specification of the Raft transformer
+  is that the traces it generates \textit{linearize}
+  (see below)
+  to traces generated by the single-node state machine.
+Intuitively, linearizability means that once
+  the Raft cluster sends a \texttt{ClientResponse} for a command $c$,
+  the execution of all subsequently issued commands will reflect the execution of $c$.
+More precisely, a trace of a replicated system linearizes to a trace
+of the underlying system if its operations can be reordered to match
+the underlying trace without moving an incoming command before a
+previously acknowledged command.
+For example, in Raft, the system can reorder concurrently issued client requests,
+  but if a request is received after a previous request is acknowledged,
+  then the system must respect that ordering.
+% In other words, linearizable systems give clients
+%   a view of a consistent sequence of commands.
+
+We formalize the linearizes-to relation as follows.\footnote{The relevant Coq development is \texttt{raft/Linearizability.v} at \url{https://github.com/uwplse/verdi/tree/cpp2015}.}
+\begin{definition}[Linearizes-to]\label{def:lin-eq}
+Let $\tau$ be a trace of inputs and outputs,
+where each input-output pair is given a unique key.
+Then $\tau$ \textit{linearizes to}
+a sequence of state machine commands $\sigma$ if
+the events of $\tau$ can be reordered into a trace $\tau'$ such that
+\begin{enumerate}
+\item $\tau'$ is sequential,
+  \ie, it consists of alternating inputs and outputs with matching keys;
+\item $\tau'$ agrees with $\sigma$,
+  \ie, they consist of the same sequence of commands,
+       and each output in $\tau'$ equals the result given
+       by the corresponding command in $\sigma$; and
+\item\label{item:lin-eq-ord} if an output $o$ appears in $\tau$
+  before an input $i$,
+  then $o$ also appears before $i$ in $\tau'$.
+\end{enumerate}
+\end{definition}
+Note that this definition requires $\tau$ and $\sigma$
+  to contain the same set of commands.
+Thus, we can define linearizability:
+\begin{definition}[Linearizability]
+  A trace $\tau$ is linearizable if
+  there exists a sequence $\sigma$ of state machine commands
+  such that $\tau$ linearizes to $\sigma$.
+\end{definition}
+
+This definition captures the notion of linearizability,
+  but establishing it directly for Raft would be difficult
+  because it would require strengthening it
+  to be an inductive invariant of the system.
+Instead, we proved Raft linearizable by relating
+  the system's trace to the local state of each node
+  and the set of packets in the network.
+
+First, we related the trace of the system
+  to each node's local copy of the state machine
+  via state machine safety (\cref{prop:sms} from \cref{ssec:verdi:raft-background}).\todo{check that this references is correct}
+%  which states that
+%  each state machine executes the same commands in the same order.
+Proving linearizability from state machine safety required
+  proving each of the conditions in \cref{def:lin-eq}
+  by reducing each to an internal property of Raft.
+\todo{I just commented out the following sentence. how is the flow now?}
+%We discuss our mechanism for proving such relations
+%  in more detail in \cref{sec:trace-relations}.
+\begin{theorem}
+  State machine safety implies linearizability.\footnote{This argument is formalized in \texttt{raft/RaftLinearizableProofs.v}, along with the lemmas imported by that file.}
+\end{theorem}
+\begin{proof}
+  Given an execution trace $\tau$ of Raft,
+    we must find $\sigma$ such that $\tau$ linearizes to $\sigma$.
+  There is an obvious choice for $\sigma$:
+    it is just the sequence of commands executed by the nodes
+    on their local state machines.
+  State machine safety guarantees that the nodes agree on this sequence,
+    so our choice is well defined.
+
+  It remains to show that $\tau$ linearizes to $\sigma$.
+  In other words, we must find $\tau'$ such that
+    the conditions of \cref{def:lin-eq} are satisfied.
+  Let $\tau'$ be the sequential input--output trace corresponding to $\sigma$,
+    \ie, for each command of $\sigma$,
+    $\tau'$ contains an input immediately followed by the corresponding output
+    for that command.
+  Then $\tau'$ is sequential and agrees with $\sigma$ by construction,
+    and it remains to show that $\tau'$ is
+    a permutation of $\tau$ that respects the ordering condition
+    (item~\ref{item:lin-eq-ord}) of \cref{def:lin-eq}.
+  Each of these is established as a separate invariant by induction on the execution.
+\end{proof}
+
+This result was formalized and proved as part of our work
+  on verified system transformers~\cite{verdi}. \todo{reword verdi cite}
+The remainder (and vast majority) of our Raft verification effort
+  establishes state machine safety.
+Since each node executes commands on its
+  state machine as entries become committed in the node's log,
+  state machine safety requires that nodes never disagree
+  about committed entries.
+The proof of State Machine Safety requires
+  the use of \textit{ghost variables}.
+Ghost variables are components of system state that are
+tracked for the purposes of verification but not
+needed at run time. This state is therefore not tracked in the extracted
+implementation. For more information, see the Verdi paper~\cite{verdi}. \todo{reword verdi cite}
+
+\begin{theorem}[State Machine Safety]
+  State machine safety holds for every reachable state of the system.\footnote{The top-level proof is in \texttt{raft-proofs/StateMachineSafetyProof.v}. The ghost variables required are specified in \texttt{raft/RaftRefinement\allowbreak Interface.v} and \texttt{raft/RaftMsgRefinementInterface.v}.}
+\end{theorem}
+\begin{proof}[Proof Sketch]
+  First strengthen the induction hypothesis
+  to quantify over ghost state
+  and appropriately constrain each node's history.
+  Next proceed by induction on the step relation,
+  and in each case show that the strengthened hypothesis is preserved.
+\end{proof}
+
+\begin{figure}
+  \centering
+  \small
+\begin{lstlisting}[language=caml,basicstyle=\scriptsize\tt,morekeywords={output,send,nop}]
+ghostData := {
+  (* list of term, candidate this node voted for,
+     log at time of vote *)
+  votes : list (nat * name * list logEntry);
+
+  (* term -> list of nodes who voted for
+     this node in that term *)
+  cronies : nat -> list name;
+
+  (* term, log when this node became leader *)
+  leaderLogs : list (nat * list logEntry);
+
+  (* list of term, entry:
+     all entries ever present in log at this node*)
+  allEntries : list (nat * logEntry)
+}
+
+ghostHandleMessage (m : msg) :=
+  match m with
+  | AppendEntries ... =>
+    (* If entries added to log, add to allEntries
+       and tag with current term *)
+  | RequestVote ...
+    (* If voting, add the current term,
+       the candidate's name,
+       and the current log to votes *)
+  | Vote ...
+    (* Add sender to cronies at current term *)
+    (* If node becomes leader, add current term
+       and log to leaderLogs *)
+  end
+\end{lstlisting}
+  \caption{Ghost variables used in the verification of Raft}
+  \label{fig:raft-ghost-variables}
+\end{figure}
+
+The proof of State Machine Safety requires several ghost variables on
+local data, as well as one on messages. \cref{fig:raft-ghost-variables} shows
+pseudocode for the local data ghost state, including the ways in which
+it is updated in response to incoming messages. Intuitively, each
+ghost variable stores part of the system's \textit{history}, which is
+not tracked in the actual implementation but which is necessary for
+proofs. For example, a node in the system does not actually need to
+keep a record of every vote that it has every cast; it is sufficient
+to track only the vote for its current term. However, in order to
+prove that only one leader is elected per term, the proof uses the
+\texttt{votes} ghost variable.  We use the ghost state to establish
+the Election Safety and Leader Completeness properties, from which we
+then prove State Machine Safety. As an example, we show how Election
+Safety follows using these ghost variables.\footnote{The proof of Leader
+Completeness is available in \texttt{raft-proofs/\allowbreak LeaderCompletenessProof.v}.}
+
+\begin{theorem}[Election Safety]
+  Election safety is true in every reachable state of the
+  system.\footnote{See \texttt{raft-proofs/OneLeaderPerTermProof.v}.}
+\end{theorem}
+\begin{proof}[Proof Sketch]
+  If a node is a leader, then it has a majority of nodes in its
+  \texttt{cronies} for that term. A node $h$ does not appear in
+  \texttt{cronies} at a node $h'$ unless $h'$ is in \texttt{votes} at
+  $h$ for the same term. A node only votes for one leader for each
+  term. If there are two leaders for one term, at least one node $h$
+  must be in \texttt{cronies} at both leaders since they each have a
+  majority. That node must have voted for both of them at that term,
+  so they must be the same node. Therefore, Election Safety holds.
+\end{proof}
+
+\hrule\todo{merge with PLDI15 text below}
 
 \begin{figure}[t]
   \centering
@@ -1842,8 +2373,6 @@ appends entries to the log: if a \mytt{ClientResponse} has already
 been issued, then that entry is already in the log, so any subsequent
 \mytt{ClientRequest} will be ordered after it in the log.
 
-% ztatlock TODO, import SMS proof description from CPP
-
 \section{Evaluation}
 \label{sec:verdi:eval}
 
@@ -1877,7 +2406,7 @@ Verdi                  &  148           & 220            & 2364      \\
   \end{tabular}
 \end{table}
 
-% ztatlock TODO get SMS numbers above
+\todo{fill out SMS numbers from CPP 16}
 
 \cref{tab:effort} shows the size of the
 specification, implementation, and proof of each case study.

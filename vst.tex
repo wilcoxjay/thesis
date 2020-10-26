@@ -1,0 +1,13 @@
+{
+\begin{tikzpicture}[thick,
+  every node/.style={align=center,font={}}]
+  \matrix[row sep=1.5cm,column sep=1.5cm] {
+  % First row:
+  \node (SA) {$S_A$}; & \node (PA) {$\Phi(S_A)$}; \\
+  % Second row:
+  \node (SB) {$S_B$}; & \node (PB) {$\mathrm{lift}(\Phi)(S_B)$}; \\
+  };
+  \draw[-{Stealth[]},double,double distance=2pt] (SA) -- node[left=2mm] {transformer} (SB);
+  \draw[-{Stealth[]},double,double distance=2pt] (PA) -- node[right=2mm] {transformer\\correctness} (PB);
+\end{tikzpicture}
+}

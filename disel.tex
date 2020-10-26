@@ -68,13 +68,6 @@
 \newcommand{\mute}[1]{{#1}}
 \newcommand{\Rule}[1]{\textsc{#1}}
 
-% remarks
-%\newcommand{\todo}[1]{\mute{\textcolor{red}{({#1})}}}
-\newcommand{\jw}[1]{\mute{\textcolor{red}{(James: {#1})}}}
-\newcommand{\zt}[1]{\mute{\textcolor{darkgreen}{(Zach: {#1})}}}
-\newcommand{\dw}[1]{\mute{\textcolor{brown}{(Doug: {#1})}}}
-\newcommand{\is}[1]{\mute{\textcolor{blue}{(Ilya: {#1})}}}
-
 \newcommand{\ab}[1]{\widehat{#1}}
 \newcommand{\This}[1]{\mathsf{this}~{#1}}
 \newcommand{\tsend}{\mathsf{send}}
@@ -3211,19 +3204,6 @@ them with any other instance of a consensus protocol, \eg,
 Paxos~\cite{Lamport:TOPLAS98} or Raft~\cite{ongaro:raft},
 thus, reusing the proofs of their core invariants.
 
-% fig:hook-ap
-
-% \todo{Outline the following things:}
-
-% \begin{enumerate}
-
-% \item Querying protocol (send/receive functions)'
-% \item Imposed constraints
-% \item Hook definition
-% \item parameterization, abstract predicates and injectivity
-% \item Final program
-% \end{enumerate}
-
 \section{Implementation and Experience}
 \label{sec:eval-impl}
 
@@ -3254,8 +3234,7 @@ the implementation of partial finite maps and heap theory
 by~\citet{Nanevski-al:POPL10}.
 
 %
-\begin{wraptable}[21]{h}{0.54\textwidth}
-%\begin{table}[t]
+\begin{table}[t]
 \begin{minipage}{0.54\textwidth}
 {
 \sffamily\footnotesize
@@ -3304,10 +3283,9 @@ by~\citet{Nanevski-al:POPL10}.
   definitions/specs, programs, proofs of protocol
   axioms/invariants/specs (LOC), and build times (sec).  }
 \label{tab:locs}
-\end{wraptable}
-%\end{table}
+\end{table}
 %
-Table~\ref{tab:locs} summarizes the proof effort for the calculator,
+Table~\ref{tab:locs} \todo{does this table look ok?} summarizes the proof effort for the calculator,
 \code{TPC}/\code{Query} systems.
 %
 The \textsf{Defs/Specs} column measures all \emph{specification}

@@ -41,12 +41,20 @@
 \newtheorem{proposition}[theorem]{Proposition}
 \newtheorem{corollary}[theorem]{Corollary}
 
+\newcounter{eventnum}\setcounter{eventnum}{0}
+\renewcommand{\theeventnum}{\Alph{eventnum}}
+\newcommand{\mkevent}[1]{\refstepcounter{eventnum}\label{#1}}
+
 \usepackage[noabbrev,capitalise]{cleveref}
+\Crefname{eventnum}{event}{events}
 \Crefname{thm}{Theorem}{Theorems}
 
 \usepackage{tikz}
 \usetikzlibrary{calc}
 \usetikzlibrary{shapes.callouts}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{decorations.pathreplacing}
+
 
 \usepackage{multirow}
 \usepackage{booktabs}

@@ -80,11 +80,8 @@
 \newcommand{\HandleMessage}{\codeid{HandleMsg}\xspace}
 \newcommand{\HandleInput}{\codeid{HandleInp}\xspace}
 
-% TODO: this should be in terms of \em, not in absolute centimeters
 \newcommand{\app}{\mathbin{+\hspace{-.125cm}+}}
 \newcommand{\elidedtext}[1]{}
-
-
 
 \newcommand{\fname}{\mathtt{name}}
 \newcommand{\fType}{\mathtt{Type}}
@@ -2400,13 +2397,11 @@ Key-value store        &  41            & 138            & 337       \\
 Primary-backup         &  20            & 134            & 1155      \\
 KV+PB                  &  5             & N/A            & 19        \\
 Raft (Linearizability) &  170           & 520            & 4144      \\
-Raft (SMS)             &  TODO          & TODO           & TODO      \\
+Raft (SMS)             &  47            & N/A            & 50719     \\
 Verdi                  &  148           & 220            & 2364      \\
 \bottomrule
   \end{tabular}
 \end{table}
-
-\todo{fill out SMS numbers from CPP 16}
 
 \cref{tab:effort} shows the size of the
 specification, implementation, and proof of each case study.

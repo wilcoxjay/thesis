@@ -124,7 +124,7 @@ invariant x + y >= 5
 - syntax.the_program and its consequences
 \end{verbatim}
 
-\section{Past, Present, and Future Work}
+\section{Using \mypyvy}
 
 \begin{verbatim}
 - our port of the raft proof
@@ -133,6 +133,33 @@ invariant x + y >= 5
 - pd
 - derived relations?
 - yotam's looking back algorithm or whatever it's called
+\end{verbatim}
+
+\section{Related Work}
+
+\begin{verbatim}
+- Ivy
+- CMP method / Cadence SMV
+  - https://link.springer.com/chapter/10.1007%2F978-3-540-30494-4_27
+  - https://www.markrtuttle.com/data/papers/talupur-tuttle-fmcad08.pdf
+  - https://link.springer.com/article/10.1007%2Fs10703-010-0092-y
+  - https://www.semanticscholar.org/paper/Parametrized-System-Verification-with-Guard-and-Krstic/70e7b7d15fe569d05f021884eef32eea3e07e82b
+- VMT http://www.vmt-lib.org/
+- nuXmv
+- AVR: https://github.com/aman-goel/avr
+- TLA+
+- Dafny
+- Coq
+- avy
+- pono
+- abc
+
+- something about k-state formulas and semantics over finite traces (Vardi's paper)
+\end{verbatim}
+
+\section{Future Work}
+
+\begin{verbatim}
 - future directions in internals:
   - collapsing the many kinds of queries into one
   - handling transition declarations more uniformly (exists, modifies)

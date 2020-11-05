@@ -1,5 +1,8 @@
-\chapter{\texttt{mypyvy}}
+\chapter{\mypyvy}
 
+% Put this somewhere
+%  % The project started because I wanted a clean sandbox in which
+%  % to implement the \updr invariant inference algorithm~\cite{updr-jacm}.
 
 \section{Introduction}
 
@@ -137,8 +140,60 @@ invariant x + y >= 5
 
 \section{Related Work}
 
+\mypyvy is directly inspired by \ivy~\cite{Padon-al:PLDI16}.\footnote{
+  \ivy's code is available on Github at \url{https://github.com/kenmcmil/ivy}.
+  % 
+  See also the \ivy website at \url{http://microsoft.github.io/ivy/}.
+}
+%
+The \ivy tool supports specification, implementation, and verification of systems,
+including distributed and concurrent systems.
+%
+Systems are expressed as a set of \emph{actions},
+each written in a simple imperative programming language
+over state variables from a first-order vocabulary.
+%
+The verification queries \ivy asks of the underlying solver
+are carefully designed to land in a decidable fragment of logic,
+increasing the efficiency, reliability, and predictability
+of the verification.
+%
+When verification fails, concrete counterexample traces
+are shown to the user demonstrating the violation.
+%
+\ivy{} also has a powerful module system
+that supports so-called ``circular'' assume-guarantee reasoning,
+where all modules get to assume all other modules' invariants,
+but are under the obligation to show that they do not violate
+their own invariants.
+%
+(This reasoning is not actually circular, but sound,
+because ``nobody violates their invariants first''
+implies ``nobody violates their invariants''.)
+
+One can view \mypyvy as similar to a hypothetical intermediate language
+in \ivy{}'s pipeline to the solver.
+%
+\ivy{} compiles the modular imperative program
+into a set of purely logical transition systems,
+each of which must be verified.
+%
+One could imagine making this connection explicit,
+by using \mypyvy as a ``backend'' for \ivy,
+translating the transition systems into \mypyvy syntax.
+%
+This would have the advantage of making
+\mypyvy's invariant inference algorithms available
+to \ivy programs.
+%
+Indeed, many of the examples and benchmarks used by \mypyvy
+were manually translated from \ivy.
+%
+We have begun work on such a translator,
+and hope to continue to work more closely with \ivy in the future.
+
+
 \begin{verbatim}
-- Ivy
 - CMP method / Cadence SMV
   - https://link.springer.com/chapter/10.1007%2F978-3-540-30494-4_27
   - https://www.markrtuttle.com/data/papers/talupur-tuttle-fmcad08.pdf

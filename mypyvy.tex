@@ -193,6 +193,38 @@ We have begun work on such a translator,
 and hope to continue to work more closely with \ivy in the future.
 
 
+Dafny is a programming language
+designed from the ground up for verification~\cite{Leino:LPAR10}.
+%
+Dafny is built on top of the Boogie intermediate verification language~\cite{boogie-manual},
+which itself uses the Z3 SMT solver~\cite{z3}.
+%
+Dafny has an imperative object-oriented programming language with
+objects, statements, loops, arrays, and heap-allocated data structures,
+and has a rich Hoare logic for reasoning about these programs.
+%
+It also has a purely functional expression-oriented programming language
+with first-class and higher-order functions, recursion, lists and logical quantifiers.
+%
+These logical features can be used express the specification of the imperative code,
+or they can be used by themselves, turning Dafny into more of a proof assistant
+than a programming language.
+%
+Dafny enjoys a high degree of proof automation, since all obligations are
+eventually sent to Z3.
+%
+However, these queries can have complex quantifier structure to them, meaning
+that they typically do not fall into any decidable fragment of first-order logic.
+%
+Dafny instructs Z3 to use syntactic heuristics based on E-matching
+to manage quantifier instantiation process~\cite{z3-e-matching,simplify}.
+%
+This approach achieves good performance in practice,
+but it means that the solver cannot return counterexamples,
+and that the user must have a basic understanding of E-matching
+in order to be an expert user of quantifiers in Dafny.
+
+
 \begin{verbatim}
 - CMP method / Cadence SMV
   - https://link.springer.com/chapter/10.1007%2F978-3-540-30494-4_27
@@ -203,7 +235,6 @@ and hope to continue to work more closely with \ivy in the future.
 - nuXmv
 - AVR: https://github.com/aman-goel/avr
 - TLA+
-- Dafny
 - Coq
 - avy
 - pono

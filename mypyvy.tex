@@ -1,4 +1,5 @@
 \chapter{\mypyvy}
+\label{chap:mypyvy}
 
 % Put this somewhere
 %  % The project started because I wanted a clean sandbox in which
@@ -140,9 +141,11 @@ invariant x + y >= 5
 
 \section{Related Work}
 
+\todo{introduce the expressiveness-automation spectrum, and place everybody on it}
+
 \mypyvy is directly inspired by \ivy~\cite{Padon-al:PLDI16}.\footnote{
   \ivy's code is available on Github at \url{https://github.com/kenmcmil/ivy}.
-  % 
+  %
   See also the \ivy website at \url{http://microsoft.github.io/ivy/}.
 }
 %
@@ -224,6 +227,93 @@ but it means that the solver cannot return counterexamples,
 and that the user must have a basic understanding of E-matching
 in order to be an expert user of quantifiers in Dafny.
 
+Previous chapters of this thesis used the \Coq proof assistant~\cite{Coq}.
+%
+\Coq is an interactive theorem prover and purely functional programming language
+based on dependent type theory.
+%
+Its design gives it essentially limitless expressiveness,
+but this comes at the cost of manual proof effort.
+%
+\Coq is the perfect tool for the job of building a new logic,
+like we did in \cref{chap:disel} with \disel.
+%
+Also, \Coq has support for building domain-specific proof automation,
+as promoted by \citet{chlipala:cpdt},
+so with careful design, one can greatly reduce manual proof effort.
+%
+\mypyvy places itself at a very different point in the design space,
+constraining what the programmer can write to a first-order transition system,
+and in return, giving essentially full automation.
+%
+\todo{move the rest of this somewhere reasonable}
+%
+My own journey as a researcher has taken me through many points
+on this spectrum.
+%
+I have seen the benefits of being able to transliterate
+your mathematical theorem statements directly into a Coq proposition,
+but I have also seen the beauty of not having to write any proofs.
+%
+In any particular domain, it often makes sense for the community to
+begin by building tools in very expressive frameworks,
+because we don't yet know what we will need.
+%
+After this initial step, researchers can start the process of
+figuring out exactly what needs to be expressed,
+and what can be traded away in exchange for better automation.
+
+\TLA is a specification language for modeling systems
+developed by \citet{lamport:tla,lamport:specifying-systems}.
+%
+It comes with a suite of tools to analyze models,
+including tools for model checking and deductive theorem proving.
+%
+\citeauthor{lamport:tla} advocates for a style of using \TLA
+where most of the benefit of the process is gained
+just from formally expressing the model of the system,
+because the user is forced to carefully think through the details.
+%
+Users can derive additional benefit by model checking their systems,
+using the TLC bounded model checker~\cite{tlc}.
+%
+TLC is an explicit-state model checker that exhaustively explores
+a finite version of the system (\eg, all Raft executions where
+there at most 5 nodes, at most 2 commands, and at most 3 terms, etc.).
+%
+Users can go even further by using the \TLA proof system (TLAPS)
+to prove their systems correct~\cite{tlaps}.
+%
+TLAPS uses a hierarchical (treelike) proof structure,
+where the leaves of the tree can be dispatched by automated solvers.
+%
+The most interesting point of comparison for \mypyvy is
+\TLA's language for specifying systems.
+%
+\TLA is much more expressive than \mypyvy,
+allowing users to write arbitrary temporal logic formulas
+to describe their system.
+%
+While sometimes needed, this expressiveness makes
+analysis and proof more challenging,
+and users often stay within an idiomatic subset that
+constructs a transition relation as the finite disjunction of
+parameterized actions.
+%
+One way to view \mypyvy is as a codification of this idiom into a language.
+%
+By restricting the way users write their system specifications,
+\mypyvy is able to completely automatically analyze
+the safety problem for these systems.
+%
+On the other hand, \mypyvy does not currently support liveness reasoning,
+so users of \TLA would miss having access to that kind of reasoning.
+%
+We plan to investigate liveness in future work,
+encoding the queries in first-order logic
+following the approach of \citet{padon:reducing-liveness}.
+
+
 
 \begin{verbatim}
 - CMP method / Cadence SMV
@@ -234,8 +324,6 @@ in order to be an expert user of quantifiers in Dafny.
 - VMT http://www.vmt-lib.org/
 - nuXmv
 - AVR: https://github.com/aman-goel/avr
-- TLA+
-- Coq
 - avy
 - pono
 - abc

@@ -1,4 +1,5 @@
 \chapter{Introduction}
+\label{chap:intro}
 
 Distributed systems are widely used but hard to implement correctly.
 These complex systems execute concurrently in unreliable environments
@@ -42,7 +43,7 @@ The central claim of this dissertation is:
 }
 \end{center}
 
-Chapter 2 presents Verdi, a Coq-based framework for implementing and
+\Cref{chap:verdi} presents Verdi, a Coq-based framework for implementing and
 verifying distributed systems.  Verdi models the system execution
 using various \emph{network semantics}, each of which encodes
 assumptions about the environment including possible network faults
@@ -74,7 +75,7 @@ relatively more faults.
 %sequential programming.
 
 
-Chapter 3 details Disel, a concurrent separation logic for distributed
+\Cref{chap:disel} details Disel, a concurrent separation logic for distributed
 systems.  Whereas Verdi separates fault tolerance reasoning from
 application logic (which we call vertical compositionality), Disel
 separates reasoning about cooperating services by defining interfaces
@@ -116,7 +117,7 @@ The difficulty of deriving these invariants inspired us to
 investigate techniques for proving and even \emph{inferring}
 inductive invariants automatically.
 
-Chapter 4 describes \mypyvy, a tool for automated reasoning about
+\Cref{chap:mypyvy} describes \mypyvy, a tool for automated reasoning about
 symbolic transition systems in first-order logic and supports a
 variety of automated reasoning tools to analyze systems.
 \mypyvy takes an input file describing a symbolic transition system
@@ -128,7 +129,7 @@ it together with the user-requested analysis to a (sequence of) SMT queries,
 which are dispatched by Z3.
 
 Distributed systems remains a crucial topic with many potential avenues
-for future work. In Chapter 5, we summarize our plans for extending
+for future work. In \cref{chap:conclusion}, we summarize our plans for extending
 Verdi, Disel, and \mypyvy to further improve the verification experience.
 We are especially excited to live in a world where more users are
 empowered to verify their distributed systems.

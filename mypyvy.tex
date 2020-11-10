@@ -313,16 +313,30 @@ We plan to investigate liveness in future work,
 encoding the queries in first-order logic
 following the approach of \citet{padon:reducing-liveness}.
 
-
+nuSMV and nuXmv are symbolic model checkers,
+originally based on BDDs and SAT solvers,
+and later adopted to infinite-domain systems
+by using SMT solvers~\todo{nusmv,nuxmv}.
+%
+These tools are ``workbenches'' that implement many different techniques
+to attack the model checking problem.
+%
+This is similar in spirit to \mypyvy's goal of
+providing a framework to implement several approaches.
+%
+One key difference between nuXmv and mypyvy is that
+nuXmv's support for infinite-state systems
+is based on integer and real number types,
+while \mypyvy's primary way to reason about such systems
+is based on pure first-order uninterpreted sorts.
+%
+In our experience, most distributed systems do not need
+specific interpreted operations over numbers,
+and instead are naturally expressed over uninterpreted sorts
+using axioms for, e.g. a total order.
 
 \begin{verbatim}
-- CMP method / Cadence SMV
-  - https://link.springer.com/chapter/10.1007%2F978-3-540-30494-4_27
-  - https://www.markrtuttle.com/data/papers/talupur-tuttle-fmcad08.pdf
-  - https://link.springer.com/article/10.1007%2Fs10703-010-0092-y
-  - https://www.semanticscholar.org/paper/Parametrized-System-Verification-with-Guard-and-Krstic/70e7b7d15fe569d05f021884eef32eea3e07e82b
 - VMT http://www.vmt-lib.org/
-- nuXmv
 - AVR: https://github.com/aman-goel/avr
 - avy
 - pono

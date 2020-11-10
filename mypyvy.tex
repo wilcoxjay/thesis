@@ -335,9 +335,32 @@ specific interpreted operations over numbers,
 and instead are naturally expressed over uninterpreted sorts
 using axioms for, e.g. a total order.
 
+AVR is a recent word-level symbolic model checker
+that has shown promise in the hardware model checking community~\cite{goel-avr}.
+%
+At its core, AVR uses syntax-guided abstraction to compute a
+word-level model of the system in first-order logic,
+which can then be analyzed with an implementation of IC3 on top of several SMT backend solvers
+to infer an inductive invariant~\cite{bradley-ic3}.
+%
+Most closely related to \mypyvy is the subsequent tool I4~\cite{i4},
+which builds on top of AVR's ability to efficiently verify finite-domain systems
+to analyze infinite-state systems such as distributed protocols.
+%
+I4 works by constructing finite instances of the protocol,
+analyzing them with AVR to get an inductive invariant for the finite protocol,
+and then generalizing this invariant
+to get a candidate invariant for the original protocol.
+%
+This candidate must then be verified using unbounded techniques,
+such as Ivy~\cite{Padon-al:PLDI16},
+and if a counterexample is obtained,
+a larger finite instance of the protocol must be analyzed.
+%
+\todo{actually compare I4/AVR with mypyvy}
+
 \begin{verbatim}
 - VMT http://www.vmt-lib.org/
-- AVR: https://github.com/aman-goel/avr
 - avy
 - pono
 - abc

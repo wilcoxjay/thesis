@@ -378,12 +378,23 @@ can also be specified in the VMT description of the transition system,
 but other queries (such as bounded reachability queries or
 \mypyvy-style ``trace'' queries) cannot be specified.
 
+\mypyvy's $k$-state semantics for formulas is
+related to interpretations of Linear Temporal Logic (LTL)
+over finite traces~\cite{vardi-ltl-finite}.
+%
+A key difference in the \mypyvy setting is that
+each state is a first-order structure,
+rather than a propositional truth assignment.
+%
+It would be interesting to extend \mypyvy
+with explicit temporal operators that are ``unrolled''
+when translating to the solver.
+
+
 \begin{verbatim}
 - avy
 - pono
 - abc
-
-- something about k-state formulas and semantics over finite traces (Vardi's paper)
 \end{verbatim}
 
 \section{Future Work}

@@ -390,12 +390,17 @@ It would be interesting to extend \mypyvy
 with explicit temporal operators that are ``unrolled''
 when translating to the solver.
 
-
-\begin{verbatim}
-- avy
-- pono
-- abc
-\end{verbatim}
+Btor2 is a language for specifying word-level hardware model checking problems
+over bitvectors and arrays~\cite{btor2}.
+%
+It is an extension of the well-known bit-level format AIGER~\cite{aiger-1.9},
+which is used in the hardware model checking competition~\cite{hwmcc20}.
+%
+Both AIGER and Btor2 are tailored to the case of reasoning
+about finite-state systems, especially those derived from hardware designs.
+%
+Thus, neither supports infinite or unbounded sorts,
+which is the focus of \mypyvy.
 
 \section{Future Work}
 

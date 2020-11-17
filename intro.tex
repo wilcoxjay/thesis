@@ -1,6 +1,40 @@
 \chapter{Introduction}
 \label{chap:intro}
 
+\begin{verbatim}
+New intro outline:
+- Barkley :D
+- distributed systems
+  - pervasive
+  - critical
+  - fail often
+  - hard to get right
+- fail often + hard to get right because:
+  - concurrency
+  - forced locality (data is distributed!)
+  - failure
+  - the combination of forced locality and failure -> partial failure
+    - ie, cannot observe globally who has definitely failed vs not
+- very difficult to test thoroughly
+  - interleavings of concurrent actions
+  - whether and when certain failures occur
+  - not to mention the usual testing difficulties for sequential programs
+    - data coverage, etc
+- primary challenge: system/proof complexity
+- solution: system/proof compositionality
+- thesis: PL techniques for compositionality lay the foundations for effective
+  verification of distributed systems implementations.
+- remainder of thesis in three parts
+  - challenge 1: fault tolerance
+    solution 1: VSTs to decompose tolerance from app
+  - challenge 2: many components
+    solution 2: separation logic with composition theorem
+  - challenge 3: proof effort
+    solution 3: proof automation that takes advantage of small components to
+                bring decidability/high automation
+\end{verbatim}
+
+
 Distributed systems are widely used but hard to implement correctly.
 These complex systems execute concurrently in unreliable environments
 and are expected to tolerate various faults.

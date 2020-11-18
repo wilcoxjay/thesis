@@ -34,28 +34,31 @@ New intro outline:
                 bring decidability/high automation
 \end{verbatim}
 
-
-Distributed systems are widely used but hard to implement correctly.
-These complex systems execute concurrently in unreliable environments
-and are expected to tolerate various faults.
-  Such environments are
-notoriously difficult to adequately model with testing, but because
-of the critical importance of these systems, it is essential that
-they are correct.
-Systems consist of many potentially failing components; it is
-essentially impossible to perform exhaustive testing on the many
-interactions between components in any real-world
-implementation.
-Most known techniques for checking concurrent and
-distributed algorithms work only on models of the system, which
-results in a formality gap between the model and its
-implementation. For example, classical model checking has been shown
-to be extremely effective in finding concurrency and fault-tolerance
-bugs at the design level, but it does not scale to the complex data
-structures used in real systems.
-Formal verification using
-human-guided, automated, machine-checked proofs is the only
-technique that can provide the desired guarantees for such systems.
+Distributed systems are widely used
+  in everything from web infrastructure to airplanes
+  and their correctness is critical.
+These systems are notoriously hard to implement correctly
+  because they execute
+  across multiple nodes in unreliable environments
+  and are expected to tolerate various faults.
+Traditional testing techniques are insufficient
+  to adequately explore the space of possible executions
+  in the presence of concurrency and failure,
+  because such tests would have to enumerate
+  all interleavings of system events and failure events
+  in a simulation of the system.
+In response to this challenge,
+  formal methods have been applied
+  to exhaustively check correctness of distributed systems,
+  but most such techniques work only on \emph{models} of the system,
+  which results in a formality gap between the model and its implementation.
+For example, classical model checking
+  has been shown to be extremely effective
+  in finding concurrency and fault-tolerance bugs at the design level,
+  but it does not scale to the complex data structures used in real systems.
+Formal verification
+  using human-guided, automated, machine-checked proofs
+  is the only technique that can provide the desired guarantees for such systems.
 
 Applying formal methods is not a panacea, however, due to the
 complexity of the systems involved.  It is not uncommon, \eg, for a

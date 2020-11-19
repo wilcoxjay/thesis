@@ -20,6 +20,9 @@ New intro outline:
   - whether and when certain failures occur
   - not to mention the usual testing difficulties for sequential programs
     - data coverage, etc
+
+- some kind of transition to formal methods that doesn't overemphasize verdi
+
 - primary challenge: system/proof complexity
 - solution: system/proof compositionality
 - thesis: PL techniques for compositionality lay the foundations for effective
@@ -38,20 +41,23 @@ Distributed systems are widely used
   in everything from web infrastructure to airplanes,
   and their correctness is critical.
 These systems are notoriously hard to implement correctly
-  because they execute
-  across multiple nodes in unreliable environments
-  and are expected to tolerate various faults.
-Traditional testing techniques are insufficient
-  to adequately explore the space of possible executions
-  in the presence of concurrency and failure,
-  because such tests would have to enumerate
-  all interleavings of system events and failure events
-  in a simulation of the system.
-In response to this challenge,
-  formal methods have been applied
+  because they are expected to tolerate execution in harsh environments,
+  where concurrency and partial failure are a fact of life,
+  all while no single node has access to a global view of the system state.
+Traditional testing techniques are inadequate
+  for exploring the space of possible executions
+  in the presence of concurrency and partial failure,
+  because this space includes the exponential number of
+  interleavings of system events and failure events,
+Furthermore, even considering a particular interleaving of events,
+  one faces all the usual difficulties with testing a sequential program,
+  including the issue of achieving sufficient coverage.
+
+Formal methods have been applied
   to exhaustively check correctness of distributed systems,
-  but most such techniques work only on \emph{models} of the system,
-  which results in a formality gap between the model and its implementation.
+  but existing techniques either
+    apply only on \emph{models} of the system or
+    exhibit prohibitively high complexity.
 For example, classical model checking
   has been shown to be extremely effective
   in finding concurrency and fault-tolerance bugs at the design level,

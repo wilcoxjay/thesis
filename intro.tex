@@ -20,9 +20,7 @@ New intro outline:
   - whether and when certain failures occur
   - not to mention the usual testing difficulties for sequential programs
     - data coverage, etc
-
-- some kind of transition to formal methods that doesn't overemphasize verdi
-
+- since testing is not enough, formal methods make sense
 - primary challenge: system/proof complexity
 - solution: system/proof compositionality
 - thesis: PL techniques for compositionality lay the foundations for effective
@@ -53,30 +51,24 @@ Furthermore, even considering a particular interleaving of events,
   one faces all the usual difficulties with testing a sequential program,
   including the issue of achieving sufficient coverage.
 
-Formal methods have been applied
-  to exhaustively check correctness of distributed systems,
-  but existing techniques either
-    apply only on \emph{models} of the system or
-    exhibit prohibitively high complexity.
-For example, classical model checking
-  has been shown to be extremely effective
-  in finding concurrency and fault-tolerance bugs at the design level,
-  but it does not scale to the complex data structures used in real systems.
-Formal verification
-  using human-guided, automated, machine-checked proofs
-  is the only technique that can provide the desired guarantees for such systems.
+Since testing is not enough for distributed systems,
+  there is a rich body of work applying formal methods
+  to exhaustively check correctness.
+Applying formal methods is not a panacea, however,
+  because complex systems have complex proofs of correctness.
+It is not uncommon, \eg,
+  for a  distributed file system to coordinate thousands of machines
+  using a combination of several different protocols to ensure
+  consistency, fault tolerance, and high performance.
+To verify such a system,
+  one must break the problem down into smaller parts.
 
-Applying formal methods is not a panacea, however, due to the
-complexity of the systems involved.  It is not uncommon, \eg, for a
-distributed file system to coordinate thousands of machines using a
-combination of several different protocols to ensure consistency,
-fault tolerance, and high performance.  To verify such a
-system, one must break the problem down into smaller parts.
-This decomposition yields benefits of automation in two senses.
-First, a truly compositional proof imposes no additional proof
-burden to put the pieces back together. Second, sufficiently
-decomposed pieces can be reasoned about fully automatically
-using decision procedures. 
+Decomposing proofs yields benefits for automation in two senses.
+First, a truly compositional proof
+  imposes no additional proof burden
+  to put the pieces back together.
+Second, sufficiently decomposed pieces can
+  be analyzed fully automatically using decision procedures.
 
 The central claim of this dissertation is:
 \begin{center}
@@ -85,6 +77,8 @@ The central claim of this dissertation is:
   distributed systems implementations.
 }
 \end{center}
+
+\todo{make the rest of this follow the outline}
 
 \Cref{chap:verdi} presents Verdi, a Coq-based framework for implementing and
 verifying distributed systems.  Verdi models the system execution

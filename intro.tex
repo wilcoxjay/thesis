@@ -60,10 +60,14 @@ It is not uncommon, \eg,
   for a  distributed file system to coordinate thousands of machines
   using a combination of several different protocols to ensure
   consistency, fault tolerance, and high performance.
-To verify such a system,
+The primary challenge to applying verification to distributed systems is
+  high system complexity, which leads to high proof complexity.
+To verify a system such as a distributed file system,
   one must break the problem down into smaller parts.
+In the face of high system complexity,
+  decomposing the problem results in reduced proof complexity and increased automation.
 
-Decomposing proofs yields benefits for automation in two senses.
+Decomposing proofs leads to two benefits.
 First, a truly compositional proof
   imposes no additional proof burden
   to put the pieces back together.
@@ -78,35 +82,44 @@ The central claim of this dissertation is:
 }
 \end{center}
 
-\todo{make the rest of this follow the outline}
+The remainder of this dissertation addresses three challenges in system complexity
+  by applying programming languages techniques to decompose the problem,
+  thus increasing automation and decreasing proof complexity.
 
-\Cref{chap:verdi} presents Verdi, a Coq-based framework for implementing and
-verifying distributed systems.  Verdi models the system execution
-using various \emph{network semantics}, each of which encodes
-assumptions about the environment including possible network faults
-and machine failures.  Network semantics can range from the idealistic
-to the pessimistic. For example, one might assume that all messages
-are eventually delivered and that nodes never fail. On the other hand,
-one might assume that packets can be dropped and duplicated and that
-some nodes behave arbitrarily or maliciously. Different systems are
-designed under different sets of assumptions, and network semantics
-capture those assumptions.
-The main point of defining a particular network semantics in Verdi is to verify
-distributed systems using that semantics as the fault model.
-Assuming the network semantics
-accurately describes all possible behaviors of the system's
-environment, Verdi guarantees that the system is correct for all executions.
-For common network semantics, there are typically generic mechanisms
-that systems use to tolerate faults, \eg sequence numbering to handle
-message reordering and duplication. Another key benefit of clearly
-stating environment assumptions as network semantics is that one
-can then express these generic fault tolerance mechanisms as \emph{transformers}
-between semantics.
-Using transformers, the engineer can implement and reason about their
-application in a fault model
-with relatively few faults, and then automatically transform the system
-into one that provably works in a more adversarial fault model with
-relatively more faults. 
+\Cref{chap:verdi} addresses complexity challenges due to fault tolerance
+  by introducing Verdi,
+  a Coq-based framework for implementing and verifying distributed systems
+  that supports composition fault tolerance reasoning
+  through \emph{verified system transformers}.
+Verdi models system execution using various \emph{network semantics},
+  each of which encodes assumptions about the environment
+  including possible network faults and machine failures.
+Network semantics can range from the idealistic to the pessimistic.
+For example, one might assume that
+  all messages are eventually delivered and that nodes never fail.
+On the other hand, one might assume that
+  packets can be dropped and duplicated and that
+  some nodes behave arbitrarily or maliciously.
+Different systems are designed under different sets of assumptions,
+  and network semantics capture those assumptions.
+The main point of defining a particular network semantics in Verdi is
+  to verify distributed systems using that semantics as the fault model.
+Assuming the network semantics accurately describes
+  all possible behaviors of the system's environment,
+  Verdi guarantees that the system is correct for all executions.
+For common network semantics,
+  there are typically generic mechanisms that systems use to tolerate faults,
+  \eg sequence numbering to handle message reordering and duplication.
+Another key benefit of
+  clearly stating environment assumptions as network semantics is that
+  one can then express these generic fault tolerance mechanisms
+  as transformers between semantics.
+Using transformers, the engineer can
+  implement and reason about their application
+  in a fault model with relatively few faults, and
+  then automatically transform the system into one
+  that provably works in a more adversarial fault model
+  with relatively more faults.
 
 %whose key insight is to treat the network as analogous to the heap in
 %sequential programming.

@@ -125,61 +125,87 @@ Using transformers, the engineer can
 %sequential programming.
 
 
-\Cref{chap:disel} details \disel, a concurrent separation logic for distributed
-systems.  Whereas Verdi separates fault tolerance reasoning from
-application logic (which we call vertical compositionality), \disel
-separates reasoning about cooperating services by defining interfaces
-that capture protocol-specific invariants (which we call horizontal
-compositionality).  This supports verifying modern distributed systems
-which are typically built by composing several services to provide a
-high-level application.  A proof of correctness for a system composed
-of several services should similarly compose the guarantees of each
-individual service. Using the techniques of Verdi alone, such reasoning
-is not possible. Instead of needing to reason across fault models,
-what we need is the ability to abstract over the low-level details
-provides its guarantee. To achieve this, we take inspiration from
-modern program logics for concurrent programs that manipulate
-heap pointers. These logics allow modular reasoning by separating
-different parts of the heap, each of which can be reasoned about
-independently. \disel applies this insight to distributed systems
-by analogizing the network as the heap. Thus, \disel separates
-the network messages of each protocol from each other, allowing
-independent reasoning. \disel achieves this through several
-novel logical mechanisms that support strengthening the invariants
-of other services with client-specific facts and capturing the
-essential interactions between protocols with \emph{hooks}, which
-allow one protocol's actions to be conditioned on another protocol's
-state.
+\Cref{chap:disel} details \disel,
+  a concurrent separation logic for distributed systems.
+Whereas
+  Verdi separates fault tolerance reasoning from application logic
+  (which we call vertical compositionality),
+  \disel separates reasoning about cooperating services
+  by defining interfaces that capture protocol-specific invariants
+  (which we call horizontal compositionality).
+This supports verifying modern distributed systems
+  which are typically built by composing several services
+  to provide a high-level application.
+A proof of correctness for a system composed of several services
+  should similarly compose the guarantees of each individual service.
+Using the techniques of Verdi alone,
+  such reasoning is not possible.
+Instead of reasoning across fault models,
+  what we need is
+  to abstract over the low-level details
+  each component uses to provide its guarantee.
+To achieve this, we take inspiration
+  from modern program logics for concurrent programs
+  that manipulate heap pointers.
+These logics allow modular reasoning
+  by separating different parts of the heap,
+  each of which can be reasoned about independently.
+\disel applies this insight to distributed systems
+  by analogizing the network as the heap.
+Thus, \disel separates the network messages
+  of each protocol from each other,
+  allowing independent reasoning.
+\disel achieves this through several logical mechanisms
+  that support strengthening the invariants
+  of other services with client-specific facts and
+  capturing the essential interactions
+  between protocols with \emph{hooks},
+  which allow one protocol's actions
+  to be conditioned on another protocol's state.
 
-Experience in \disel and Verdi showed that the manual effort required
-to provide strong guarantees about distributed systems doesn't scale
-with current tooling.  In particular, the key sticking point is
-developing inductive invariants.  Deductive verification techniques,
-such as those used in \disel and Verdi, are highly expressive but
-require the user to provide a great deal of additional input,
-including inductive invariants and their proofs. For example, using
-Verdi to prove an application correct in a relatively nice fault model
-still requires deriving an application-specific invariant, which
-simultaneously (1) summarizes all the reachable states of the
-application, (2) is closed under the transition system's step
-relation, and (3) ensures the absence of safety violations.
-The difficulty of deriving these invariants inspired us to
-investigate techniques for proving and even \emph{inferring}
-inductive invariants automatically.
+Experience in \disel and Verdi showed
+  that the manual effort required
+  to provide strong guarantees about distributed systems
+  doesn't scale with current tooling.
+In particular, the key sticking point is developing inductive invariants.
+Deductive verification techniques,
+  such as those used in \disel and Verdi,
+  are highly expressive
+  but require the user to provide a great deal of additional input,
+  including inductive invariants and their proofs.
+For example, using Verdi to prove an application correct
+  in a relatively nice fault model
+  still requires deriving an application-specific invariant,
+  which simultaneously
+    (1) summarizes all the reachable states of the application,
+    (2) is closed under the transition system's step relation, and
+    (3) ensures the absence of safety violations.
+The difficulty of deriving these invariants
+  inspired us to investigate techniques
+  for automatically proving and even \emph{inferring} inductive invariants.
 
-\Cref{chap:mypyvy} describes \mypyvy, a tool for automated reasoning about
-symbolic transition systems in first-order logic and supports a
-variety of automated reasoning tools to analyze systems.
-\mypyvy takes an input file describing a symbolic transition system
-and performs the analysis requested by the user. Three of the most
-interesting analyses include inductive invariant checking,
-invariant inference, and bounded trace reasoning.
-In all cases, \mypyvy loads the transition system and compiles
-it together with the user-requested analysis to a (sequence of) SMT queries,
-which are dispatched by Z3.
+\Cref{chap:mypyvy} describes \mypyvy,
+  a tool for automated reasoning
+  about symbolic transition systems in first-order logic
+  that supports a variety of automated reasoning tools to analyze systems.
+\mypyvy takes an input file
+  describing a symbolic transition system
+  and performs the analysis requested by the user.
+Three of the most interesting analyses include
+  inductive invariant checking,
+  invariant inference, and
+  bounded trace reasoning.
+In all cases, \mypyvy loads the transition system
+  and compiles it together with the user-requested analysis
+  to a (sequence of) SMT queries,
+  which are dispatched by Z3.
 
-Distributed systems remains a crucial topic with many potential avenues
-for future work. In \cref{chap:conclusion}, we summarize our plans for extending
-Verdi, \disel, and \mypyvy to further improve the verification experience.
-We are especially excited to live in a world where more users are
-empowered to verify their distributed systems.
+Distributed systems remain a crucial topic
+  with many potential avenues for future work.
+In \cref{chap:conclusion},
+  we summarize our plans
+  for extending Verdi, \disel, and \mypyvy
+  to further improve the verification experience.
+We are especially excited
+  to live in a world where more users
+  are empowered to verify their distributed systems.

@@ -19,8 +19,7 @@
 \def\yMin{-5}
 \def\yMax{11}
 
-
-\begin{tikzpicture}[scale=0.35, >=stealth]
+\noindent\begin{tikzpicture}[scale=0.35, >=stealth]
   \foreach \i in {\xMin,...,\xMax} {
       \draw [very thin,gray] (\i,\yMin) -- (\i,\yMax);
   }
@@ -31,8 +30,8 @@
   \draw[<->, thick] (0, \yMin) -- (0, \yMax);
   \fill[fill=red, fill opacity=0.3] (0, 0) circle [radius=3];
   \draw[fill=black] (0, 5) circle [radius=0.25];
-  \draw[->, line width=2pt] (0, 5) -- (0, 6);
-  \draw[->, line width=2pt] (0, 5) -- (1, 4);
+  \draw[->, line width=1.5pt] (0, 5) -- (0, 6);
+  \draw[->, line width=1.5pt] (0, 5) -- (1, 4);
 \end{tikzpicture} 
 \begin{tikzpicture}[scale=0.35, >=stealth]
   \foreach \i in {\xMin,...,\xMax} {
@@ -45,12 +44,12 @@
   \draw[<->, thick] (0, \yMin) -- (0, \yMax);
   \fill[fill=red, fill opacity=0.3] (0, 0) circle [radius=3];
   \draw[fill=black] (0, 5) circle [radius=0.25];
-  \draw[->, line width=2pt] (0, 5) -- (0, 6);
-  \draw[->, line width=2pt] (0, 5) -- (1, 4);
-  \draw[->, line width=2pt] (0, 6) -- (0, 7);
-  \draw[->, line width=2pt] (0, 6) -- (1, 5);
-  \draw[->, line width=2pt] (1, 4) -- (1, 5);
-  \draw[->, line width=2pt] (1, 4) -- (2, 3);
+  \draw[->, line width=1.5pt] (0, 5) -- (0, 6);
+  \draw[->, line width=1.5pt] (0, 5) -- (1, 4);
+  \draw[->, line width=1.5pt] (0, 6) -- (0, 7);
+  \draw[->, line width=1.5pt] (0, 6) -- (1, 5);
+  \draw[->, line width=1.5pt] (1, 4) -- (1, 5);
+  \draw[->, line width=1.5pt] (1, 4) -- (2, 3);
 \end{tikzpicture} 
 \begin{tikzpicture}[scale=0.35, >=stealth]
   \foreach \i in {\xMin,...,\xMax} {
@@ -63,18 +62,18 @@
   \draw[<->, thick] (0, \yMin) -- (0, \yMax);
   \fill[fill=red, fill opacity=0.3] (0, 0) circle [radius=3];
   \draw[fill=black] (0, 5) circle [radius=0.25];
-  \draw[->, line width=2pt] (0, 5) -- (0, 6);
-  \draw[->, line width=2pt] (0, 5) -- (1, 4);
-  \draw[->, line width=2pt] (0, 6) -- (0, 7);
-  \draw[->, line width=2pt] (0, 6) -- (1, 5);
-  \draw[->, line width=2pt] (1, 4) -- (1, 5);
-  \draw[->, line width=2pt] (1, 4) -- (2, 3);
-  \draw[->, line width=2pt] (0, 7) -- (0, 8);
-  \draw[->, line width=2pt] (0, 7) -- (1, 6);
-  \draw[->, line width=2pt] (1, 5) -- (1, 6);
-  \draw[->, line width=2pt] (1, 5) -- (2, 4);
-  \draw[->, line width=2pt] (2, 3) -- (2, 4);
-  \draw[->, line width=2pt] (2, 3) -- (3, 2);
+  \draw[->, line width=1.5pt] (0, 5) -- (0, 6);
+  \draw[->, line width=1.5pt] (0, 5) -- (1, 4);
+  \draw[->, line width=1.5pt] (0, 6) -- (0, 7);
+  \draw[->, line width=1.5pt] (0, 6) -- (1, 5);
+  \draw[->, line width=1.5pt] (1, 4) -- (1, 5);
+  \draw[->, line width=1.5pt] (1, 4) -- (2, 3);
+  \draw[->, line width=1.5pt] (0, 7) -- (0, 8);
+  \draw[->, line width=1.5pt] (0, 7) -- (1, 6);
+  \draw[->, line width=1.5pt] (1, 5) -- (1, 6);
+  \draw[->, line width=1.5pt] (1, 5) -- (2, 4);
+  \draw[->, line width=1.5pt] (2, 3) -- (2, 4);
+  \draw[->, line width=1.5pt] (2, 3) -- (3, 2);
 \end{tikzpicture}
 
 \noindent\begin{tikzpicture}[scale=0.35, >=stealth]
@@ -103,6 +102,37 @@
   \draw[fill=black] (0, 5) circle [radius=0.25];
   \fill[fill=blue, fill opacity=0.3] (0, 5) -- ($(-\yMax,\yMax)+(5,0)$) -- (\xMax, \yMax) -- ($(\xMax,5)-(0,\xMax)$) -- cycle;
 \end{tikzpicture} 
+\begin{tikzpicture}[scale=0.35, >=stealth]
+  \foreach \i in {\xMin,...,\xMax} {
+      \draw [very thin,gray] (\i,\yMin) -- (\i,\yMax);
+  }
+  \foreach \i in {\yMin,...,\yMax} {
+      \draw [very thin,gray] (\xMin,\i) -- (\xMax,\i);
+  }
+  \draw[<->, thick] (\xMin, 0) -- (\xMax, 0);
+  \draw[<->, thick] (0, \yMin) -- (0, \yMax);
+  \fill[fill=red, fill opacity=0.3] (0, 0) circle [radius=3];
+  \draw[fill=black] (0, 5) circle [radius=0.25];
+  \fill[fill=yellow, fill opacity=0.3] (0, 5) -- (0, \yMax) -- ($(-\yMax,\yMax)+(5,0)$) -- cycle;
+\end{tikzpicture} 
+
+\noindent\begin{tikzpicture}[scale=0.35, >=stealth]
+  \foreach \i in {\xMin,...,\xMax} {
+      \draw [very thin,gray] (\i,\yMin) -- (\i,\yMax);
+  }
+  \foreach \i in {\yMin,...,\yMax} {
+      \draw [very thin,gray] (\xMin,\i) -- (\xMax,\i);
+  }
+  \draw[<->, thick] (\xMin, 0) -- (\xMax, 0);
+  \draw[<->, thick] (0, \yMin) -- (0, \yMax);
+  \fill[fill=red, fill opacity=0.3] (0, 0) circle [radius=3];
+  \draw[fill=black] (0, 5) circle [radius=0.25];
+  \fill[even odd rule, fill=orange, fill opacity=0.3]
+  (0, 5) -- (5, 0) -- (5, -4) -- (-5, -4) -- (-5, 5) -- cycle
+  (\xMin, \yMax) -- (\xMax, \yMax) -- (\xMax, \yMin) -- (\xMin, \yMin) -- cycle;
+  \draw[red, ->, line width=1.5pt] (-5, 5) -- (-4, 4);
+\end{tikzpicture} 
+
 
 \begin{verbatim}
 - the crawler

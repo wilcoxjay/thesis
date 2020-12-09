@@ -12,6 +12,9 @@
 - something something clean research platform
 \end{verbatim}
 
+\todo{delete}
+\lipsum[1-2]
+
 \section{Background on Transition Systems}
 
 \def\xMin{-8}
@@ -19,113 +22,219 @@
 \def\yMin{-5}
 \def\yMax{11}
 
-\noindent\begin{tikzpicture}[scale=0.35, >=stealth]
-  \foreach \i in {\xMin,...,\xMax} {
-      \draw [very thin,gray] (\i,\yMin) -- (\i,\yMax);
-  }
-  \foreach \i in {\yMin,...,\yMax} {
-      \draw [very thin,gray] (\xMin,\i) -- (\xMax,\i);
-  }
-  \draw[<->, thick] (\xMin, 0) -- (\xMax, 0);
-  \draw[<->, thick] (0, \yMin) -- (0, \yMax);
-  \fill[fill=red, fill opacity=0.3] (0, 0) circle [radius=3];
-  \draw[fill=black] (0, 5) circle [radius=0.25];
-\end{tikzpicture}
-\begin{tikzpicture}[scale=0.35, >=stealth]
-  \foreach \i in {\xMin,...,\xMax} {
-      \draw [very thin,gray] (\i,\yMin) -- (\i,\yMax);
-  }
-  \foreach \i in {\yMin,...,\yMax} {
-      \draw [very thin,gray] (\xMin,\i) -- (\xMax,\i);
-  }
-  \draw[<->, thick] (\xMin, 0) -- (\xMax, 0);
-  \draw[<->, thick] (0, \yMin) -- (0, \yMax);
-  \fill[fill=red, fill opacity=0.3] (0, 0) circle [radius=3];
-  \draw[fill=black] (0, 5) circle [radius=0.25];
-  \draw[->, line width=1.5pt] (0, 5) -- (0, 6);
-  \draw[->, line width=1.5pt] (0, 5) -- (1, 4);
-\end{tikzpicture} 
-\begin{tikzpicture}[scale=0.35, >=stealth]
-  \foreach \i in {\xMin,...,\xMax} {
-      \draw [very thin,gray] (\i,\yMin) -- (\i,\yMax);
-  }
-  \foreach \i in {\yMin,...,\yMax} {
-      \draw [very thin,gray] (\xMin,\i) -- (\xMax,\i);
-  }
-  \draw[<->, thick] (\xMin, 0) -- (\xMax, 0);
-  \draw[<->, thick] (0, \yMin) -- (0, \yMax);
-  \fill[fill=red, fill opacity=0.3] (0, 0) circle [radius=3];
-  \draw[fill=black] (0, 5) circle [radius=0.25];
-  \draw[->, line width=1.5pt] (0, 5) -- (0, 6);
-  \draw[->, line width=1.5pt] (0, 5) -- (1, 4);
-  \draw[->, line width=1.5pt] (0, 6) -- (0, 7);
-  \draw[->, line width=1.5pt] (0, 6) -- (1, 5);
-  \draw[->, line width=1.5pt] (1, 4) -- (1, 5);
-  \draw[->, line width=1.5pt] (1, 4) -- (2, 3);
-\end{tikzpicture} 
-\begin{tikzpicture}[scale=0.35, >=stealth]
-  \foreach \i in {\xMin,...,\xMax} {
-      \draw [very thin,gray] (\i,\yMin) -- (\i,\yMax);
-  }
-  \foreach \i in {\yMin,...,\yMax} {
-      \draw [very thin,gray] (\xMin,\i) -- (\xMax,\i);
-  }
-  \draw[<->, thick] (\xMin, 0) -- (\xMax, 0);
-  \draw[<->, thick] (0, \yMin) -- (0, \yMax);
-  \fill[fill=red, fill opacity=0.3] (0, 0) circle [radius=3];
-  \draw[fill=black] (0, 5) circle [radius=0.25];
-  \draw[->, line width=1.5pt] (0, 5) -- (0, 6);
-  \draw[->, line width=1.5pt] (0, 5) -- (1, 4);
-  \draw[->, line width=1.5pt] (0, 6) -- (0, 7);
-  \draw[->, line width=1.5pt] (0, 6) -- (1, 5);
-  \draw[->, line width=1.5pt] (1, 4) -- (1, 5);
-  \draw[->, line width=1.5pt] (1, 4) -- (2, 3);
-  \draw[->, line width=1.5pt] (0, 7) -- (0, 8);
-  \draw[->, line width=1.5pt] (0, 7) -- (1, 6);
-  \draw[->, line width=1.5pt] (1, 5) -- (1, 6);
-  \draw[->, line width=1.5pt] (1, 5) -- (2, 4);
-  \draw[->, line width=1.5pt] (2, 3) -- (2, 4);
-  \draw[->, line width=1.5pt] (2, 3) -- (3, 2);
-\end{tikzpicture}
-\begin{tikzpicture}[scale=0.35, >=stealth]
-  \foreach \i in {\xMin,...,\xMax} {
-      \draw [very thin,gray] (\i,\yMin) -- (\i,\yMax);
-  }
-  \foreach \i in {\yMin,...,\yMax} {
-      \draw [very thin,gray] (\xMin,\i) -- (\xMax,\i);
-  }
-  \draw[<->, thick] (\xMin, 0) -- (\xMax, 0);
-  \draw[<->, thick] (0, \yMin) -- (0, \yMax);
-  \fill[fill=red, fill opacity=0.3] (0, 0) circle [radius=3];
-  \draw[fill=black] (0, 5) circle [radius=0.25];
-  \fill[fill=green, fill opacity=0.3] (0, 5) -- (0, \yMax) -- (\xMax, \yMax) -- ($(\xMax,5)-(0,\xMax)$) -- cycle;
-\end{tikzpicture} 
-\begin{tikzpicture}[scale=0.35, >=stealth]
-  \foreach \i in {\xMin,...,\xMax} {
-      \draw [very thin,gray] (\i,\yMin) -- (\i,\yMax);
-  }
-  \foreach \i in {\yMin,...,\yMax} {
-      \draw [very thin,gray] (\xMin,\i) -- (\xMax,\i);
-  }
-  \draw[<->, thick] (\xMin, 0) -- (\xMax, 0);
-  \draw[<->, thick] (0, \yMin) -- (0, \yMax);
-  \fill[fill=red, fill opacity=0.3] (0, 0) circle [radius=3];
-  \draw[fill=black] (0, 5) circle [radius=0.25];
-  \fill[fill=blue, fill opacity=0.3] (0, 5) -- ($(-\yMax,\yMax)+(5,0)$) -- (\xMax, \yMax) -- ($(\xMax,5)-(0,\xMax)$) -- cycle;
-\end{tikzpicture} 
-\begin{tikzpicture}[scale=0.35, >=stealth]
-  \foreach \i in {\xMin,...,\xMax} {
-      \draw [very thin,gray] (\i,\yMin) -- (\i,\yMax);
-  }
-  \foreach \i in {\yMin,...,\yMax} {
-      \draw [very thin,gray] (\xMin,\i) -- (\xMax,\i);
-  }
-  \draw[<->, thick] (\xMin, 0) -- (\xMax, 0);
-  \draw[<->, thick] (0, \yMin) -- (0, \yMax);
-  \fill[fill=red, fill opacity=0.3] (0, 0) circle [radius=3];
-  \draw[fill=black] (0, 5) circle [radius=0.25];
-  \fill[fill=yellow, fill opacity=0.3] (0, 5) -- (0, \yMax) -- ($(-\yMax,\yMax)+(5,0)$) -- cycle;
-\end{tikzpicture} 
+\begin{figure}[t]
+  \centering
+  \begin{minipage}{0.5\linewidth}
+    \centering
+    \begin{tikzpicture}[scale=0.35, >=stealth]
+      \foreach \i in {\xMin,...,\xMax} {
+          \draw [very thin,gray] (\i,\yMin) -- (\i,\yMax);
+      }
+      \foreach \i in {\yMin,...,\yMax} {
+          \draw [very thin,gray] (\xMin,\i) -- (\xMax,\i);
+      }
+      \draw[<->, thick] (\xMin, 0) -- (\xMax, 0);
+      \draw[<->, thick] (0, \yMin) -- (0, \yMax);
+      \fill[fill=red, fill opacity=0.3] (0, 0) circle [radius=3];
+      \draw[fill=black] (0, 5) circle [radius=0.25];
+    \end{tikzpicture}
+    \caption{Robot initial configuration.}
+    \label{fig:robot-init}
+  \end{minipage}%
+  \begin{minipage}{0.5\linewidth}
+    \centering
+    \begin{tikzpicture}[scale=0.35, >=stealth]
+      \foreach \i in {\xMin,...,\xMax} {
+          \draw [very thin,gray] (\i,\yMin) -- (\i,\yMax);
+      }
+      \foreach \i in {\yMin,...,\yMax} {
+          \draw [very thin,gray] (\xMin,\i) -- (\xMax,\i);
+      }
+      \draw[<->, thick] (\xMin, 0) -- (\xMax, 0);
+      \draw[<->, thick] (0, \yMin) -- (0, \yMax);
+      \fill[fill=red, fill opacity=0.3] (0, 0) circle [radius=3];
+      \draw[fill=black] (0, 5) circle [radius=0.25];
+      \draw[->, line width=1.5pt] (0, 5) -- (0, 6);
+      \draw[->, line width=1.5pt] (0, 5) -- (1, 4);
+    \end{tikzpicture}
+    \caption{Robot's first steps.}
+    \label{fig:robot-first-steps}
+  \end{minipage}
+  \hrule
+  \vspace{1em}
+  \begin{minipage}{1\linewidth}
+    \centering
+    \begin{minipage}{0.5\linewidth}
+      \centering
+      \begin{tikzpicture}[scale=0.35, >=stealth]
+        \foreach \i in {\xMin,...,\xMax} {
+            \draw [very thin,gray] (\i,\yMin) -- (\i,\yMax);
+        }
+        \foreach \i in {\yMin,...,\yMax} {
+            \draw [very thin,gray] (\xMin,\i) -- (\xMax,\i);
+        }
+        \draw[<->, thick] (\xMin, 0) -- (\xMax, 0);
+        \draw[<->, thick] (0, \yMin) -- (0, \yMax);
+        \fill[fill=red, fill opacity=0.3] (0, 0) circle [radius=3];
+        \draw[fill=black] (0, 5) circle [radius=0.25];
+        \draw[->, line width=1.5pt] (0, 5) -- (0, 6);
+        \draw[->, line width=1.5pt] (0, 5) -- (1, 4);
+        \draw[->, line width=1.5pt] (0, 6) -- (0, 7);
+        \draw[->, line width=1.5pt] (0, 6) -- (1, 5);
+        \draw[->, line width=1.5pt] (1, 4) -- (1, 5);
+        \draw[->, line width=1.5pt] (1, 4) -- (2, 3);
+      \end{tikzpicture}%
+    \end{minipage}%
+    \begin{minipage}{0.5\linewidth}
+      \centering
+      \begin{tikzpicture}[scale=0.35, >=stealth]
+        \foreach \i in {\xMin,...,\xMax} {
+            \draw [very thin,gray] (\i,\yMin) -- (\i,\yMax);
+        }
+        \foreach \i in {\yMin,...,\yMax} {
+            \draw [very thin,gray] (\xMin,\i) -- (\xMax,\i);
+        }
+        \draw[<->, thick] (\xMin, 0) -- (\xMax, 0);
+        \draw[<->, thick] (0, \yMin) -- (0, \yMax);
+        \fill[fill=red, fill opacity=0.3] (0, 0) circle [radius=3];
+        \draw[fill=black] (0, 5) circle [radius=0.25];
+        \draw[->, line width=1.5pt] (0, 5) -- (0, 6);
+        \draw[->, line width=1.5pt] (0, 5) -- (1, 4);
+        \draw[->, line width=1.5pt] (0, 6) -- (0, 7);
+        \draw[->, line width=1.5pt] (0, 6) -- (1, 5);
+        \draw[->, line width=1.5pt] (1, 4) -- (1, 5);
+        \draw[->, line width=1.5pt] (1, 4) -- (2, 3);
+        \draw[->, line width=1.5pt] (0, 7) -- (0, 8);
+        \draw[->, line width=1.5pt] (0, 7) -- (1, 6);
+        \draw[->, line width=1.5pt] (1, 5) -- (1, 6);
+        \draw[->, line width=1.5pt] (1, 5) -- (2, 4);
+        \draw[->, line width=1.5pt] (2, 3) -- (2, 4);
+        \draw[->, line width=1.5pt] (2, 3) -- (3, 2);
+      \end{tikzpicture}
+    \end{minipage}%
+    \caption{Robot's second and third steps.}
+    \label{fig:robot-23-steps}
+  \end{minipage}
+\end{figure}
+
+Imagine robot in a 2-dimensional world.
+The robot starts at position $(0, 5)$,
+  and can take steps to integer grid points either
+ due north or diagonally southeast of its current position.
+The world has a circular hole of radius 3 centered at the origin.
+Can the robot ever fall in the hole?\footnote{Thanks to Jon Howell for this example.}
+
+The initial situation is depicted in \cref{fig:robot-init}.
+The smaller black circle represents the robot's initial position,
+  and the larger shaded red circle represents the hole at the origin.
+In its first step, shown in \cref{fig:robot-first-steps},
+  the robot could either move north one square,
+  or diagonally southeast one square.
+These two possibilities are drawn as thick black arrows.
+So far, the robot manages to avoid falling in.
+
+As the robot progresses, more and more positions are reachable,
+  each with a sequence of moves due north or diagonally southeast.
+The set of possible positions after two and three steps
+  are shown in \cref{fig:robot-23-steps}.
+Despite the growing number of states,
+  no sequence of steps causes the robot to fall in.
+
+\begin{figure}[t]
+  \centering
+  \begin{minipage}{0.5\linewidth}
+    \centering
+    \begin{tikzpicture}[scale=0.35, >=stealth]
+      \foreach \i in {\xMin,...,\xMax} {
+          \draw [very thin,gray] (\i,\yMin) -- (\i,\yMax);
+      }
+      \foreach \i in {\yMin,...,\yMax} {
+          \draw [very thin,gray] (\xMin,\i) -- (\xMax,\i);
+      }
+      \draw[<->, thick] (\xMin, 0) -- (\xMax, 0);
+      \draw[<->, thick] (0, \yMin) -- (0, \yMax);
+      \fill[fill=red, fill opacity=0.3] (0, 0) circle [radius=3];
+      \draw[fill=black] (0, 5) circle [radius=0.25];
+      \fill[fill=green, fill opacity=0.3] (0, 5) -- (0, \yMax) -- (\xMax, \yMax) -- ($(\xMax,5)-(0,\xMax)$) -- cycle;
+    \end{tikzpicture}
+    \caption{Robot's reachable positions.}
+    \label{fig:robot-reachable}
+  \end{minipage}%
+  \begin{minipage}{0.5\linewidth}
+    \centering
+    \begin{tikzpicture}[scale=0.35, >=stealth]
+      \foreach \i in {\xMin,...,\xMax} {
+          \draw [very thin,gray] (\i,\yMin) -- (\i,\yMax);
+      }
+      \foreach \i in {\yMin,...,\yMax} {
+          \draw [very thin,gray] (\xMin,\i) -- (\xMax,\i);
+      }
+      \draw[<->, thick] (\xMin, 0) -- (\xMax, 0);
+      \draw[<->, thick] (0, \yMin) -- (0, \yMax);
+      \fill[fill=red, fill opacity=0.3] (0, 0) circle [radius=3];
+      \draw[fill=black] (0, 5) circle [radius=0.25];
+      \fill[fill=blue, fill opacity=0.3] (0, 5) -- ($(-\yMax,\yMax)+(5,0)$) -- (\xMax, \yMax) -- ($(\xMax,5)-(0,\xMax)$) -- cycle;
+    \end{tikzpicture}
+    \caption{A simple overapproximation to the set of reachable positions.}
+    \label{fig:robot-inductive-invariant}
+  \end{minipage}
+\end{figure}
+
+We start to see a pattern emerging.
+No matter what happens,
+  the robot will never be able to move west of the $y$ axis,
+  nor will it be able to move southwest
+    of the diagonal line $x + y = 5$.
+This region is shown shaded in green in \cref{fig:robot-reachable}.
+Visually, this green polygonal region does not overlap with the red circle,
+  which ``proves'' that the robot never falls in.
+
+In fact, this green region exactly characterizes
+  the set of possible positions that the robot could reach
+  through some sequence of moves.
+Given any point in the green region,
+  the robot can reach it by first moving southeast over and over until
+  it is vertically below the target point,
+  and then moving due north over and over until the point is reached.
+
+Our proof that the robot never falls in
+  can be simplified slightly be noticing
+  that we never used the fact that
+  the robot always remains east of the $y$ axis.
+Instead, it is enough to convince ourselves that
+  the robot is always northeast of the line $x + y = 5$.
+This region is shown in blue in \cref{fig:robot-inductive-invariant}.
+Again, it does not visually overlap with the circle,
+  so it constitutes a visual ``proof'' that the robot never falls in.
+
+This time, though, not every position in the blue polygonal region is reachable,
+  since we have already realized that no position west of the $y$ axis is reachable.
+The unreachable positions from this region are shown in \cref{fig:robot-unreachable}.
+This example demonstrates that we can prove the robot never falls in
+  even without exactly characterizing the set of reachable positions.
+
+\begin{figure}[t]
+  \centering
+  \begin{tikzpicture}[scale=0.35, >=stealth]
+    \foreach \i in {\xMin,...,\xMax} {
+        \draw [very thin,gray] (\i,\yMin) -- (\i,\yMax);
+    }
+    \foreach \i in {\yMin,...,\yMax} {
+        \draw [very thin,gray] (\xMin,\i) -- (\xMax,\i);
+    }
+    \draw[<->, thick] (\xMin, 0) -- (\xMax, 0);
+    \draw[<->, thick] (0, \yMin) -- (0, \yMax);
+    \fill[fill=red, fill opacity=0.3] (0, 0) circle [radius=3];
+    \draw[fill=black] (0, 5) circle [radius=0.25];
+    \fill[fill=yellow, fill opacity=0.3] (-1, 5) -- (-1, \yMax) -- ($(-\yMax,\yMax)+(5,0)$) -- cycle;
+  \end{tikzpicture}
+  \caption{Unreachable positions from \cref{fig:robot-inductive-invariant}.}
+
+  \label{fig:robot-unreachable}
+\end{figure}
+
+
+\noindent
 \begin{tikzpicture}[scale=0.35, >=stealth]
   \foreach \i in {\xMin,...,\xMax} {
       \draw [very thin,gray] (\i,\yMin) -- (\i,\yMax);
@@ -139,7 +248,7 @@
   \draw[fill=black] (0, 5) circle [radius=0.25];
   \draw[red, ->, line width=1.5pt] (-2, 3) -- +(1, -1);
   \draw[red, ->, line width=1.5pt] (1, -3) -- +(0, 1);
-\end{tikzpicture} 
+\end{tikzpicture}
 \begin{tikzpicture}[scale=0.35, >=stealth]
   \foreach \i in {\xMin,...,\xMax} {
       \draw [very thin,gray] (\i,\yMin) -- (\i,\yMax);
@@ -156,7 +265,7 @@
   (\xMin, \yMax) -- (\xMax, \yMax) -- (\xMax, \yMin) -- (\xMin, \yMin) -- cycle;
   \draw[red, ->, line width=1.5pt] (-5, 5) -- (-4, 4);
   \draw[red, ->, line width=1.5pt] (2, -4) -- +(0, 1);
-\end{tikzpicture} 
+\end{tikzpicture}
 \begin{tikzpicture}[scale=0.35, >=stealth]
   \foreach \i in {\xMin,...,\xMax} {
       \draw [very thin,gray] (\i,\yMin) -- (\i,\yMax);
@@ -169,7 +278,7 @@
   \fill[fill=red, fill opacity=0.3] (0, 0) circle [radius=3];
   \draw[fill=black] (0, 5) circle [radius=0.25];
   \fill[fill=violet, fill opacity=0.4] (0, 5) -- (3, 2) -- (3, 1) -- (4, 0) -- (4, \yMin) -- (\xMax, \yMin) -- (\xMax, \yMax) -- ($(-\yMax,\yMax)+(5,0)$) -- cycle;
-\end{tikzpicture} 
+\end{tikzpicture}
 \begin{tikzpicture}[scale=0.35, >=stealth]
   \foreach \i in {\xMin,...,\xMax} {
       \draw [very thin,gray] (\i,\yMin) -- (\i,\yMax);
@@ -184,7 +293,7 @@
   \fill[fill=violet, fill opacity=0.4] (0, 5) -- (3, 2) -- (3, 1) -- (4, 0) -- (4, \yMin) -- (\xMax, \yMin) -- (\xMax, \yMax) -- ($(-\yMax,\yMax)+(5,0)$) -- cycle;
   \draw[->, red, line width=1.5pt] ($(-\yMax,\yMax)+(4,0)$) -- (2, 2);
   \draw[->, red, line width=1.5pt] (3, \yMin) -- (3, 0);
-\end{tikzpicture} 
+\end{tikzpicture}
 
 \begin{verbatim}
 - the crawler

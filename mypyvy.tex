@@ -13,9 +13,11 @@
 \end{verbatim}
 
 \todo{delete}
-\lipsum[1-2]
+\lipsum[1]
 
 \section{Background on Transition Systems}
+
+\subsection{The robot example informally and pictorially}
 
 \def\xMin{-8}
 \def\xMax{8}
@@ -23,8 +25,8 @@
 \def\yMax{11}
 
 \begin{figure}[t]
-  \centering
-  \begin{minipage}{0.5\linewidth}
+  \hfil%
+  \begin{minipage}{0.45\linewidth}
     \centering
     \begin{tikzpicture}[scale=0.35, >=stealth]
       \foreach \i in {\xMin,...,\xMax} {
@@ -41,7 +43,8 @@
     \caption{Robot initial configuration.}
     \label{fig:robot-init}
   \end{minipage}%
-  \begin{minipage}{0.5\linewidth}
+  \hfil%
+  \begin{minipage}{0.45\linewidth}
     \centering
     \begin{tikzpicture}[scale=0.35, >=stealth]
       \foreach \i in {\xMin,...,\xMax} {
@@ -59,7 +62,8 @@
     \end{tikzpicture}
     \caption{Robot's first steps.}
     \label{fig:robot-first-steps}
-  \end{minipage}
+  \end{minipage}%
+  \hfil%
   \hrule
   \vspace{1em}
   \begin{minipage}{1\linewidth}
@@ -137,12 +141,12 @@ As the robot progresses, more and more positions are reachable,
   each with a sequence of moves due north or diagonally southeast.
 The set of possible positions after two and three steps
   are shown in \cref{fig:robot-23-steps}.
-Despite the growing number of states,
+Despite the growing number of reachable positions,
   no sequence of steps causes the robot to fall in.
 
 \begin{figure}[t]
-  \centering
-  \begin{minipage}{0.5\linewidth}
+  \hfil%
+  \begin{minipage}{0.45\linewidth}
     \centering
     \begin{tikzpicture}[scale=0.35, >=stealth]
       \foreach \i in {\xMin,...,\xMax} {
@@ -157,10 +161,11 @@ Despite the growing number of states,
       \draw[fill=black] (0, 5) circle [radius=0.25];
       \fill[fill=green, fill opacity=0.3] (0, 5) -- (0, \yMax) -- (\xMax, \yMax) -- ($(\xMax,5)-(0,\xMax)$) -- cycle;
     \end{tikzpicture}
-    \caption{Robot's reachable positions.}
+    \caption{Exact characterization of the robot's reachable positions.}
     \label{fig:robot-reachable}
   \end{minipage}%
-  \begin{minipage}{0.5\linewidth}
+  \hfil%
+  \begin{minipage}{0.45\linewidth}
     \centering
     \begin{tikzpicture}[scale=0.35, >=stealth]
       \foreach \i in {\xMin,...,\xMax} {
@@ -178,6 +183,7 @@ Despite the growing number of states,
     \caption{A simple overapproximation to the set of reachable positions.}
     \label{fig:robot-inductive-invariant}
   \end{minipage}
+  \hfil%
 \end{figure}
 
 We start to see a pattern emerging.
@@ -192,6 +198,7 @@ Visually, this green polygonal region does not overlap with the red circle,
 In fact, this green region exactly characterizes
   the set of possible positions that the robot could reach
   through some sequence of moves.
+(We call such positions ``reachable''.)
 Given any point in the green region,
   the robot can reach it by first moving southeast over and over until
   it is vertically below the target point,
@@ -210,91 +217,259 @@ Again, it does not visually overlap with the circle,
 This time, though, not every position in the blue polygonal region is reachable,
   since we have already realized that no position west of the $y$ axis is reachable.
 The unreachable positions from this region are shown in \cref{fig:robot-unreachable}.
-This example demonstrates that we can prove the robot never falls in
+This second proof demonstrates that we can prove the robot never falls in
   even without exactly characterizing the set of reachable positions.
+
+\begin{figure}[t]%
+%  \centering%
+  \hfil%
+  \begin{minipage}{0.45\linewidth}
+    \centering
+    \begin{tikzpicture}[scale=0.35, >=stealth]
+      \foreach \i in {\xMin,...,\xMax} {
+          \draw [very thin,gray] (\i,\yMin) -- (\i,\yMax);
+      }
+      \foreach \i in {\yMin,...,\yMax} {
+          \draw [very thin,gray] (\xMin,\i) -- (\xMax,\i);
+      }
+      \draw[<->, thick] (\xMin, 0) -- (\xMax, 0);
+      \draw[<->, thick] (0, \yMin) -- (0, \yMax);
+      \fill[fill=red, fill opacity=0.3] (0, 0) circle [radius=3];
+      \draw[fill=black] (0, 5) circle [radius=0.25];
+      \fill[fill=yellow, fill opacity=0.3] (-1, 5) -- (-1, \yMax) -- ($(-\yMax,\yMax)+(5,0)$) -- cycle;
+    \end{tikzpicture}
+    \caption{Positions from \cref{fig:robot-inductive-invariant} that are unreachable.}
+    \label{fig:robot-unreachable}
+  \end{minipage}%
+  \hfil%
+  \begin{minipage}{0.45\linewidth}
+    \centering
+    \begin{tikzpicture}[scale=0.35, >=stealth]
+      \foreach \i in {\xMin,...,\xMax} {
+          \draw [very thin,gray] (\i,\yMin) -- (\i,\yMax);
+      }
+      \foreach \i in {\yMin,...,\yMax} {
+          \draw [very thin,gray] (\xMin,\i) -- (\xMax,\i);
+      }
+      \draw[<->, thick] (\xMin, 0) -- (\xMax, 0);
+      \draw[<->, thick] (0, \yMin) -- (0, \yMax);
+      \fill[fill=red, fill opacity=0.3] (0, 0) circle [radius=3];
+      \draw[fill=black] (0, 5) circle [radius=0.25];
+      \fill[fill=orange, fill opacity=0.3]
+      (\xMin, -\xMin) -- (\xMin, \yMax) -- (\xMax, \yMax) -- (\xMax, \yMin) --
+      (-\yMin, \yMin) -- cycle;
+      \draw[red,fill=red] (1, 1) circle [radius=0.25];
+    \end{tikzpicture}
+    \caption{The orange region is unsafe because it intersects the red circle.}
+    \label{fig:robot-unsafe}
+  \end{minipage}%
+%  \dotfill
+  \hfil
+\end{figure}
 
 \begin{figure}[t]
   \centering
-  \begin{tikzpicture}[scale=0.35, >=stealth]
-    \foreach \i in {\xMin,...,\xMax} {
-        \draw [very thin,gray] (\i,\yMin) -- (\i,\yMax);
-    }
-    \foreach \i in {\yMin,...,\yMax} {
-        \draw [very thin,gray] (\xMin,\i) -- (\xMax,\i);
-    }
-    \draw[<->, thick] (\xMin, 0) -- (\xMax, 0);
-    \draw[<->, thick] (0, \yMin) -- (0, \yMax);
-    \fill[fill=red, fill opacity=0.3] (0, 0) circle [radius=3];
-    \draw[fill=black] (0, 5) circle [radius=0.25];
-    \fill[fill=yellow, fill opacity=0.3] (-1, 5) -- (-1, \yMax) -- ($(-\yMax,\yMax)+(5,0)$) -- cycle;
-  \end{tikzpicture}
-  \caption{Unreachable positions from \cref{fig:robot-inductive-invariant}.}
-
-  \label{fig:robot-unreachable}
 \end{figure}
 
+Reflecting on our two admittedly informal proofs so far,
+  we can boil them each down into three essential proof steps:
+  (1) identify a set of positions $I$ that
+  (2) contains all reachable positions; and that
+  (3) does not intersect the red circle.
+Each proof step is important.
+Proof step (1) requires some creativity and foresight
+  to pick a set that will make proof steps (2) and (3) possible.
+Proof step (3) has been fairly straightforward so far,
+  because we can visually analyze our set and the red circle
+  to determine if they overlap.
+If we wanted to be more precise about proof step (3),
+  we could do some algebra to show that
+  any position $(x, y)$ that satisfies the linear inequalities
+  that define the polygonal regions from
+    \cref{fig:robot-reachable,fig:robot-inductive-invariant}
+  always fall outside the red circle,
+  i.e. $\sqrt{x^2 + y^2} > 3$.
 
-\noindent
-\begin{tikzpicture}[scale=0.35, >=stealth]
-  \foreach \i in {\xMin,...,\xMax} {
-      \draw [very thin,gray] (\i,\yMin) -- (\i,\yMax);
-  }
-  \foreach \i in {\yMin,...,\yMax} {
-      \draw [very thin,gray] (\xMin,\i) -- (\xMax,\i);
-  }
-  \draw[<->, thick] (\xMin, 0) -- (\xMax, 0);
-  \draw[<->, thick] (0, \yMin) -- (0, \yMax);
-  \fill[fill=red, fill opacity=0.3] (0, 0) circle [radius=3];
-  \draw[fill=black] (0, 5) circle [radius=0.25];
-  \draw[red, ->, line width=1.5pt] (-2, 3) -- +(1, -1);
-  \draw[red, ->, line width=1.5pt] (1, -3) -- +(0, 1);
-\end{tikzpicture}
-\begin{tikzpicture}[scale=0.35, >=stealth]
-  \foreach \i in {\xMin,...,\xMax} {
-      \draw [very thin,gray] (\i,\yMin) -- (\i,\yMax);
-  }
-  \foreach \i in {\yMin,...,\yMax} {
-      \draw [very thin,gray] (\xMin,\i) -- (\xMax,\i);
-  }
-  \draw[<->, thick] (\xMin, 0) -- (\xMax, 0);
-  \draw[<->, thick] (0, \yMin) -- (0, \yMax);
-  \fill[fill=red, fill opacity=0.3] (0, 0) circle [radius=3];
-  \draw[fill=black] (0, 5) circle [radius=0.25];
-  \fill[even odd rule, fill=orange, fill opacity=0.3]
-  (0, 5) -- (5, 0) -- (5, -4) -- (-5, -4) -- (-5, 5) -- cycle
-  (\xMin, \yMax) -- (\xMax, \yMax) -- (\xMax, \yMin) -- (\xMin, \yMin) -- cycle;
-  \draw[red, ->, line width=1.5pt] (-5, 5) -- (-4, 4);
-  \draw[red, ->, line width=1.5pt] (2, -4) -- +(0, 1);
-\end{tikzpicture}
-\begin{tikzpicture}[scale=0.35, >=stealth]
-  \foreach \i in {\xMin,...,\xMax} {
-      \draw [very thin,gray] (\i,\yMin) -- (\i,\yMax);
-  }
-  \foreach \i in {\yMin,...,\yMax} {
-      \draw [very thin,gray] (\xMin,\i) -- (\xMax,\i);
-  }
-  \draw[<->, thick] (\xMin, 0) -- (\xMax, 0);
-  \draw[<->, thick] (0, \yMin) -- (0, \yMax);
-  \fill[fill=red, fill opacity=0.3] (0, 0) circle [radius=3];
-  \draw[fill=black] (0, 5) circle [radius=0.25];
-  \fill[fill=violet, fill opacity=0.4] (0, 5) -- (3, 2) -- (3, 1) -- (4, 0) -- (4, \yMin) -- (\xMax, \yMin) -- (\xMax, \yMax) -- ($(-\yMax,\yMax)+(5,0)$) -- cycle;
-\end{tikzpicture}
-\begin{tikzpicture}[scale=0.35, >=stealth]
-  \foreach \i in {\xMin,...,\xMax} {
-      \draw [very thin,gray] (\i,\yMin) -- (\i,\yMax);
-  }
-  \foreach \i in {\yMin,...,\yMax} {
-      \draw [very thin,gray] (\xMin,\i) -- (\xMax,\i);
-  }
-  \draw[<->, thick] (\xMin, 0) -- (\xMax, 0);
-  \draw[<->, thick] (0, \yMin) -- (0, \yMax);
-  \fill[fill=red, fill opacity=0.3] (0, 0) circle [radius=3];
-  \draw[fill=black] (0, 5) circle [radius=0.25];
-  \fill[fill=violet, fill opacity=0.4] (0, 5) -- (3, 2) -- (3, 1) -- (4, 0) -- (4, \yMin) -- (\xMax, \yMin) -- (\xMax, \yMax) -- ($(-\yMax,\yMax)+(5,0)$) -- cycle;
-  \draw[->, red, line width=1.5pt] ($(-\yMax,\yMax)+(4,0)$) -- (2, 2);
-  \draw[->, red, line width=1.5pt] (3, \yMin) -- (3, 0);
-\end{tikzpicture}
+Proof step (2) is more subtle.
+We have claimed informally that the robot will never
+  be able to move southwest of the line $x + y = 5$,
+  nor west of the $y$ axis,
+  but what would constitute a more detailed proof of this fact?
+These claims are claims of \emph{invariance},
+  i.e., that the set $I$ from proof step (1) is an invariant,
+  where an invariant is a set that contains all reachable positions.
+The key to proving invariance is an \emph{inductive} argument,
+  which first shows (2.1) that the initial position is in $I$
+  and then shows (2.2) that, from any position in $I$,
+  all steps the robot could take
+  lead to new positions that are also in $I$.
+By induction, this implies that all reachable positions
+  are contained in $I$.
+For the invariants represented in
+  \cref{fig:robot-reachable,fig:robot-inductive-invariant}
+  we could make proof steps (2.1) and (2.2) more precise
+  by showing that the initial position
+    satisfies the linear inequalities for the polygonal regions
+  and by showing that if $(x,y)$ satisfies the inequalities,
+    then so do both $(x, y+1)$ (moving due north)
+      and $(x+1, y-1)$ (moving southeast).
 
+\begin{figure}[t]%
+%  \centering%
+  \hfil%
+  \begin{minipage}{0.45\linewidth}
+    \centering
+      \begin{tikzpicture}[scale=0.35, >=stealth]
+        \foreach \i in {\xMin,...,\xMax} {
+            \draw [very thin,gray] (\i,\yMin) -- (\i,\yMax);
+        }
+        \foreach \i in {\yMin,...,\yMax} {
+            \draw [very thin,gray] (\xMin,\i) -- (\xMax,\i);
+        }
+        \draw[<->, thick] (\xMin, 0) -- (\xMax, 0);
+        \draw[<->, thick] (0, \yMin) -- (0, \yMax);
+        \fill[fill=red, fill opacity=0.3] (0, 0) circle [radius=3];
+        \draw[fill=black] (0, 5) circle [radius=0.25];
+        \draw[red, ->, line width=1.5pt] (-2, 3) -- +(1, -1);
+        \draw[red, ->, line width=1.5pt] (1, -3) -- +(0, 1);
+        \fill[even odd rule, fill=orange, fill opacity=0.3]
+        (0, 4) -- ++(1, -1) -- ++(1, 0) -- ++(1, -1) -- ++(0, -1) -- ++(1, -1)
+               -- ++(-1, -1) -- ++(0, -1) -- ++(-1, -1) -- ++(-1, 0) -- ++(-1, -1)
+               -- ++(-1, 1) -- ++(-1, 0) -- ++(-1, 1) -- ++(0, 1) -- ++(-1, 1)
+               -- ++(1, 1) -- ++(0, 1) -- ++(1, 1) -- ++(1, 0) -- ++(1, 1)
+               -- cycle
+        (\xMin, \yMax) -- (\xMax, \yMax) -- (\xMax, \yMin) -- (\xMin, \yMin) -- cycle;
+      \end{tikzpicture}
+    \caption{The region outside the circle is invariant but not inductive.}
+    \label{fig:robot-cti1}
+  \end{minipage}%
+  \hfil%
+  \begin{minipage}{0.45\linewidth}
+    \centering
+    \begin{tikzpicture}[scale=0.35, >=stealth]
+      \foreach \i in {\xMin,...,\xMax} {
+          \draw [very thin,gray] (\i,\yMin) -- (\i,\yMax);
+      }
+      \foreach \i in {\yMin,...,\yMax} {
+          \draw [very thin,gray] (\xMin,\i) -- (\xMax,\i);
+      }
+      \draw[<->, thick] (\xMin, 0) -- (\xMax, 0);
+      \draw[<->, thick] (0, \yMin) -- (0, \yMax);
+      \fill[fill=red, fill opacity=0.3] (0, 0) circle [radius=3];
+      \draw[fill=black] (0, 5) circle [radius=0.25];
+      \fill[even odd rule, fill=orange, fill opacity=0.3]
+      (0, 5) -- (5, 0) -- (5, -4) -- (-5, -4) -- (-5, 5) -- cycle
+      (\xMin, \yMax) -- (\xMax, \yMax) -- (\xMax, \yMin) -- (\xMin, \yMin) -- cycle;
+      \draw[red, ->, line width=1.5pt] (-5, 5) -- (-4, 4);
+      \draw[red, ->, line width=1.5pt] (2, -4) -- +(0, 1);
+    \end{tikzpicture}
+    \caption{This simplified region is also invariant but not inductive.}
+    \label{fig:robot-cti2}
+  \end{minipage}%
+%  \dotfill
+  \hfil
+\end{figure}
+
+It is instructive to see what happens when
+  the set $I$ selected in proof step (1)
+  fails to proof steps (2) or (3).
+When proof step (3) fails,
+  $I$ intersects the red circle,
+  as in \cref{fig:robot-unsafe}.
+In this case we call the set $I$ ``unsafe''.
+The small opaque red dot shows an example position that is both
+  in the candidate set $I$ drawn as the orange region
+  and the shaded red circle at the origin.
+When proof step (2) fails,
+  there is a position in $I$ from which
+  the robot can step to a position outside $I$,
+  as in \cref{fig:robot-cti1,fig:robot-cti2}.
+The red arrows show examples of positions in the orange regions
+  that can step out of orange regions.
+We call such positions ``counterexamples to inductiveness'', or CTIs.
+
+\begin{figure}[t]%
+  \hfil%
+  \begin{minipage}{0.45\linewidth}
+    \centering
+    \begin{tikzpicture}[scale=0.35, >=stealth]
+      \foreach \i in {\xMin,...,\xMax} {
+          \draw [very thin,gray] (\i,\yMin) -- (\i,\yMax);
+      }
+      \foreach \i in {\yMin,...,\yMax} {
+          \draw [very thin,gray] (\xMin,\i) -- (\xMax,\i);
+      }
+      \draw[<->, thick] (\xMin, 0) -- (\xMax, 0);
+      \draw[<->, thick] (0, \yMin) -- (0, \yMax);
+      \fill[fill=red, fill opacity=0.3] (0, 0) circle [radius=3];
+      \draw[fill=black] (0, 5) circle [radius=0.25];
+      \fill[fill=violet, fill opacity=0.4] (0, 5) -- (3, 2) -- (3, 1) -- (4, 0) -- (4, \yMin) -- (\xMax, \yMin) -- (\xMax, \yMax) -- ($(-\yMax,\yMax)+(5,0)$) -- cycle;
+    \end{tikzpicture}
+    \caption{The largest safe inductive invariant for the robot.}
+    \label{fig:robot-large-invariant}
+  \end{minipage}%
+  \hfil%
+  \begin{minipage}{0.45\linewidth}
+    \centering
+    \begin{tikzpicture}[scale=0.35, >=stealth]
+      \foreach \i in {\xMin,...,\xMax} {
+          \draw [very thin,gray] (\i,\yMin) -- (\i,\yMax);
+      }
+      \foreach \i in {\yMin,...,\yMax} {
+          \draw [very thin,gray] (\xMin,\i) -- (\xMax,\i);
+      }
+      \draw[<->, thick] (\xMin, 0) -- (\xMax, 0);
+      \draw[<->, thick] (0, \yMin) -- (0, \yMax);
+      \fill[fill=red, fill opacity=0.3] (0, 0) circle [radius=3];
+      \draw[fill=black] (0, 5) circle [radius=0.25];
+      \fill[fill=violet, fill opacity=0.4] (0, 5) -- (3, 2) -- (3, 1) -- (4, 0) -- (4, \yMin) -- (\xMax, \yMin) -- (\xMax, \yMax) -- ($(-\yMax,\yMax)+(5,0)$) -- cycle;
+      \draw[->, red, line width=1.5pt] ($(-\yMax,\yMax)+(4,0)$) -- (2, 2);
+      \draw[->, red, line width=1.5pt] (3, \yMin) -- (3, 0);
+    \end{tikzpicture}
+    \caption{Proof that every position outside the purple region is backward reachable.}
+    \label{fig:robot-backward-reachable}
+  \end{minipage}%
+  \hfil
+\end{figure}
+
+In the robot example, we can rephrase inductiveness by saying:
+  if a position $(x, y)$ is \emph{not} in $I$,
+  then neither is any state due south or diagonally northwest of $(x, y)$.
+Since our goal in any proof of the robot's safety is
+  to come up with a set $I$ that is inductive and does not intersect the red circle,
+  we know the states in the red circle must not be in $I$.
+Using the rephrasing above,
+  we can conclude that $I$ must also not contain
+  any state due south or diagonally northwest of the red circle.
+Continuing to rule out states in this way,
+  we can find the \emph{largest} set $I$ that will make the proof go through,
+  shown in \cref{fig:robot-large-invariant}.
+To convince ourselves that this region $I$ is the largest safe inductive invariant,
+  it is enough to show that every position not in $I$ is \emph{backward reachable},
+  by which we mean, there is a sequence of steps
+  starting from the position and ending somewhere in the red circle.
+\Cref{fig:robot-backward-reachable} demonstrates that
+  the positions just outside the purple region are all backward reachable,
+  using sequences of steps that follow the red arrows to the red circle.
+Every other position outside the purple shaded region
+  is either due south or diagonally northwest of one of these two red arrows,
+  and so is also backward reachable.
+
+Because the robot example is so simple,
+  we are able to exactly characterize
+    the set of reachable states (\cref{fig:robot-reachable}) and
+    the set of backward reachable states (\cref{fig:robot-backward-reachable}).
+In more complex examples, this will be much more difficult,
+  but luckily it will always be sufficient to find an overapproximation
+  to the set of reachable states, such as \cref{fig:robot-inductive-invariant},
+  which proves safety without exactly characterizing
+  reachability or backward reachability.
+
+\subsection{The robot example in set theory}
+
+\todo{jrw}
+
+\clearpage
 \begin{verbatim}
 - the crawler
   - thanks to jon howell for suggesting this example

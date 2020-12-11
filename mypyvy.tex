@@ -467,40 +467,110 @@ In more complex examples, this will be much more difficult,
 
 \subsection{The robot example in set theory}
 
+\def\robot{\ensuremath{\mathsf{robot}}}
+\def\reach{\ensuremath{\mathsf{reach}}}
+
+Let's formalize the robot example from the previous section
+  using the language of set theory.
+
+A \emph{transition system} $\tau = (S, S^0, \to)$ consists of a set of states $S$,
+  a set of initial states $S^0\subseteq S$,
+  and a binary transition relation $\to\subseteq S\times S$.
+We write $s\to s'$ to mean $(s, s') \in \to$.
+
+We can formalize the robot example as a transition system as follows.
+\begin{align*}
+  \tau_\robot &= (S_\robot, S^0_\robot, \to_\robot)\\
+  S_\robot &= \set{(x,y) \mid x,y\in\mathbb{Z}}\\
+  S^0_\robot &= \set{(0, 5)}\\
+  \to_\robot &= \set{((x,y), (x, y + 1)) \mid x,y\in\mathbb{Z}} \mathrel{\cup}\\
+            &\phantom{\mathrel{=}}\quad \set{((x,y), (x + 1, y - 1)) \mid x,y\in\mathbb{Z}}
+\end{align*}
+
+We write $s\to^* s'$ to mean that there is a (possibly empty) sequence of steps from $s$ to $s'$.
+Using this notation, we can say that a state $s$ is \emph{reachable}
+  if there is an initial state $s_0\in S^0$ such that $s_0 \to^* s$.
+We write $\reach(\tau)$ for the set of reachable states of the transition system $\tau$.
+
+In the robot example,
+  we characterized the set of reachable states in \cref{fig:robot-reachable}.
+We can express the set precisely as
+\[
+  \reach(\tau_\robot) = \set{(x,y) \mid x \ge 0 \text{ and } x + y \ge 5}
+\]
+The proof of this fact follows the informal discussion from the previous section.
+First, the set on the right hand side contains all reachable states,
+  which can be shown with an inductive argument (that we spell out below).
+Second, every state in this set is reachable,
+  which we can show by
+  first showing that everything on the diagonal $x + y = 5 \land x \ge 0$ is reachable
+    (by a sequence of southeast moves from the initial state),
+  and then showing that every state above the diagonal is reachable
+    (by a subsequent sequence of north moves).
+
+A \emph{safety property} for a transition system is a set of bad states $B\subseteq S$
+  that is claimed not to intersect the set of reachable states.
+In the robot example, the bad states are the ones in the red circle:
+\[
+  B_\robot = \set{(x,y) \mid \sqrt{x^2 + y^2} \le 3}.
+\]
+The claim that the robot is \emph{safe} means that $B_\robot$ does not intersect $\reach(\tau_\robot)$,
+  which is visually apparent in \cref{fig:robot-reachable}.
+
+In simple systems, such as the robot example,
+  $\reach(\tau)$ can be characterized directly,
+  but in more complex systems, it is neither practical nor useful
+  to obtain an exact characterization of reachable states.
+Instead, one often uses \emph{overapproximations} to reachability,
+  known as invariants.
+We say that a set $I$ is an \emph{invariant} if it contains every reachable state,
+  that is, if $\reach(\tau) \subseteq I$.
+Thus, another way to talk about safety properties is to say that
+  the complement of the set of bad states is an invariant,
+  i.e. $\reach(\tau) \subseteq S\setminus B$.
+When $\reach(\tau)$ has a direct characterization,
+  one can prove that $I$ is an invariant directly from the definition.
+But in complex systems where
+  no useful direct characterization of $\reach(\tau)$ exists,
+  one instead uses an inductive argument to establish invariance.
+We say that $I$ is an \emph{inductive invariant} if:
+  (1) $S^0\subseteq I$; and
+  (2) for any $s\in I$, if $s\to s'$, then $s' \in I$.
+
+Both the green region from \cref{fig:robot-reachable} and
+  the blue region from \cref{fig:robot-inductive-invariant}
+  are invariants, and in fact are inductive invariants.
+(Indeed $\reach(\tau)$ is always an inductive invariant in any transition system.)
+However, not all invariants are inductive invariants.
+For example, the orange regions from \cref{fig:robot-cti1,fig:robot-cti2}
+  are both invariants (because they contain the green region from \cref{fig:robot-reachable})
+  but neither are inductive.
+If we wanted to use an inductive argument to show
+  that these orange regions are invariants,
+  we would need to first \emph{strengthen} them.
+
+In general, suppose we want to prove that $I$ is an invariant of some transition system $\tau$,
+  and that we don't have a useful direct characterization of $\reach(\tau)$ handy.
+Further, suppose that $I$ is not inductive.
+To show that $I$ is an invariant, it is enough to find another set $J$ such that:
+  (1) $J\subseteq I$; and
+  (2) $J$ is inductive.
+Since $J$ is inductive, $J$ is an invariant, i.e. $\reach(\tau)\subseteq J$.
+But $J\subseteq I$, so $I$ is also an invariant.
+In the robot example, we could use the blue region from \cref{fig:robot-inductive-invariant}
+  as an inductive strengthening
+  to prove that either of the orange regions is an invariant.
+Most of the art and skill of working with transition systems
+  is in the ability to look at a non-inductive property
+  and see what kinds of strengthenings of it
+  might be good ideas to get it to be inductive.
+
+\subsection{First-order logic for transition systems}
+
 \todo{jrw}
 
 \clearpage
 \begin{verbatim}
-- the crawler
-  - thanks to jon howell for suggesting this example
-  - cute little robot starting at (0, 5) in the plane
-  - there is a circular hole of radius 3 centered at the origin
-  - crawler can take 1 step due north or one diagonal step south-east
-  - prove: the crawler never falls in the hole
-  - model steps as binary relation on "states" (points in the plane)
-  - a state s is reachable if there is some sequence of steps that starts from
-    (0, 5) and ends at s
-  - <draw nice pictures>
-  - inductive invariant vs reachable states vs bad states
-- mathematical transition systems
-  - incrementally formalize the crawler in set theory
-  - a transition system is a state space, a set of initial states,
-    and a binary transition relation on states
-  - an execution of a transition system is a nonempty sequence of states,
-    the first of which is initial, and each adjacent pair of which are
-    related by the transition relation.
-  - a reachable state is one that appears in some execution
-  - alternatively,
-  - an invariant of a transition system is a set of states that contains
-    all reachable states
-  - the way to prove something is an invariant is by induction on executions.
-  - an inductive invariant I is a set of states that:
-    - contains all initial states
-    - is closed under the transition relation;
-      ie, if s \in I and s -> s' then s' \in I
-  - the "safety verification problem for transition systems" is the problem of,
-    given a transition system and a "goal" invariant called the safety property,
-    find an inductive invariant that implies the safety property.
 - first-order symbolic transition systems "on paper"
   - incrementally formalize the crawler in logic
   - so far everything is in math/set theory

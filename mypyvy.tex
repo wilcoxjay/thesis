@@ -481,10 +481,10 @@ We write $s\to s'$ to mean $(s, s') \in \to$.
 We can formalize the robot example as a transition system as follows.
 \begin{align*}
   \tau_\robot &= (S_\robot, S^0_\robot, \to_\robot)\\
-  S_\robot &= \set{(x,y) \mid x,y\in\mathbb{Z}}\\
+  S_\robot &= \set{(x,y) \mid x,y\in\Z}\\
   S^0_\robot &= \set{(0, 5)}\\
-  \to_\robot &= \set{((x,y), (x, y + 1)) \mid x,y\in\mathbb{Z}} \mathrel{\cup}\\
-            &\phantom{\mathrel{=}}\quad \set{((x,y), (x + 1, y - 1)) \mid x,y\in\mathbb{Z}}
+  \to_\robot &= \set{((x,y), (x, y + 1)) \mid x,y\in\Z} \mathrel{\cup}\\
+            &\phantom{\mathrel{=}}\quad \set{((x,y), (x + 1, y - 1)) \mid x,y\in\Z}
 \end{align*}
 
 We write $s\to^* s'$ to mean that there is a (possibly empty) sequence of steps from $s$ to $s'$.
@@ -508,7 +508,9 @@ Second, every state in this set is reachable,
   and then showing that every state above the diagonal is reachable
     (by a subsequent sequence of north moves).
 
-A \emph{safety property} for a transition system is a set of bad states $B\subseteq S$
+In the robot example, our goal was to prove the robot never falls in the red circle.
+In general, the kinds of goals we will be interested in will be \emph{safety properties},
+  specifically, that a transition system avoids a certain set of \emph{bad states} $B\subseteq S$
   that is claimed not to intersect the set of reachable states.
 In the robot example, the bad states are the ones in the red circle:
 \[
@@ -528,6 +530,11 @@ We say that a set $I$ is an \emph{invariant} if it contains every reachable stat
 Thus, another way to talk about safety properties is to say that
   the complement of the set of bad states is an invariant,
   i.e. $\reach(\tau) \subseteq S\setminus B$.
+Indeed, another way to set up the safety verification problem is
+  to specify $S\setminus B$ directly instead of $B$,
+  and to claim that $S\setminus B$ is an invariant.
+We call this the \emph{positive phrasing of the safety problem}.
+
 When $\reach(\tau)$ has a direct characterization,
   one can prove that $I$ is an invariant directly from the definition.
 But in complex systems where
@@ -567,7 +574,65 @@ Most of the art and skill of working with transition systems
 
 \subsection{First-order logic for transition systems}
 
-\todo{jrw}
+We are on a journey to more and more formally specify the robot example
+  and to prove its safety more and more automatically.
+The next step on this journey is through first-order logic,
+  which we assume the reader is at least passingly familiar with.
+\todo{Really tempted \emph{not} to assume that, but it's a whole other subsection...}
+The basic idea is to make the states of a transition system
+  \emph{first-order structures} over \emph{state variables}, and
+  to use formulas to describe the initial states,
+  the transition relation, the bad states,
+  and the inductive invariant.
+
+For the robot, the state variables are $x$ and $y$,
+  both of sort $\Z$.
+A first order structure is just
+  an assignment of variables to values of the correct sort.
+In this case, a structure will be an integer for $x$ and an integer for $y$,
+  that is, a pair of integers, or, in yet other words, a point in the plane.
+
+The robot only has one initial state, $(5, 0)$.
+We can describe this as a logical formula over the variables $x$ and $y$ as
+\[
+  \mathit{Init}_{\robot} ~~=~~ x = 0 \land y = 5.
+\]
+
+Taking the positive phrasing of the robot example's safety problem,
+  we want to show that the set of states
+  with distance strictly greater than 3 from the origin
+  is an invariant of the transition system.
+We can express this safety invariant as (avoiding square roots by squaring both sides)
+\[
+  \mathit{Safe}_{\robot} ~~=~~ x^2 + y^2 > 9.
+\]
+
+Since the initial set of states and the safety set of states are \emph{sets} of states,
+  they are encoded in logic as formulas over \emph{one} copy of the state variables.
+The transition relation, on the other hand, is a \emph{binary} relation,
+  so it is encoded in logic as a formula over \emph{two} copies of the state variables.
+In the robot example, we can write the transition relation as
+\[
+    \mathit{Tr}_{\robot} ~~=~~ (x' = x \land y' = y + 1) \lor (x' = x + 1 \land y' = y - 1).
+\]
+We think of the primed variables $x'$ and $y'$ as
+  holding the values \emph{after} the step occurs,
+while the unprimed versions hold the values from before the step.
+The transition formula says:
+\begin{quote}
+  A step is possible from $(x, y)$ to $(x', y')$ if
+    either $x$ stays the same and $y$ is incremented by one,
+    or $x$ is incremented by one and $y$ is decremented by one.
+\end{quote}
+
+Next, we can state the blue region from \cref{fig:robot-inductive-invariant}
+  as a formula
+\[
+  \mathit{Inv}_{\robot} ~~=~~ x + y \ge 5.
+\]
+
+\todo{jrw: talk about logical queries over these things for inductiveness}
+
 
 \clearpage
 \begin{verbatim}

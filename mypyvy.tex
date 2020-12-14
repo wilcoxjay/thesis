@@ -602,15 +602,21 @@ Taking the positive phrasing of the robot example's safety problem,
   we want to show that the set of states
   with distance strictly greater than 3 from the origin
   is an invariant of the transition system.
-We can express this safety invariant as (avoiding square roots by squaring both sides)
+We can express this safety invariant as follows 
+  (avoiding square roots by squaring both sides)
 \[
   \mathit{Safe}_{\robot} ~~=~~ x^2 + y^2 > 9.
 \]
 
-Since the initial set of states and the safety set of states are \emph{sets} of states,
+Since the initial condition and the safety condition 
+  of a transition system are \emph{sets} of states,
   they are encoded in logic as formulas over \emph{one} copy of the state variables.
-The transition relation, on the other hand, is a \emph{binary} relation,
+The transition relation, on the other hand, is a \emph{binary relation},
   so it is encoded in logic as a formula over \emph{two} copies of the state variables.
+(We refer to formulas over two copies of the state variables as
+  "two-vocabulary" or "two-state" formulas, 
+  and we call the second copy of the variables "primed" 
+  and write them as $x'$, for example.)
 In the robot example, we can write the transition relation as
 \[
     \mathit{Tr}_{\robot} ~~=~~ (x' = x \land y' = y + 1) \lor (x' = x + 1 \land y' = y - 1).
@@ -631,20 +637,63 @@ Next, we can state the blue region from \cref{fig:robot-inductive-invariant}
   \mathit{Inv}_{\robot} ~~=~~ x + y \ge 5.
 \]
 
-\todo{jrw: talk about logical queries over these things for inductiveness}
-
+If we are trying to prove $\mathit{Safe}$ using $\mathit{Inv}$,
+  there are two things to check. 
+First, $\mathit{Inv}$ must be strong enough 
+  to prove $\mathit{Safe}$, 
+  that is,
+\[
+  \mathit{Inv} \Rightarrow \mathit{Safe}.
+\]
+In the robot example, this amounts to the fact that 
+  the blue region from \cref{fig:robot-inductive-invariant}
+  does not intersect the red circle at the origin, 
+\[
+  x + y \ge 5 \Rightarrow x^2 + y^2 > 9.
+\]
+Second, $\mathit{Inv}$ must be inductive, 
+  which is phrased logically using two formulas,
+one to check that the initial condition implies the invariant,
+\[
+  \mathit{Init} \Rightarrow \mathit{Inv},
+\]
+and one to check that the invariant is preserved by the transition relation,
+\[
+  \mathit{Inv} \land \mathid{Tr} \Rightarrow \mathit{Inv}'.
+\]
+The first of these two formulas is over a single copy of the state.
+But the second formula is a two-vocabulary formula, 
+  both because it contains the two-vocabulary formula $\mathid{Tr}$,
+  and because we use $\mathit{Inv}'$ to mean ``$\mathit{Inv}$ 
+  with all the state variables changed to their primed copy''. 
+In the robot example, there is only one initial state, 
+  so the check on initial states amounts the fact that
+  the initial state is in the blue region
+  or, logically,
+\[
+  x = 0 \land y = 5 \Rightarrow x + y \ge 5.
+\]
+To check that the blue region is preserved by the robot's steps,
+  we need to observe that there is no way to start in a state in the blue region
+  and take a step outside of it, 
+  or, logically,
+\[
+  x + y \ge 5 \land ((x' = x \land y' = y + 1) \lor 
+                     (x' = x + 1 \land y' = y - 1)) \Rightarrow 
+  x' + y' \ge 5.
+\]
+This formula is valid, since 
+  either $y' > y$ and $x' = x$ in the first kind of step, 
+  or $x + y = x' + y'$ in the second kind of step.
+While a bit tedious, this is perhaps the first time in the robot example 
+  that we haven't had to hand-wave around 
+  the fact that one of the regions is inductive.
+It follows from the tedium of checking this formula's validity.
 
 \clearpage
 \begin{verbatim}
 - first-order symbolic transition systems "on paper"
-  - incrementally formalize the crawler in logic
-  - so far everything is in math/set theory
-  - can formalize transition systems in first-order logic as follows
   - states will be first-order structures over some vocabulary \sigma
-  - initial states will be described by a FO-formula over \sigma
-  - transition relation is a FO-formula over the "double vocabulary"
-    consisting of two copies of \sigma, the second copy we call "primed"
-  - the safety property is also a (single vocabulary) formula
   - the goal is to find a (single vocabulary) formula that is an inductive
     invariant for the system
   - inductiveness can be checked by checking validity of:

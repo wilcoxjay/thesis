@@ -690,31 +690,42 @@ While a bit tedious, this is perhaps the first time in the robot example
   the fact that one of the regions is inductive.
 It follows from the tedium of checking this formula's validity.
 
-\clearpage
 \begin{verbatim}
 - first-order symbolic transition systems "on paper"
   - states will be first-order structures over some vocabulary \sigma
-  - the goal is to find a (single vocabulary) formula that is an inductive
-    invariant for the system
-  - inductiveness can be checked by checking validity of:
-    - Init => I       (note: single vocab)
-    - I /\ TR => I'   (note: double vocab)
-      where I' is I with all the vocabulary symbols replaced by the primed copy
 \end{verbatim}
 
-\section{The Crawler in \mypyvy}
+\section{The Robot in \mypyvy}
 
-\begin{verbatim}
-- incrementally formalize the crawler in \mypyvy
-- make a joke about "mutable constant"
-\end{verbatim}
+It's finally time to write some \mypyvy.
+Let's take a tour of the syntax using our robot example.
+A \mypyvy program is a list of \emph{declarations}.
+There are two broad kinds of declarations:
+  those that define the transition system
+  and those that make \emph{queries} over the transition system.
 
-\begin{verbatim}
+Here are two declarations for the state variables of the robot.%
+\begin{lstlisting}[language=mypyvy, xleftmargin=.2\textwidth, xrightmargin=.2\textwidth]
 mutable constant x: int
 mutable constant y: int
+\end{lstlisting}
+In \mypyvy, we spell ``variable'' as ``\lstinline[language=mypyvy]{mutable constant}'', 
+  following the logical terminology of a constant symbol.
+(We discuss mutability in more detail in the next section.)
+All the state declarations together
+  define the state space of the transition system.
 
-init x = 0 & y = 5
-
+The initial conditions are declared with the \lstinline[language=mypyvy]{init} keyword.
+\begin{lstlisting}[language=mypyvy, xleftmargin=.2\textwidth, xrightmargin=.2\textwidth]
+init x = 0 
+init y = 5
+\end{lstlisting}
+The conjunction of all the \lstinline[language=mypyvy]{init} declarations in a \mypyvy program 
+  is the initial condition of the resulting transition system.
+  
+The transition relation is declared 
+  with several \lstinline[language=mypyvy]{transition} declarations.
+\begin{lstlisting}[language=mypyvy, xleftmargin=.2\textwidth, xrightmargin=.2\textwidth]
 transition north()
   modifies y
   new(y) = y + 1
@@ -723,11 +734,82 @@ transition south_east()
   modifies x, y
   & new(x) = x + 1
   & new(y) = y - 1
+\end{lstlisting}
+Each \lstinline[language=mypyvy]{transition} has a name and takes parameters in parentheses, 
+  which are existentially quantified.
+The \lstinline[language=mypyvy]{modifies} clause is a comma-separated list of state components 
+  that are changed by this transition;
+  all other state components are implicitly constrained to not change.
+For example, in the \lstinline[language=mypyvy]{north} transition, 
+  there is an implicit constraint $x' = x$, 
+  which was explicit when we were writing directly in first-order logic
+  in the previous section.
+In \mypyvy syntax, instead of primed symbols, 
+  we use the \lstinline[language=mypyvy]{new} keyword,
+  so \lstinline[language=mypyvy]{new(y)} refers to $y'$.
+The global transition relation of the transition system is 
+  the \emph{disjunction} of all the transition declarations in the program.
 
+The safety property is declared using the \lstinline[language=mypyvy]{keyword}.
+\begin{lstlisting}[language=mypyvy, xleftmargin=.2\textwidth, xrightmargin=.2\textwidth]
 safety x * x + y * y > 9
+\end{lstlisting}
+If the program has more than one \lstinline[language=mypyvy]{safety} declaration, 
+  the safety property is the conjunction of all the declarations.
+The \lstinline[language=mypyvy]{safety} keyword is the first declaration 
+  that is a \emph{query}. 
+When processing the program, \mypyvy will attempt to prove that 
+  the safety property is true in all reachable states of the system.
+As we have discussed throughout this chapter, 
+  the primary technique for proving a safety property is 
+  to find an inductive invariant.
 
+These invariants are declared using the \lstinline[language=mypyvy]{invariant} keyword.
+\begin{lstlisting}[language=mypyvy, xleftmargin=.2\textwidth, xrightmargin=.2\textwidth]
 invariant x + y >= 5
-\end{verbatim}
+\end{lstlisting}
+Again, all the \lstinline[language=mypyvy]{invariant} declarations in a program are 
+  implicitly conjoined. 
+
+\begin{figure}[t]
+  \centering
+  \begin{center}
+  \begin{tabular}{c}
+  \begin{lstlisting}[language=mypyvy]
+  mutable constant x: int
+  mutable constant y: int
+  
+  init x = 0 & y = 5
+  
+  transition north()
+    modifies y
+    new(y) = y + 1
+  
+  transition south_east()
+    modifies x, y
+    & new(x) = x + 1
+    & new(y) = y - 1
+  
+  # don't fall in!
+  safety x * x + y * y > 9
+  
+  invariant x + y >= 5
+  \end{lstlisting}
+  \end{tabular}
+  \end{center}
+  \caption{The complete robot example in \mypyvy.}
+  \label{fig:robot-mypyvy}
+\end{figure}
+That completes the robot example in \mypyvy.
+Running \mypyvy on the resulting file causes it to 
+  issue queries to the solver to verify that the invariants 
+  are inductive and imply the safety property.
+For this program, the verification succeeds.
+Commenting out the \lstinline[language=mypyvy]{invariant} declaration
+  causes the verification to fail 
+  because the safety property is not itself inductive.
+
+\todo{jrw: show output of tool in success and failure cases}
 
 \section{Expressing Transition Systems in \mypyvy}
 

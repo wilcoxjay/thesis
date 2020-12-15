@@ -22,6 +22,15 @@
 \fvset{fontsize=\scriptsize}
 \renewcommand{\ttdefault}{txtt} % provide bold tt in alltt
 
+\lstdefinelanguage{mypyvy}
+{morekeywords={mutable, immutable, constant, relation, function, 
+               init, transition, modifies, new, safety, invariant},
+sensitive=false,
+morecomment=[l]{\#},
+basicstyle=\ttfamily,
+keywordstyle=\ttfamily\bfseries,
+}
+
 %\usepackage{libertine}
 \usepackage[T1]{fontenc}
 

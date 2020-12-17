@@ -747,17 +747,25 @@ For example, in the \lstinline[language=mypyvy]{north} transition,
 In \mypyvy syntax, instead of primed symbols, 
   we use the \lstinline[language=mypyvy]{new} keyword,
   so \lstinline[language=mypyvy]{new(y)} refers to $y'$.
+\mypyvy also allows conjunction and disjunction symbols 
+  (\texttt{\&} and \texttt{|}) to appear \emph{before} the first conjunct or disjunct, 
+  for the sole reason that it makes it easy to vertically align 
+  the lines of a long formula.
 The global transition relation of the transition system is 
   the \emph{disjunction} of all the transition declarations in the program.
 
 The safety property is declared using the \lstinline[language=mypyvy]{keyword}.
 \begin{lstlisting}[language=mypyvy, xleftmargin=.2\textwidth, xrightmargin=.2\textwidth]
-safety x * x + y * y > 9
+safety [does_not_fall_in] x * x + y * y > 9
 \end{lstlisting}
+A safety property can be given a name by including it in square brackets.
+In this case the name is \texttt{does\_not\_fall\_in}.
+\mypyvy will use this name to refer to this invariant. 
+If no name is given, \mypyvy will refer to a line number instead.
 If the program has more than one \lstinline[language=mypyvy]{safety} declaration, 
   the safety property is the conjunction of all the declarations.
-The \lstinline[language=mypyvy]{safety} keyword is the first declaration 
-  that is a \emph{query}. 
+The \lstinline[language=mypyvy]{safety} keyword is our first example of 
+  a declaration that is a \emph{query}. 
 When processing the program, \mypyvy will attempt to prove that 
   the safety property is true in all reachable states of the system.
 As we have discussed throughout this chapter, 
@@ -768,18 +776,21 @@ These invariants are declared using the \lstinline[language=mypyvy]{invariant} k
 \begin{lstlisting}[language=mypyvy, xleftmargin=.2\textwidth, xrightmargin=.2\textwidth]
 invariant x + y >= 5
 \end{lstlisting}
-Again, all the \lstinline[language=mypyvy]{invariant} declarations in a program are 
+Invariants can also be named, but here we choose to not name the invariant.
+All the \lstinline[language=mypyvy]{invariant} declarations in a program are 
   implicitly conjoined. 
 
 \begin{figure}[t]
-  \centering
+%  \centering
+  \begin{minipage}[b]{.4\textwidth}
   \begin{center}
   \begin{tabular}{c}
-  \begin{lstlisting}[language=mypyvy]
+  \begin{lstlisting}[language=mypyvy, numbers=left]
   mutable constant x: int
   mutable constant y: int
   
-  init x = 0 & y = 5
+  init x = 0 
+  init y = 5
   
   transition north()
     modifies y
@@ -791,25 +802,49 @@ Again, all the \lstinline[language=mypyvy]{invariant} declarations in a program 
     & new(y) = y - 1
   
   # don't fall in!
-  safety x * x + y * y > 9
-  
+  safety [does_not_fall_in] 
+    x * x + y * y > 9
+
   invariant x + y >= 5
   \end{lstlisting}
   \end{tabular}
   \end{center}
   \caption{The complete robot example in \mypyvy.}
   \label{fig:robot-mypyvy}
+  \end{minipage}%
+  \hfil%
+  \begin{minipage}[b]{.5\textwidth}
+  \begin{center}
+    {\footnotesize
+  \begin{verbatim}
+  checking init:
+    implies invariant does_not_fall_in... ok.
+    implies invariant on line 20... ok.
+  checking transition north:
+    preserves invariant does_not_fall_in... ok.
+    preserves invariant on line 20... ok.
+  checking transition south_east:
+    preserves invariant does_not_fall_in... ok.
+    preserves invariant on line 20... ok.
+  all ok!
+  \end{verbatim}
+    }
+  \end{center}
+  \caption{\mypyvy output when verifying the robot example.}
+  \label{fig:robot-mypyvy-output-success}
+  \end{minipage}%
 \end{figure}
 That completes the robot example in \mypyvy.
 Running \mypyvy on the resulting file causes it to 
   issue queries to the solver to verify that the invariants 
   are inductive and imply the safety property.
 For this program, the verification succeeds.
+\mypyvy's output can be seen in \cref{fig:robot-mypyvy-output-success}.
 Commenting out the \lstinline[language=mypyvy]{invariant} declaration
   causes the verification to fail 
   because the safety property is not itself inductive.
 
-\todo{jrw: show output of tool in success and failure cases}
+\todo{jrw: show output of tool failure cases}
 
 \section{Expressing Transition Systems in \mypyvy}
 

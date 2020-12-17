@@ -4,7 +4,7 @@
 \newcounter{tagz}
 
 \input{lstcoq}
-\lstset{style=Coq}
+%\lstset{style=Coq}
 \hyphenation{Dist-Algo}
 \hyphenation{Ssref-lect}
 
@@ -257,7 +257,7 @@
 
 \newcommand{\spa}{\phantom{zz}}
 \newcommand{\spb}{\phantom{zzzz}}
-\newcommand{\code}[1]{\lstinline[basicstyle=\small\ttfamily]{#1}}
+\newcommand{\code}[1]{\lstinline[style=Coq, basicstyle=\small\ttfamily]{#1}}
 \newcommand{\fld}{\#}
 
 \newcommand{\SendEffect}{\mathsf{Sent}}
@@ -2749,7 +2749,7 @@ a participant, is defined as follows:
 
 %\newpage
 
-\begin{lstlisting}[basicstyle=\footnotesize\ttfamily]
+\begin{lstlisting}[style=Coq, basicstyle=\footnotesize\ttfamily]
 Definition localCoh (n: nid) := [Pred l |
   if n == cn then exists(r: round) (s: CState) (log: Log), l = st :-> (r, s) \+ lg :-> log
   else if n \in pts
@@ -2797,7 +2797,7 @@ from the coordinator before changing its state.
 {\centering
 \begin{tabular}{c@{\ }c}
 \begin{minipage}{0.5\linewidth}
-\begin{lstlisting}[basicstyle=\scriptsize\ttfamily]
+\begin{lstlisting}[style=Coq, basicstyle=\scriptsize\ttfamily]
 Definition c_send_step (r: round) (cs: CState)
            (log: Log) (to: node) := match cs with
   (* Sending prepare-messages *)
@@ -2815,7 +2815,7 @@ Definition c_send_step (r: round) (cs: CState)
 \end{minipage}
 &
 \begin{minipage}{0.5\linewidth}
-\begin{lstlisting}[basicstyle=\scriptsize\ttfamily]
+\begin{lstlisting}[style=Coq, basicstyle=\scriptsize\ttfamily]
 Definition c_recv_step (r : round) (cs : CState)
        (log : Log) (tag : nat) (mbody : seq nat) :=
   match cs with
@@ -2923,7 +2923,7 @@ interesting to connect \disel to Ivy, which we leave to the future work.
 \centering
 \begin{tabular}{@{\!\!}c@{\ }c}
 \begin{minipage}{0.5\linewidth}
-\begin{lstlisting}[basicstyle=\scriptsize\ttfamily]
+\begin{lstlisting}[style=Coq, basicstyle=\scriptsize\ttfamily]
 Definition coordinator_round (d : data) :
 {r log}, DHT [cn, TPC]
 (fun s => loc cn s = st :-> (r, CInit) \+ lg :-> log,
@@ -2946,7 +2946,7 @@ Definition coordinator_round (d : data) :
 &
 \setlength{\belowcaptionskip}{-10pt}
 \begin{minipage}{0.5\linewidth}
-\begin{lstlisting}[basicstyle=\scriptsize\ttfamily]
+\begin{lstlisting}[style=Coq, basicstyle=\scriptsize\ttfamily]
 Definition run_coordinator (data_seq : seq data) :
 DHT [cn, _]
 (fun s => s = loc cn s = st :-> (0, CInit) \+ lg :-> [::]
@@ -2970,7 +2970,7 @@ DHT [cn, _]
 
 % \begin{figure}[t]
 % {\centering
-% \begin{lstlisting}[basicstyle=\footnotesize\ttfamily]
+% \begin{lstlisting}[style=Coq, basicstyle=\footnotesize\ttfamily]
 % Definition pt_PhaseTwoCommit cn pt r x log ms :=
 % (loc pt = st :-> (r, PRespYes x) \+ lg :-> log
 %  /\$ $ msg_spec cn pt commit_req [r] ms
@@ -2999,7 +2999,7 @@ it, or have acknowledged the decision and returned to the initial state.
 The invariant also implies a simple statement of \emph{global log agreement},
 shown below:
 %
-\begin{lstlisting}[basicstyle=\footnotesize\ttfamily]
+\begin{lstlisting}[style=Coq, basicstyle=\footnotesize\ttfamily]
 Lemma cn_log_agreement d r log pt : loc cn d = st :-> (r, CInit) \+ lg :-> log ->
         coh d -> TPCInv d -> forall pt, pt \in pts -> loc pt d = st :-> (r, PInit) \+ lg :-> log.
 \end{lstlisting}
@@ -3084,7 +3084,7 @@ of data being sent in a response to a request.
 \begin{tabular}{c@{\ }c}
 \!\!\!\!
 \begin{minipage}{0.5\linewidth}
-\begin{lstlisting}[basicstyle=\scriptsize\ttfamily]
+\begin{lstlisting}[style=Coq, basicstyle=\scriptsize\ttfamily]
 Program Definition run_and_query (ds : seq data) pt :
   {reqs resp}, DHT [cn, (TPC \+ Query, QHook)]
   (fun s => loc s = st :-> (0, CInit) \+ lg :-> [::] /\
@@ -3105,7 +3105,7 @@ Program Definition run_and_query (ds : seq data) pt :
 \end{minipage}
 &
 \begin{minipage}{0.5\linewidth}
-\begin{lstlisting}[basicstyle=\scriptsize\ttfamily]
+\begin{lstlisting}[style=Coq, basicstyle=\scriptsize\ttfamily]
 Parameter core_state : Data -> LocState -> Prop.
 Parameter local_indicator : Data -> LocState -> Prop.
 
@@ -3186,7 +3186,7 @@ spec we only need to instantiate the predicates as follows and prove
 the corresponding hypotheses for \code{TPC}, which follow from the
 invariant \code{TPCInv} and Lemma~\code{cn_log_agreement}:
 
-\begin{lstlisting}[basicstyle=\footnotesize\ttfamily]
+\begin{lstlisting}[style=Coq, basicstyle=\footnotesize\ttfamily]
 (* For TPC, abstract Data type is instantiated with a round number (nat) and Log. *)
 Definition Data := nat * Log.
 Definition local_indicator (d : Data) l := l = st :-> (d.1, CInit) \+ log :-> d.2.
@@ -3235,6 +3235,7 @@ by~\citet{Nanevski-al:POPL10}.
 
 %
 \begin{table}[t]
+\centering
 \begin{minipage}{0.54\textwidth}
 {
 \sffamily\footnotesize
@@ -3285,7 +3286,7 @@ by~\citet{Nanevski-al:POPL10}.
 \label{tab:locs}
 \end{table}
 %
-Table~\ref{tab:locs} \todo{does this table look ok?} summarizes the proof effort for the calculator,
+Table~\ref{tab:locs} summarizes the proof effort for the calculator,
 \code{TPC}/\code{Query} systems.
 %
 The \textsf{Defs/Specs} column measures all \emph{specification}

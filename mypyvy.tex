@@ -756,7 +756,7 @@ The global transition relation of the transition system is
 
 The safety property is declared using the \lstinline[language=mypyvy]{keyword}.
 \begin{lstlisting}[language=mypyvy, xleftmargin=.2\textwidth, xrightmargin=.2\textwidth]
-safety [does_not_fall_in] x * x + y * y > 9
+safety [no_fall_in] x * x + y * y > 9
 \end{lstlisting}
 A safety property can be given a name by including it in square brackets.
 In this case the name is \texttt{does\_not\_fall\_in}.
@@ -802,13 +802,14 @@ All the \lstinline[language=mypyvy]{invariant} declarations in a program are
     & new(y) = y - 1
   
   # don't fall in!
-  safety [does_not_fall_in] 
+  safety [no_fall_in] 
     x * x + y * y > 9
 
   invariant x + y >= 5
   \end{lstlisting}
   \end{tabular}
   \end{center}
+  \vspace{1.5cm}
   \caption{The complete robot example in \mypyvy.}
   \label{fig:robot-mypyvy}
   \end{minipage}%
@@ -818,20 +819,36 @@ All the \lstinline[language=mypyvy]{invariant} declarations in a program are
     {\footnotesize
   \begin{verbatim}
   checking init:
-    implies invariant does_not_fall_in... ok.
+    implies invariant no_fall_in... ok.
     implies invariant on line 20... ok.
   checking transition north:
-    preserves invariant does_not_fall_in... ok.
+    preserves invariant no_fall_in... ok.
     preserves invariant on line 20... ok.
   checking transition south_east:
-    preserves invariant does_not_fall_in... ok.
+    preserves invariant no_fall_in... ok.
     preserves invariant on line 20... ok.
   all ok!
+  ----------------------------------------
+  checking init:
+    implies invariant no_fall_in... ok.
+  checking transition north:
+    preserves invariant no_fall_in... 
+  state 0:
+  x = 1
+  y = -3
+  state 1:
+  x = 1
+  y = -2
+  error robot.pyv:17:1: invariant no_fall_in 
+      is not preserved by transition north
+  error robot.pyv:7:1: this transition does
+   not preserve invariant no_fall_in
+  program has errors.
   \end{verbatim}
     }
   \end{center}
-  \caption{\mypyvy output when verifying the robot example.}
-  \label{fig:robot-mypyvy-output-success}
+  \caption{\mypyvy output when running on two versions of the robot.}
+  \label{fig:robot-mypyvy-output}
   \end{minipage}%
 \end{figure}
 That completes the robot example in \mypyvy.
@@ -839,14 +856,24 @@ Running \mypyvy on the resulting file causes it to
   issue queries to the solver to verify that the invariants 
   are inductive and imply the safety property.
 For this program, the verification succeeds.
-\mypyvy's output can be seen in \cref{fig:robot-mypyvy-output-success}.
+\mypyvy's output can be seen in 
+  the top half of \cref{fig:robot-mypyvy-output}.
 Commenting out the \lstinline[language=mypyvy]{invariant} declaration
   causes the verification to fail 
   because the safety property is not itself inductive.
-
-\todo{jrw: show output of tool failure cases}
+\mypyvy's output in this case can be seen in
+  the bottom half of \cref{fig:robot-mypyvy-output}.
+\mypyvy shows a counterexample to induction (CTI), 
+  which is a pair of states related by the transition relation
+  (in this case, the \texttt{north} transition)
+  such that the first state satisfies the candidate invariant
+  but the second state does not.
+The CTI in \cref{fig:robot-mypyvy-output} corresponds 
+  to the red arrow pointing north in \cref{fig:robot-cti1}. 
 
 \section{Expressing Transition Systems in \mypyvy}
+
+\todo{jrw: going to want another example with uninterpreted sorts}
 
 \begin{verbatim}
 - sort

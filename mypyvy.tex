@@ -873,7 +873,24 @@ The CTI in \cref{fig:robot-mypyvy-output} corresponds
 
 \section{Expressing Transition Systems in \mypyvy}
 
-\todo{jrw: going to want another example with uninterpreted sorts}
+\begin{verbatim}
+sort A
+
+immutable function f(A): A
+mutable relation r(A)
+immutable constant source: A
+
+init r(X) <-> X = source
+
+transition step(x: A)
+  modifies r
+  & r(x)
+  & (forall X. new(r(X)) <-> r(X) | X = f(x))
+
+# safety forall X. r(X) -> exists Y. X = f(Y)
+safety forall X. r(X) -> X = source | exists Y. X = f(Y)
+\end{verbatim}
+\todo{jrw: possibly introduce uninterpreted sorts in a separate FOL background section}
 
 \begin{verbatim}
 - sort

@@ -1,21 +1,42 @@
 \chapter{\mypyvy}
 \label{chap:mypyvy}
 
+\section{Introduction}
+
+Our experience with \Verdi and \disel has been
+  that the most challenging aspect of distributed systems verification
+  is discovering inductive invariants.
+An inductive invariant is a property of system states that simultaneously
+  (1) summarizes all the reachable states of the system,
+  (2) is closed under all steps the system can take, and
+  (3) ensures the absence of safety violations.
+This challenge has led researchers to investigate 
+  techniques for automatically inferring inductive invariants, 
+  given a description of a system and its safety property.
+
+This chapter describes \mypyvy
+  a tool for automated reasoning
+  about symbolic transition systems in first-order logic
+  that supports a variety of automated reasoning tools to analyze systems.
+\mypyvy takes an input file
+  describing a symbolic transition system
+  and performs the analysis requested by the user.
+Three of the most interesting analyses include
+  inductive invariant checking,
+  inductive invariant inference, and
+  bounded trace reasoning, including bounded model checking.
+In all cases, \mypyvy loads the transition system
+  and compiles it together with the user-requested analysis
+  to a (sequence of) SMT queries,
+  which are dispatched by Z3.
+
+\todo{say something about "clean research platform"}
+\todo{say something about "intermediate language" (vs Ivy)}
 % Put this somewhere
 %  % The project started because I wanted a clean sandbox in which
 %  % to implement the \updr invariant inference algorithm~\cite{updr-jacm}.
 
-\section{Introduction}
-
-\begin{verbatim}
-- something something invariant inference
-- something something clean research platform
-\end{verbatim}
-
-\todo{delete}
-\lipsum[1]
-
-\section{Background on Transition Systems}
+\section{Background on Transition Systems and First-Order Logic}
 
 \subsection{The robot example informally and pictorially}
 
@@ -572,13 +593,39 @@ Most of the art and skill of working with transition systems
   and see what kinds of strengthenings of it
   might be good ideas to get it to be inductive.
 
+\subsection{Background on first-order logic}
+
+\begin{verbatim}
+  - sorts
+  - relations, constants, and functions; signatures
+  - syntax of FOL
+  - FO-structures over a signature
+  - interpreting syntax in a structure; defn of "model"
+  - EPR: definition and model theory 
+  - extensions to EPR: stratified functions
+\end{verbatim}
+
+Many of the ideas of first-order logic are not complicated,
+  but they are tedious to set up formally.
+In this section, we do our best.
+
+A \emph{sort} is either $\mathbb{B}$ or an uninterpreted symbol.
+
+A \emph{function type} is some number of argument sorts and a return sort.
+
+A \emph{vocabulary} is a map from names to function types
+
+A \emph{first-order structure} over a vocabulary is 
+  a set for every uninterpreted sort symbol
+
+
 \subsection{First-order logic for transition systems}
 
 We are on a journey to more and more formally specify the robot example
   and to prove its safety more and more automatically.
 The next step on this journey is through first-order logic,
   which we assume the reader is at least passingly familiar with.
-\todo{Really tempted \emph{not} to assume that, but it's a whole other subsection...}
+\todo{rephrase since we decided to add a background section}
 The basic idea is to make the states of a transition system
   \emph{first-order structures} over \emph{state variables}, and
   to use formulas to describe the initial states,

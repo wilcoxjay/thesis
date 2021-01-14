@@ -30,11 +30,21 @@ In all cases, \mypyvy loads the transition system
   to a (sequence of) SMT queries,
   which are dispatched by Z3.
 
-\todo{say something about "clean research platform"}
-\todo{say something about "intermediate language" (vs Ivy)}
-% Put this somewhere
-%  % The project started because I wanted a clean sandbox in which
-%  % to implement the \updr invariant inference algorithm~\cite{updr-jacm}.
+\mypyvy is not just the sum of the analyses currently available;
+  it is a platform for doing research in automated verification.
+We have ongoing projects that use the \mypyvy foundation
+  to build several new invariant inference techniques 
+  and user interfaces for verification and exploration.
+In this context, \mypyvy can be seen as a sort of intermediate language
+  that captures the right level of abstraction for implementing 
+  invariant inference techniques.
+Higher level languages, such as \ivy~\cite{Padon-al:PLDI16}
+  that want to leverage invariant inference 
+  can express their queries in \mypyvy and 
+  use the available inference algorithms.
+There is much exciting work to be done here. 
+This chapter is more modest in scope, 
+  describing the core of \mypyvy in theory and implementation.
 
 \section{Background on Transition Systems and First-Order Logic}
 

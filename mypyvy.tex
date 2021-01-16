@@ -623,11 +623,30 @@ A \emph{sort} is either $\mathbb{B}$ or an uninterpreted symbol.
 
 A \emph{function type} is some number of argument sorts and a return sort.
 
-A \emph{vocabulary} is a map from names to function types
+A \emph{vocabulary} is a map from names to function types.
+
+There are special words to refer to some function types.
+If a function $c$ has zero arguments, 
+  then we say that $c$ is a \emph{constant}.
+If a function $R$ has return type $\mathbb{B}$, 
+  then we say that $R$ is a \emph{relation}.
 
 A \emph{first-order structure} over a vocabulary is 
-  a set for every uninterpreted sort symbol
+ (1) a set for every uninterpreted sort symbol and 
+ (2) for every function symbol in the vocabulary, 
+     a mathematical function between the sets 
+     corresponding to the functions type.
 
+Syntax of FOL
+
+Given a vocabulary $\sigma$, 
+  a first-order structure $S$ over $\sigma$,
+  and a first-order expression $\phi$ also over $\sigma$,
+  we define $\denote{\phi}_S$, 
+  the interpretation of $\phi$ in $S$, 
+  to be the element of the set in $S$ 
+  corresponding to the sort of $\phi$.
+  
 
 \subsection{First-order logic for transition systems}
 

@@ -40,7 +40,6 @@
 \newcommand{\hord}{\sqsubseteq}
 \newcommand{\many}[1]{\overline{#1}}
 
-\newcommand{\denot}[1]{\llbracket{#1}\rrbracket}
 \newcommand{\FV}{\mathsf{FV}}
 
 
@@ -2525,7 +2524,7 @@ locally, we adopt the trace-based approach for semantics of
 sequentially-consistent concurrent programs~\cite{Brookes:TCS07}. We
 define a \emph{denotational} semantics of a \disel command $c$ as a
 (possibly infinite) set of finite \emph{partial execution traces}
-$\denot{c} = \set{\trace_{\stat}~|~\trace = [w_1, \ldots, w_n]}$,
+$\denote{c} = \set{\trace_{\stat}~|~\trace = [w_1, \ldots, w_n]}$,
 where each element $w_i$ of a trace $\trace$ is a transition wrapper
 call or an idle step (corresponding to reading local state) as it
 occurs during a single, potentially incomplete, sequential execution
@@ -2605,7 +2604,7 @@ semantics and post-safe traces.
 \begin{definition}[Hoare Type Semantics]
 \label{def:htt}
 $W \vd{n} c: \pre{P}\post{Q}$ \Iff for \emph{any}~$s$,
-such that $s \vDash P$, and for \emph{any} trace $\trace_{\stat} \in \denot{c}$,
+such that $s \vDash P$, and for \emph{any} trace $\trace_{\stat} \in \denote{c}$,
 such that $\stat = \done~v$, the trace $\trace_{\stat}$ is post-safe for
 $n$,~$s$ and $Q$.
 \end{definition}
@@ -2624,7 +2623,7 @@ those of its components, corresponding precisely to inference rules
 (\cf~\cref{fig:semass}) in program logics.
 %
 The proofs of those lemmas with respect to the denotational semantics
-$\denot{\cdot}$ of specific programming constructs deliver the
+$\denote{\cdot}$ of specific programming constructs deliver the
 soundness result of \disel as a logic:
 %
 \begin{theorem}[Soundness of \disel logic]

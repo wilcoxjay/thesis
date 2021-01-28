@@ -44,15 +44,16 @@ These systems are notoriously hard to implement correctly
   all while no single node has access to a global view of the system state.
 Traditional testing techniques are inadequate
   for exploring the space of possible executions
-  in the presence of concurrency and partial failure,
+  in the presence of concurrency and partial failure
   because this space includes the exponential number of
-  interleavings of system events and failure events,
+  interleavings of system events and failure events.
 Furthermore, even considering a particular interleaving of events,
   one faces all the usual difficulties with testing a sequential program,
   including the issue of achieving sufficient coverage.
 
 Since testing is not enough for distributed systems,
-  there is a rich body of work applying formal methods
+  the research community has developed
+  a rich body of work applying formal methods
   to exhaustively check correctness.
 Applying formal methods is not a panacea, however,
   because complex systems have complex proofs of correctness.
@@ -65,7 +66,7 @@ The primary challenge to applying verification to distributed systems is
 To verify a system such as a distributed file system,
   one must break the problem down into smaller parts.
 In the face of high system complexity,
-  decomposing the problem results in reduced proof complexity and increased automation.
+  decomposing the problem reduces proof complexity and increases automation.
 Decomposing proofs leads to two benefits.
 First, a truly compositional proof
   imposes no additional proof burden
@@ -105,10 +106,10 @@ The main point of defining a particular network semantics in Verdi is
   to verify distributed systems using that semantics as the fault model.
 Assuming the network semantics accurately describes
   all possible behaviors of the system's environment,
-  Verdi guarantees that the system is correct for all executions.
+  a proof in Verdi guarantees that the system is correct for all executions.
 For common network semantics,
   there are typically generic mechanisms that systems use to tolerate faults,
-  \eg sequence numbering to handle message reordering and duplication.
+  \eg, sequence numbering to handle message reordering and duplication.
 Another key benefit of
   clearly stating environment assumptions as network semantics is that
   one can then express these generic fault tolerance mechanisms

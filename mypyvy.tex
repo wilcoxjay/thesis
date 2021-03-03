@@ -674,7 +674,10 @@ Given a vocabulary $\sigma$,
 \end{gather*}
 
 If $e : \mathsf{bool}$ and $\denote{e}_A = \top$,
-  then we say that $A$ is a \emph{model} of $e$.
+  then we say that $A$ is a \emph{model} of $e$,
+  and we write $A \models e$.
+We say that $e$ is \emph{satisfiable} if there exists a first order structure $A$ over $\sigma$ such that $A\models e$.
+We say that $e$ is \emph{valid} if for every first order structure $A$ over $\sigma$, $A\models e$.
 
 % equiv
 Let $e_1 : \mathsf{bool}$ and $e_2 : \mathsf{bool}$ be two formulas over $\sigma$.
@@ -686,13 +689,36 @@ $A\models e_1$ if and only if $A\models e_2$.
 %   Every formula $e : \mathsf{bool}$ is equivalent to a formula where all quantifiers come first.
 % \end{fact}
 
+A formula $e : \mathsf{bool}$ is \emph{quantifier free}
+  if its syntax does not contain any uses of $\forall$ or $\exists$.
+
 % basic EPR
 If a vocabulary $\sigma$ consists of only relations and constants,
   then we call it ``function free''.
 If $\sigma$ is function free and $e : \mathsf{bool}$ over $\sigma$,
-  then we say that $e$ is \emph{effectively propositional for purposes of satisfiability}
+  then we say that $e$ is \emph{effectively propositional for satisfiability}
   if $e$ is equivalent to a formula of the form $\exists^*\forall^*\, e_0$,
   where $e_0$ is some quantifier-free formula.
+Taking the negation, we also obtain \emph{effectively propositional formulas for validity},
+  which have the form $\forall^*\exists^*\, e_0$.
+
+The reasons for defining these classes of formulas is that there are
+  decision procedures for satisfiability and validity.
+
+\begin{theorem}
+  Let $\sigma$ be function free,
+  and let $e : \mathsf{bool}$ over $\sigma$ be effectively propositional for satisfiability.
+  Then it is decidable whether $e$ is satisfiable.
+\end{theorem}
+\begin{lemma}
+  Given a fixed vocabulary $\sigma$ (not necessarily function free),
+  there are only finitely many first-order structures of any particular size.
+\end{lemma}
+\begin{lemma}[Small model property]
+  Let $\sigma$ be function free,
+  and let $e : \mathsf{bool}$ over $\sigma$ be effectively propositional for satisfiability.
+  Then there exists a natural number $n$ such that $e$ is satisfiable if and only if it has a model of size at most $n$.
+\end{lemma}
 
 % stratified functions
 

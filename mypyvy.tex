@@ -605,16 +605,6 @@ Most of the art and skill of working with transition systems
 
 \subsection{Background on first-order logic}
 
-\begin{verbatim}
-  - sorts
-  - relations, constants, and functions; signatures
-  - syntax of FOL
-  - FO-structures over a signature
-  - interpreting syntax in a structure; defn of "model"
-  - EPR: definition and model theory
-  - extensions to EPR: stratified functions
-\end{verbatim}
-
 Many of the ideas of first-order logic are not complicated,
   but they are tedious to set up formally.
 In this section, we do our best.
@@ -627,11 +617,11 @@ In this section, we do our best.
     t &\in& \mathrm{FunctionType}\\
     t &::=& (s,\dots,s) \to s\\
     \sigma &\in&  \mathrm{String} \rightharpoonup \mathrm{FunctionType}\\
-    e &::=& \mathsf{true} \mid \mathsf{false} \mid \lnot e\mid e\land e\mid e\lor e \mid \\
+    e &::=& \mathsf{true} \mid \mathsf{false} \mid \lnot e\mid e\land e\mid e\lor e \mid e \Rightarrow e \mid \\
       &   & e = e \mid f(e,\dots,e) \mid x \mid \forall x : s.\, e \mid \exists x : s.\, e
   \end{array}
   \end{gather*}
-  \caption{Syntax of first-order logic}
+  \caption{Syntax of pure, multi-sorted first-order logic.}
   \label{fig:fol-syntax}
 \end{figure}
 
@@ -641,12 +631,33 @@ A \emph{function type} $t$ is some number of argument sorts and a return sort.
 A \emph{vocabulary} is a map from function names to function types.
 We write $\mathsf{usorts}(\sigma)$ for the set of all uninterpreted sort
   symbols used in the type of any function symbol in $\sigma$.
-
 We distinguish several special classes of function types.
 If a function $c$ has zero arguments,
-  then we say that $c$ is a \emph{constant}.
+  then we say that $c$ is a \emph{constant},
+  and in expressions we abbreviate $c()$ as $c$.
 If a function $R$ has return type $\mathsf{bool}$,
   then we say that $R$ is a \emph{relation}.
+
+An \emph{expression} is one of: a boolean constant,
+  the application of a unary or binary boolean operation to subexpressions,
+  an equation between expressions,
+  the application of a function to some number of arguments,
+  a variable,
+  or a quantified expression.
+There is a straightforward type system
+  that assigns a sort (either an uninterpreted sort or $\mathsf{bool}$) to each expression,
+  in the context of a vocabulary and a local context that binds variables to sorts.%
+\footnote{Our approach to first-order logic is somewhat nonstandard,
+in that we treat $\mathsf{bool}$ as ``just another sort'',
+rather than having a separate syntactic category for formulas and terms.
+This setup is somewhat more parsimonious in the presence of multiple uninterpreted sorts,
+and it also has the advantage of allowing quantifying over booleans.
+In any case, the fundamental expressivity of the logic is not changed by these choices.}
+The type system also enforces that functions are applied to the correct number of arguments,
+  that function arguments have types corresponding to the functions declared type in the vocabulary,
+  and that both sides of an equation have the same type.
+We omit the definition of this type system, and implicitly assume that all expressions are well typed.
+We use the word \emph{formula} to mean ``an expression of type $\mathsf{bool}$''.
 
 A \emph{first-order structure} $A$ over a vocabulary $\sigma$ is
  (1) a set $A_u$ for every uninterpreted sort $u\in\mathsf{usorts}(\sigma)$ and
@@ -657,9 +668,9 @@ A \emph{first-order structure} $A$ over a vocabulary $\sigma$ is
 (In case one of the sorts is $\mathsf{bool}$, we define
   $A_{\mathsf{bool}} = \mathbb{B}$,
   \ie, every first-order structure interprets $\mathsf{bool}$
-  as the set $\set{\top,\bot}$.
+  as the set $\set{\top,\bot}$.)
 
-\todo{type system}
+
 
 Given a vocabulary $\sigma$,
   a first-order structure $A$ over $\sigma$,

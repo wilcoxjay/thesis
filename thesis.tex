@@ -44,6 +44,7 @@ keywordstyle=\small\ttfamily\bfseries,
 \usepackage{amssymb}
 \usepackage{wasysym}
 \usepackage{amsthm}
+\usepackage[noabbrev,capitalise]{cleveref}
 \theoremstyle{definition}
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{definition}[theorem]{Definition}
@@ -55,9 +56,9 @@ keywordstyle=\small\ttfamily\bfseries,
 \renewcommand{\theeventnum}{\Alph{eventnum}}
 \newcommand{\mkevent}[1]{\refstepcounter{eventnum}\label{#1}}
 
-\usepackage[noabbrev,capitalise]{cleveref}
 \Crefname{eventnum}{event}{events}
 \Crefname{thm}{Theorem}{Theorems}
+\Crefname{lem}{Lemma}{Lemmas}
 \Crefname{chapter}{Chapter}{Chapters}
 
 \usepackage{tikz}

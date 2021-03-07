@@ -671,6 +671,7 @@ A \emph{first-order structure} $A$ over a vocabulary $\sigma$ is
   $A_{\mathsf{bool}} = \mathbb{B}$,
   \ie, every first-order structure interprets $\mathsf{bool}$
   as the set $\set{\top,\bot}$.)
+We call $\bigcup{u\in\mathsf{usorts}(\sigma)} A_u$ the \emph{universe} of $A$.
 
 Given a vocabulary $\sigma$,
   a first-order structure $A$ over $\sigma$,
@@ -683,6 +684,7 @@ Given a vocabulary $\sigma$,
   \denote{\mathsf{true}}_A &=& \top\\
   \end{array}
 \end{gather*}
+\todo{finish this definition}
 
 If $e : \mathsf{bool}$ and $\denote{e}_A = \top$,
   then we say that $A$ is a \emph{model} of $e$,
@@ -720,7 +722,7 @@ Substructures agree on the interpretation of quantifier free expressions.
   Let $e_0$ be quantifier free (not necessarily of sort $\mathsf{bool}$),
   and let $A$ and $B$ be first-order structures over $\sigma$
   such that $B$ is a substructure of $A$.
-  Also, let $\rho \in \mathrm{String} \rightharpoonup \bigcup_{s\in\dom\sigma} B_s$.
+  Also, let $\rho \in \mathrm{String} \rightharpoonup \bigcup_{s\in\mathsf{usorts}\sigma} B_s$.
   Then $\denote{e}_B^\rho = \denote{e}_A^\rho$.
 
   Intuitively, a quantifier-free formula can only ``see'' elements
@@ -781,7 +783,7 @@ When it is clear from context whether we are talking about satisfiability or val
 The reasons for defining these classes of formulas is that there are
   decision procedures for satisfiability and validity.
 
-\begin{lemma}[Small model property]
+\begin{lemma}[Small model property]\label{lem:epr-small-model-property}
   Let $\sigma$ be function free,
   and let $e : \mathsf{bool}$ over $\sigma$ be effectively propositional for satisfiability.
   Then there exists a natural number $n$ (depending on $\sigma$ and $e$) such that
@@ -824,15 +826,37 @@ The reasons for defining these classes of formulas is that there are
   and the result follows.
 \end{proof}
 
+Decidability of EPR follows as a corollary, after the following lemma.
+\begin{lemma}\label{lem:finitely-many-structures}
+  Given a fixed (finite!) vocabulary $\sigma$ (not necessarily function free),
+  there are only finitely many first-order structures of any particular universe size.
+\end{lemma}
+\begin{proof}
+  Fix a particular universe size $n$. Then for each constant symbol $c$ in
+  $\sigma$, there are at most $n$ choices of how to interpret $c$ in the universe.
+  For each relation symbol $R$, there are at most $2^{nk}$ choices for how to interpret $R$, where $k$ is the arity of $R$.
+  And for each function symbol $f$, there are at most $n^{nk}$, where $k$ is there arity of $f$.
+  Taking the product of all these choices across all symbols in $\sigma$ gives us an upper bound on the number of first order structures
+  over $\sigma$ with universe size $n$.
+\end{proof}
+
 \begin{theorem}
   Let $\sigma$ be function free,
   and let $e : \mathsf{bool}$ over $\sigma$ be effectively propositional for satisfiability.
   Then it is decidable whether $e$ is satisfiable.
 \end{theorem}
-\begin{lemma}
-  Given a fixed vocabulary $\sigma$ (not necessarily function free),
-  there are only finitely many first-order structures of any particular size.
-\end{lemma}
+\begin{proof}
+  By \cref{lem:epr-small-model-property}, it suffices to check for a model of up to size $n$,
+  where $n$ is the number of constants in $\sigma$
+  plus the number of existentially quantified variables of $e$.
+  Then by \cref{lem:finitely-many-structures},
+  there are finitely many structures of size at most $n$.
+  We can enumerate them and check for each one
+  whether it is a model of $e$.
+  If we find a model, $e$ is satisfiable.
+  If we exhaust all structures of size at most $n$,
+  then we know no model of $e$ exists of any size (even infinite!).
+\end{proof}
 
 % stratified functions
 

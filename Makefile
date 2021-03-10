@@ -1,4 +1,4 @@
-publish: clean thesis.pdf
+publish: thesis.pdf
 	scp thesis.pdf jamesrwilcox.com:/var/www/jamesrwilcox.com/thesis.pdf
 
 thesis.pdf: *.tex

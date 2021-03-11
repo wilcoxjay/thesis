@@ -46,7 +46,7 @@ There is much exciting work to be done here.
 This chapter is more modest in scope,
   describing the core of \mypyvy in theory and implementation.
 
-\section{Background on Transition Systems and First-Order Logic}
+\section{Background on Transition Systems}
 
 \subsection{The robot example informally and pictorially}
 
@@ -603,7 +603,302 @@ Most of the art and skill of working with transition systems
   and see what kinds of strengthenings of it
   might be good ideas to get it to be inductive.
 
-\subsection{Background on first-order logic}
+
+\subsection{First-order logic for transition systems}
+
+We are on a journey to more and more formally specify the robot example
+  and to prove its safety more and more automatically.
+The next step on this journey is through first-order logic,
+  which we assume the reader is at least passingly familiar with.
+\todo{rephrase since we decided to add a background section}
+The basic idea is to make the states of a transition system
+  \emph{first-order structures} over \emph{state variables}, and
+  to use formulas to describe the initial states,
+  the transition relation, the bad states,
+  and the inductive invariant.
+
+For the robot, the state variables are $x$ and $y$,
+  both of sort $\Z$.
+A first order structure is just
+  an assignment of variables to values of the correct sort.
+In this case, a structure will be an integer for $x$ and an integer for $y$,
+  that is, a pair of integers, or, in yet other words, a point in the plane.
+
+The robot only has one initial state, $(5, 0)$.
+We can describe this as a logical formula over the variables $x$ and $y$ as
+\[
+  \mathit{Init}_{\robot} ~~=~~ x = 0 \land y = 5.
+\]
+
+Taking the positive phrasing of the robot example's safety problem,
+  we want to show that the set of states
+  with distance strictly greater than 3 from the origin
+  is an invariant of the transition system.
+We can express this safety invariant as follows
+  (avoiding square roots by squaring both sides)
+\[
+  \mathit{Safe}_{\robot} ~~=~~ x^2 + y^2 > 9.
+\]
+
+Since the initial condition and the safety condition
+  of a transition system are \emph{sets} of states,
+  they are encoded in logic as formulas over \emph{one} copy of the state variables.
+The transition relation, on the other hand, is a \emph{binary relation},
+  so it is encoded in logic as a formula over \emph{two} copies of the state variables.
+(We refer to formulas over two copies of the state variables as
+  "two-vocabulary" or "two-state" formulas,
+  and we call the second copy of the variables "primed"
+  and write them as $x'$, for example.)
+In the robot example, we can write the transition relation as
+\[
+    \mathit{Tr}_{\robot} ~~=~~ (x' = x \land y' = y + 1) \lor (x' = x + 1 \land y' = y - 1).
+\]
+We think of the primed variables $x'$ and $y'$ as
+  holding the values \emph{after} the step occurs,
+while the unprimed versions hold the values from before the step.
+The transition formula says:
+\begin{quote}
+  A step is possible from $(x, y)$ to $(x', y')$ if
+    either $x$ stays the same and $y$ is incremented by one,
+    or $x$ is incremented by one and $y$ is decremented by one.
+\end{quote}
+
+Next, we can state the blue region from \cref{fig:robot-inductive-invariant}
+  as a formula
+\[
+  \mathit{Inv}_{\robot} ~~=~~ x + y \ge 5.
+\]
+
+If we are trying to prove $\mathit{Safe}$ using $\mathit{Inv}$,
+  there are two things to check.
+First, $\mathit{Inv}$ must be strong enough
+  to prove $\mathit{Safe}$,
+  that is,
+\[
+  \mathit{Inv} \Rightarrow \mathit{Safe}.
+\]
+In the robot example, this amounts to the fact that
+  the blue region from \cref{fig:robot-inductive-invariant}
+  does not intersect the red circle at the origin,
+\[
+  x + y \ge 5 \Rightarrow x^2 + y^2 > 9.
+\]
+Second, $\mathit{Inv}$ must be inductive,
+  which is phrased logically using two formulas,
+one to check that the initial condition implies the invariant,
+\[
+  \mathit{Init} \Rightarrow \mathit{Inv},
+\]
+and one to check that the invariant is preserved by the transition relation,
+\[
+  \mathit{Inv} \land \mathid{Tr} \Rightarrow \mathit{Inv}'.
+\]
+The first of these two formulas is over a single copy of the state.
+But the second formula is a two-vocabulary formula,
+  both because it contains the two-vocabulary formula $\mathid{Tr}$,
+  and because we use $\mathit{Inv}'$ to mean ``$\mathit{Inv}$
+  with all the state variables changed to their primed copy''.
+In the robot example, there is only one initial state,
+  so the check on initial states amounts the fact that
+  the initial state is in the blue region
+  or, logically,
+\[
+  x = 0 \land y = 5 \Rightarrow x + y \ge 5.
+\]
+To check that the blue region is preserved by the robot's steps,
+  we need to observe that there is no way to start in a state in the blue region
+  and take a step outside of it,
+  or, logically,
+\[
+  x + y \ge 5 \land ((x' = x \land y' = y + 1) \lor
+                     (x' = x + 1 \land y' = y - 1)) \Rightarrow
+  x' + y' \ge 5.
+\]
+This formula is valid, since
+  either $y' > y$ and $x' = x$ in the first kind of step,
+  or $x + y = x' + y'$ in the second kind of step.
+While a bit tedious, this is perhaps the first time in the robot example
+  that we haven't had to hand-wave around
+  the fact that one of the regions is inductive.
+It follows from the tedium of checking this formula's validity.
+
+\section{The Robot in \mypyvy}
+
+It's finally time to write some \mypyvy.
+Let's take a tour of the syntax using our robot example.
+A \mypyvy program is a list of \emph{declarations}.
+There are two broad kinds of declarations:
+  those that define the transition system
+  and those that make \emph{queries} over the transition system.
+
+Here are two declarations for the state variables of the robot.%
+\begin{lstlisting}[language=mypyvy, xleftmargin=.2\textwidth, xrightmargin=.2\textwidth]
+mutable constant x: int
+mutable constant y: int
+\end{lstlisting}
+In \mypyvy, we spell ``variable'' as ``\lstinline[language=mypyvy]{mutable constant}'',
+  following the logical terminology of a constant symbol.
+(We discuss mutability in more detail in the next section.)
+All the state declarations together
+  define the state space of the transition system.
+
+The initial conditions are declared with the \lstinline[language=mypyvy]{init} keyword.
+\begin{lstlisting}[language=mypyvy, xleftmargin=.2\textwidth, xrightmargin=.2\textwidth]
+init x = 0
+init y = 5
+\end{lstlisting}
+The conjunction of all the \lstinline[language=mypyvy]{init} declarations in a \mypyvy program
+  is the initial condition of the resulting transition system.
+
+The transition relation is declared
+  with several \lstinline[language=mypyvy]{transition} declarations.
+\begin{lstlisting}[language=mypyvy, xleftmargin=.2\textwidth, xrightmargin=.2\textwidth]
+transition north()
+  modifies y
+  new(y) = y + 1
+
+transition south_east()
+  modifies x, y
+  & new(x) = x + 1
+  & new(y) = y - 1
+\end{lstlisting}
+Each \lstinline[language=mypyvy]{transition} has a name and takes parameters in parentheses,
+  which are existentially quantified.
+The \lstinline[language=mypyvy]{modifies} clause is a comma-separated list of state components
+  that are changed by this transition;
+  all other state components are implicitly constrained to not change.
+For example, in the \lstinline[language=mypyvy]{north} transition,
+  there is an implicit constraint $x' = x$,
+  which was explicit when we were writing directly in first-order logic
+  in the previous section.
+In \mypyvy syntax, instead of primed symbols,
+  we use the \lstinline[language=mypyvy]{new} keyword,
+  so \lstinline[language=mypyvy]{new(y)} refers to $y'$.
+\mypyvy also allows conjunction and disjunction symbols
+  (\texttt{\&} and \texttt{|}) to appear \emph{before} the first conjunct or disjunct,
+  for the sole reason that it makes it easy to vertically align
+  the lines of a long formula.
+The global transition relation of the transition system is
+  the \emph{disjunction} of all the transition declarations in the program.
+
+The safety property is declared using the \lstinline[language=mypyvy]{safety} keyword.
+\begin{lstlisting}[language=mypyvy, xleftmargin=.2\textwidth, xrightmargin=.2\textwidth]
+safety [no_fall_in] x * x + y * y > 9
+\end{lstlisting}
+A safety property can be given a name by including it in square brackets.
+In this case the name is \texttt{no\_fall\_in}.
+\mypyvy will use this name to refer to this invariant.
+If no name is given, \mypyvy will refer to a line number instead.
+If the program has more than one \lstinline[language=mypyvy]{safety} declaration,
+  the safety property is the conjunction of all the declarations.
+The \lstinline[language=mypyvy]{safety} keyword is our first example of
+  a declaration that is a \emph{query}.
+When processing the program, \mypyvy will attempt to prove that
+  the safety property is true in all reachable states of the system.
+As we have discussed throughout this chapter,
+  the primary technique for proving a safety property is
+  to find an inductive invariant.
+
+These invariants are declared using the \lstinline[language=mypyvy]{invariant} keyword.
+\begin{lstlisting}[language=mypyvy, xleftmargin=.2\textwidth, xrightmargin=.2\textwidth]
+invariant x + y >= 5
+\end{lstlisting}
+Invariants can also be named, but here we choose to not name the invariant.
+All the \lstinline[language=mypyvy]{invariant} declarations in a program are
+  implicitly conjoined.
+
+\begin{figure}[t]
+%  \centering
+  \begin{minipage}[b]{.4\textwidth}
+  \begin{center}
+  \begin{tabular}{c}
+  \begin{lstlisting}[language=mypyvy, numbers=left]
+  mutable constant x: int
+  mutable constant y: int
+
+  init x = 0
+  init y = 5
+
+  transition north()
+    modifies y
+    new(y) = y + 1
+
+  transition south_east()
+    modifies x, y
+    & new(x) = x + 1
+    & new(y) = y - 1
+
+  # don't fall in!
+  safety [no_fall_in]
+    x * x + y * y > 9
+
+  invariant x + y >= 5
+  \end{lstlisting}
+  \end{tabular}
+  \end{center}
+  \vspace{1.5cm}
+  \caption{The complete robot example in \mypyvy.}
+  \label{fig:robot-mypyvy}
+  \end{minipage}%
+  \hfil%
+  \begin{minipage}[b]{.5\textwidth}
+  \begin{center}
+    {\footnotesize
+  \begin{verbatim}
+  checking init:
+    implies invariant no_fall_in... ok.
+    implies invariant on line 20... ok.
+  checking transition north:
+    preserves invariant no_fall_in... ok.
+    preserves invariant on line 20... ok.
+  checking transition south_east:
+    preserves invariant no_fall_in... ok.
+    preserves invariant on line 20... ok.
+  all ok!
+  ----------------------------------------
+  checking init:
+    implies invariant no_fall_in... ok.
+  checking transition north:
+    preserves invariant no_fall_in...
+  state 0:
+  x = 1
+  y = -3
+  state 1:
+  x = 1
+  y = -2
+  error robot.pyv:17:1: invariant no_fall_in
+      is not preserved by transition north
+  error robot.pyv:7:1: this transition does
+   not preserve invariant no_fall_in
+  program has errors.
+  \end{verbatim}
+    }
+  \end{center}
+  \caption{\mypyvy output when running on two versions of the robot.}
+  \label{fig:robot-mypyvy-output}
+  \end{minipage}%
+\end{figure}
+That completes the robot example in \mypyvy.
+Running \mypyvy on the resulting file causes it to
+  issue queries to the solver to verify that the invariants
+  are inductive and imply the safety property.
+For this program, the verification succeeds.
+\mypyvy's output can be seen in
+  the top half of \cref{fig:robot-mypyvy-output}.
+Commenting out the \lstinline[language=mypyvy]{invariant} declaration
+  causes the verification to fail
+  because the safety property is not itself inductive.
+\mypyvy's output in this case can be seen in
+  the bottom half of \cref{fig:robot-mypyvy-output}.
+\mypyvy shows a counterexample to induction (CTI),
+  which is a pair of states related by the transition relation
+  (in this case, the \texttt{north} transition)
+  such that the first state satisfies the candidate invariant
+  but the second state does not.
+The CTI in \cref{fig:robot-mypyvy-output} corresponds
+  to the red arrow pointing north in \cref{fig:robot-cti1}.
+
+\section{Background on first-order logic}
 
 Many of the ideas of first-order logic are not complicated,
   but they are tedious to set up formally.
@@ -860,305 +1155,6 @@ Decidability of EPR follows as a corollary, after the following lemma.
 
 % stratified functions
 
-
-\subsection{First-order logic for transition systems}
-
-We are on a journey to more and more formally specify the robot example
-  and to prove its safety more and more automatically.
-The next step on this journey is through first-order logic,
-  which we assume the reader is at least passingly familiar with.
-\todo{rephrase since we decided to add a background section}
-The basic idea is to make the states of a transition system
-  \emph{first-order structures} over \emph{state variables}, and
-  to use formulas to describe the initial states,
-  the transition relation, the bad states,
-  and the inductive invariant.
-
-For the robot, the state variables are $x$ and $y$,
-  both of sort $\Z$.
-A first order structure is just
-  an assignment of variables to values of the correct sort.
-In this case, a structure will be an integer for $x$ and an integer for $y$,
-  that is, a pair of integers, or, in yet other words, a point in the plane.
-
-The robot only has one initial state, $(5, 0)$.
-We can describe this as a logical formula over the variables $x$ and $y$ as
-\[
-  \mathit{Init}_{\robot} ~~=~~ x = 0 \land y = 5.
-\]
-
-Taking the positive phrasing of the robot example's safety problem,
-  we want to show that the set of states
-  with distance strictly greater than 3 from the origin
-  is an invariant of the transition system.
-We can express this safety invariant as follows
-  (avoiding square roots by squaring both sides)
-\[
-  \mathit{Safe}_{\robot} ~~=~~ x^2 + y^2 > 9.
-\]
-
-Since the initial condition and the safety condition
-  of a transition system are \emph{sets} of states,
-  they are encoded in logic as formulas over \emph{one} copy of the state variables.
-The transition relation, on the other hand, is a \emph{binary relation},
-  so it is encoded in logic as a formula over \emph{two} copies of the state variables.
-(We refer to formulas over two copies of the state variables as
-  "two-vocabulary" or "two-state" formulas,
-  and we call the second copy of the variables "primed"
-  and write them as $x'$, for example.)
-In the robot example, we can write the transition relation as
-\[
-    \mathit{Tr}_{\robot} ~~=~~ (x' = x \land y' = y + 1) \lor (x' = x + 1 \land y' = y - 1).
-\]
-We think of the primed variables $x'$ and $y'$ as
-  holding the values \emph{after} the step occurs,
-while the unprimed versions hold the values from before the step.
-The transition formula says:
-\begin{quote}
-  A step is possible from $(x, y)$ to $(x', y')$ if
-    either $x$ stays the same and $y$ is incremented by one,
-    or $x$ is incremented by one and $y$ is decremented by one.
-\end{quote}
-
-Next, we can state the blue region from \cref{fig:robot-inductive-invariant}
-  as a formula
-\[
-  \mathit{Inv}_{\robot} ~~=~~ x + y \ge 5.
-\]
-
-If we are trying to prove $\mathit{Safe}$ using $\mathit{Inv}$,
-  there are two things to check.
-First, $\mathit{Inv}$ must be strong enough
-  to prove $\mathit{Safe}$,
-  that is,
-\[
-  \mathit{Inv} \Rightarrow \mathit{Safe}.
-\]
-In the robot example, this amounts to the fact that
-  the blue region from \cref{fig:robot-inductive-invariant}
-  does not intersect the red circle at the origin,
-\[
-  x + y \ge 5 \Rightarrow x^2 + y^2 > 9.
-\]
-Second, $\mathit{Inv}$ must be inductive,
-  which is phrased logically using two formulas,
-one to check that the initial condition implies the invariant,
-\[
-  \mathit{Init} \Rightarrow \mathit{Inv},
-\]
-and one to check that the invariant is preserved by the transition relation,
-\[
-  \mathit{Inv} \land \mathid{Tr} \Rightarrow \mathit{Inv}'.
-\]
-The first of these two formulas is over a single copy of the state.
-But the second formula is a two-vocabulary formula,
-  both because it contains the two-vocabulary formula $\mathid{Tr}$,
-  and because we use $\mathit{Inv}'$ to mean ``$\mathit{Inv}$
-  with all the state variables changed to their primed copy''.
-In the robot example, there is only one initial state,
-  so the check on initial states amounts the fact that
-  the initial state is in the blue region
-  or, logically,
-\[
-  x = 0 \land y = 5 \Rightarrow x + y \ge 5.
-\]
-To check that the blue region is preserved by the robot's steps,
-  we need to observe that there is no way to start in a state in the blue region
-  and take a step outside of it,
-  or, logically,
-\[
-  x + y \ge 5 \land ((x' = x \land y' = y + 1) \lor
-                     (x' = x + 1 \land y' = y - 1)) \Rightarrow
-  x' + y' \ge 5.
-\]
-This formula is valid, since
-  either $y' > y$ and $x' = x$ in the first kind of step,
-  or $x + y = x' + y'$ in the second kind of step.
-While a bit tedious, this is perhaps the first time in the robot example
-  that we haven't had to hand-wave around
-  the fact that one of the regions is inductive.
-It follows from the tedium of checking this formula's validity.
-
-\begin{verbatim}
-- first-order symbolic transition systems "on paper"
-  - states will be first-order structures over some vocabulary \sigma
-\end{verbatim}
-
-\section{The Robot in \mypyvy}
-
-It's finally time to write some \mypyvy.
-Let's take a tour of the syntax using our robot example.
-A \mypyvy program is a list of \emph{declarations}.
-There are two broad kinds of declarations:
-  those that define the transition system
-  and those that make \emph{queries} over the transition system.
-
-Here are two declarations for the state variables of the robot.%
-\begin{lstlisting}[language=mypyvy, xleftmargin=.2\textwidth, xrightmargin=.2\textwidth]
-mutable constant x: int
-mutable constant y: int
-\end{lstlisting}
-In \mypyvy, we spell ``variable'' as ``\lstinline[language=mypyvy]{mutable constant}'',
-  following the logical terminology of a constant symbol.
-(We discuss mutability in more detail in the next section.)
-All the state declarations together
-  define the state space of the transition system.
-
-The initial conditions are declared with the \lstinline[language=mypyvy]{init} keyword.
-\begin{lstlisting}[language=mypyvy, xleftmargin=.2\textwidth, xrightmargin=.2\textwidth]
-init x = 0
-init y = 5
-\end{lstlisting}
-The conjunction of all the \lstinline[language=mypyvy]{init} declarations in a \mypyvy program
-  is the initial condition of the resulting transition system.
-
-The transition relation is declared
-  with several \lstinline[language=mypyvy]{transition} declarations.
-\begin{lstlisting}[language=mypyvy, xleftmargin=.2\textwidth, xrightmargin=.2\textwidth]
-transition north()
-  modifies y
-  new(y) = y + 1
-
-transition south_east()
-  modifies x, y
-  & new(x) = x + 1
-  & new(y) = y - 1
-\end{lstlisting}
-Each \lstinline[language=mypyvy]{transition} has a name and takes parameters in parentheses,
-  which are existentially quantified.
-The \lstinline[language=mypyvy]{modifies} clause is a comma-separated list of state components
-  that are changed by this transition;
-  all other state components are implicitly constrained to not change.
-For example, in the \lstinline[language=mypyvy]{north} transition,
-  there is an implicit constraint $x' = x$,
-  which was explicit when we were writing directly in first-order logic
-  in the previous section.
-In \mypyvy syntax, instead of primed symbols,
-  we use the \lstinline[language=mypyvy]{new} keyword,
-  so \lstinline[language=mypyvy]{new(y)} refers to $y'$.
-\mypyvy also allows conjunction and disjunction symbols
-  (\texttt{\&} and \texttt{|}) to appear \emph{before} the first conjunct or disjunct,
-  for the sole reason that it makes it easy to vertically align
-  the lines of a long formula.
-The global transition relation of the transition system is
-  the \emph{disjunction} of all the transition declarations in the program.
-
-The safety property is declared using the \lstinline[language=mypyvy]{keyword}.
-\begin{lstlisting}[language=mypyvy, xleftmargin=.2\textwidth, xrightmargin=.2\textwidth]
-safety [no_fall_in] x * x + y * y > 9
-\end{lstlisting}
-A safety property can be given a name by including it in square brackets.
-In this case the name is \texttt{does\_not\_fall\_in}.
-\mypyvy will use this name to refer to this invariant.
-If no name is given, \mypyvy will refer to a line number instead.
-If the program has more than one \lstinline[language=mypyvy]{safety} declaration,
-  the safety property is the conjunction of all the declarations.
-The \lstinline[language=mypyvy]{safety} keyword is our first example of
-  a declaration that is a \emph{query}.
-When processing the program, \mypyvy will attempt to prove that
-  the safety property is true in all reachable states of the system.
-As we have discussed throughout this chapter,
-  the primary technique for proving a safety property is
-  to find an inductive invariant.
-
-These invariants are declared using the \lstinline[language=mypyvy]{invariant} keyword.
-\begin{lstlisting}[language=mypyvy, xleftmargin=.2\textwidth, xrightmargin=.2\textwidth]
-invariant x + y >= 5
-\end{lstlisting}
-Invariants can also be named, but here we choose to not name the invariant.
-All the \lstinline[language=mypyvy]{invariant} declarations in a program are
-  implicitly conjoined.
-
-\begin{figure}[t]
-%  \centering
-  \begin{minipage}[b]{.4\textwidth}
-  \begin{center}
-  \begin{tabular}{c}
-  \begin{lstlisting}[language=mypyvy, numbers=left]
-  mutable constant x: int
-  mutable constant y: int
-
-  init x = 0
-  init y = 5
-
-  transition north()
-    modifies y
-    new(y) = y + 1
-
-  transition south_east()
-    modifies x, y
-    & new(x) = x + 1
-    & new(y) = y - 1
-
-  # don't fall in!
-  safety [no_fall_in]
-    x * x + y * y > 9
-
-  invariant x + y >= 5
-  \end{lstlisting}
-  \end{tabular}
-  \end{center}
-  \vspace{1.5cm}
-  \caption{The complete robot example in \mypyvy.}
-  \label{fig:robot-mypyvy}
-  \end{minipage}%
-  \hfil%
-  \begin{minipage}[b]{.5\textwidth}
-  \begin{center}
-    {\footnotesize
-  \begin{verbatim}
-  checking init:
-    implies invariant no_fall_in... ok.
-    implies invariant on line 20... ok.
-  checking transition north:
-    preserves invariant no_fall_in... ok.
-    preserves invariant on line 20... ok.
-  checking transition south_east:
-    preserves invariant no_fall_in... ok.
-    preserves invariant on line 20... ok.
-  all ok!
-  ----------------------------------------
-  checking init:
-    implies invariant no_fall_in... ok.
-  checking transition north:
-    preserves invariant no_fall_in...
-  state 0:
-  x = 1
-  y = -3
-  state 1:
-  x = 1
-  y = -2
-  error robot.pyv:17:1: invariant no_fall_in
-      is not preserved by transition north
-  error robot.pyv:7:1: this transition does
-   not preserve invariant no_fall_in
-  program has errors.
-  \end{verbatim}
-    }
-  \end{center}
-  \caption{\mypyvy output when running on two versions of the robot.}
-  \label{fig:robot-mypyvy-output}
-  \end{minipage}%
-\end{figure}
-That completes the robot example in \mypyvy.
-Running \mypyvy on the resulting file causes it to
-  issue queries to the solver to verify that the invariants
-  are inductive and imply the safety property.
-For this program, the verification succeeds.
-\mypyvy's output can be seen in
-  the top half of \cref{fig:robot-mypyvy-output}.
-Commenting out the \lstinline[language=mypyvy]{invariant} declaration
-  causes the verification to fail
-  because the safety property is not itself inductive.
-\mypyvy's output in this case can be seen in
-  the bottom half of \cref{fig:robot-mypyvy-output}.
-\mypyvy shows a counterexample to induction (CTI),
-  which is a pair of states related by the transition relation
-  (in this case, the \texttt{north} transition)
-  such that the first state satisfies the candidate invariant
-  but the second state does not.
-The CTI in \cref{fig:robot-mypyvy-output} corresponds
-  to the red arrow pointing north in \cref{fig:robot-cti1}.
 
 \section{Expressing Transition Systems in \mypyvy}
 

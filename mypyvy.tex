@@ -977,6 +977,11 @@ Given a vocabulary $\sigma$,
   \begin{array}{rcl}
   \denote{e}_A &\in& A_s\\
   \denote{\mathsf{true}}_A &=& \top\\
+  \denote{\mathsf{false}}_A &=& \bot\\
+  \denote{\lnot e}_A &=& \lnot \denote{e}_A\\
+  \denote{e_1 \Rightarrow e_2}_A &=& \denote{e_1}_A \Rightarrow \denote{e_2}_A\\
+%e\land e\mid e\lor e \mid e \Rightarrow e \mid \\
+%      &   & e = e \mid f(e,\dots,e) \mid x \mid \forall x : s.\, e \mid \exists x : s.\, e
   \end{array}
 \end{gather*}
 \todo{finish this definition}
@@ -1012,7 +1017,8 @@ We say that $B$ is a \emph{substructure} of $A$ if $B$ is the restriction of $A$
 whose sets are subsets of $A$
 and whose interpretation of every function symbol agrees with $A$'s interpretation.)
 
-Substructures agree on the interpretation of quantifier free expressions.
+Substructures agree on the interpretation of quantifier free expressions,
+as shown by the following lemma.
 \begin{lemma}\label{lem:qf-denote-substruct}
   Let $e_0$ be quantifier free (not necessarily of sort $\mathsf{bool}$),
   and let $A$ and $B$ be first-order structures over $\sigma$

@@ -898,7 +898,9 @@ Commenting out the \lstinline[language=mypyvy]{invariant} declaration
 The CTI in \cref{fig:robot-mypyvy-output} corresponds
   to the red arrow pointing north in \cref{fig:robot-cti1}.
 
-\section{Background on first-order logic}
+\section{Background on first-order logic}\label{sec:fol-background}
+
+\todo{this section is out of place here}
 
 Many of the ideas of first-order logic are not complicated,
   but they are tedious to set up formally.
@@ -1164,6 +1166,30 @@ Decidability of EPR follows as a corollary, after the following lemma.
 
 \section{Expressing Transition Systems in \mypyvy}
 
+\mypyvy consists of a language for expressing transition systems (this section)
+  and a tool for answering queries about such systems (\cref{sec:mypyvy-queries}).
+The \mypyvy language closely corresponds to
+  the theoretical development of first-order logic from \cref{sec:fol-background}.
+
+A \mypyvy file consists of a sequence of declarations,
+  which together define a transition system.
+Recall that a transition system consists of a state space,
+  a set of initial states,
+  and a transition relation.
+There are declarations for all of these things.
+In addition, there are declarations to record other properties of interest,
+  such as inductive invariants and safety properties.
+While not officially part of the definition of the transition system,
+  it makes sense to record these properties in the same file,
+  so that queries about the system can make easy use of them.
+For example, there is a query to check that all the invariants in a file
+  actually are invariants.
+
+\todo{mypyvy should really not use the word \texttt{invariant} when we mean \emph{inductive}}
+
+
+
+
 \begin{verbatim}
 sort A
 
@@ -1181,7 +1207,7 @@ transition step(x: A)
 # safety forall X. r(X) -> exists Y. X = f(Y)
 safety forall X. r(X) -> X = source | exists Y. X = f(Y)
 \end{verbatim}
-\todo{jrw: possibly introduce uninterpreted sorts in a separate FOL background section}
+
 
 \begin{verbatim}
 - sort
@@ -1198,7 +1224,7 @@ safety forall X. r(X) -> X = source | exists Y. X = f(Y)
 - note on modifies clauses/frame conjuncts
 \end{verbatim}
 
-\section{Queries on Transition Systems}
+\section{Queries on Transition Systems}\label{sec:mypyvy-queries}
 
 \begin{verbatim}
 - trace/bmc; the trace declaration; sat/unsat qualifier

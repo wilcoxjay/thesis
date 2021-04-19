@@ -1187,15 +1187,32 @@ For example, there is a query to check that all the invariants in a file
 
 \todo{mypyvy should really not use the word \texttt{invariant} when we mean \emph{inductive}}
 
-
+A transition system consists of a state space, a set of initial states, and a transition relation.
+\mypyvy has one or more declarations corresponding to each of these components.
+To define the state space,
+  \mypyvy supports declaring uninterpreted sorts, constants, relations, and functions.
+The \lstinline[language=mypyvy]{sort} keyword declares the name of an uninterpreted sort.
+Uninterpreted sorts can be used in the types of other declarations in the file.
+The state consists of constants, relations, and functions, which we refer to as ``state variables''.
+Each state variable can by \lstinline[language=mypyvy]{immutable} or \lstinline[language=mypyvy]{mutable}.
+An \lstinline[language=mypyvy]{immutable} state variable cannot be changed by the transition relation throughout an execution of the system,
+  while a \lstinline[language=mypyvy]{mutable} state variable can evolve over time.
+There are keywords \lstinline[language=mypyvy]{constant}, \lstinline[language=mypyvy]{relation}, and \lstinline[language=mypyvy]{function}
+  for each category of state variable.
+Here are some examples of sort declarations and state variable declarations.
+\begin{lstlisting}[language=mypyvy, xleftmargin=.2\textwidth, xrightmargin=.2\textwidth]
+  sort A
+  immutable constant source: A
+  mutable relation r(A)
+  immutable function f(A): A
+\end{lstlisting}
+Each state variable declaration starts with its mutability, then its category, followed by its name.
+After the name, the sorts of the arguments (if any) are given,
+followed by a return type (if any; relations always return \lstinline[language=mypyvy]{function}).
 
 
 \begin{verbatim}
 sort A
-
-immutable function f(A): A
-mutable relation r(A)
-immutable constant source: A
 
 init r(X) <-> X = source
 

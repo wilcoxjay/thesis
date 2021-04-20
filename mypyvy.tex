@@ -1189,6 +1189,7 @@ For example, there is a query to check that all the invariants in a file
 
 A transition system consists of a state space, a set of initial states, and a transition relation.
 \mypyvy has one or more declarations corresponding to each of these components.
+
 To define the state space,
   \mypyvy supports declaring uninterpreted sorts, constants, relations, and functions.
 The \lstinline[language=mypyvy]{sort} keyword declares the name of an uninterpreted sort.
@@ -1208,18 +1209,43 @@ Here are some examples of sort declarations and state variable declarations.
 \end{lstlisting}
 Each state variable declaration starts with its mutability, then its category, followed by its name.
 After the name, the sorts of the arguments (if any) are given,
-followed by a return type (if any; relations always return \lstinline[language=mypyvy]{function}).
+followed by a return type (if any; relations always return \lstinline[language=mypyvy]{bool}).
 
+To define the initial conditions,
+  \mypyvy provides the \lstinline[language=mypyvy]{init} keyword.
+An \lstinline[language=mypyvy]{init} declaration consists of this keyword
+  followed by a one-state expression of type \lstinline[language=mypyvy]{bool}.
+For example, the following declaration says that initially
+  the relation \lstinline[language=mypyvy]{r} contains only the element \lstinline[language=mypyvy]{source}.
+\begin{lstlisting}[language=mypyvy, xleftmargin=.2\textwidth, xrightmargin=.2\textwidth]
+  init forall X:A. r(X) <-> X = source
+\end{lstlisting}
+If a file contains more than one \lstinline[language=mypyvy]{init} declaration,
+  they are all conjoined together to form the initial condition for the transition system.
 
-\begin{verbatim}
-sort A
-
-init r(X) <-> X = source
-
+To define the transition relation,
+  \mypyvy provides the \lstinline[language=mypyvy]{transition} keyword.
+A \lstinline[language=mypyvy]{transition} declaration consists of this keyword
+  followed by a name and some number of comma-separated parameters in parentheses,
+  then a modifies clause,
+  and then a two-state expression of type \lstinline[language=mypyvy]{bool}.
+For example, the following transition says that for any element
+  currently in the \lstinline[language=mypyvy]{r} relation,
+  you can add its image under the function \lstinline[language=mypyvy]{f}
+  to \lstinline[language=mypyvy]{r} as well.
+\begin{lstlisting}[language=mypyvy, xleftmargin=.2\textwidth, xrightmargin=.2\textwidth]
 transition step(x: A)
   modifies r
   & r(x)
   & (forall X. new(r(X)) <-> r(X) | X = f(x))
+\end{lstlisting}
+The transition is named \lstinline[language=mypyvy]{step} and takes one parameter
+  called \lstinline[language=mypyvy]{x} of type \lstinline[language=mypyvy]{A}.
+Parameters are implicitly existentially quantified in the global transition relation.
+If there is more than one \lstinline[language=mypyvy]{transition} declaration in the file,
+  then their \emph{disjunction} forms the transition relation of the transition system.
+
+\begin{verbatim}
 
 # safety forall X. r(X) -> exists Y. X = f(Y)
 safety forall X. r(X) -> X = source | exists Y. X = f(Y)

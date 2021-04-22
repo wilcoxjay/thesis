@@ -1245,12 +1245,30 @@ Parameters are implicitly existentially quantified in the global transition rela
 If there is more than one \lstinline[language=mypyvy]{transition} declaration in the file,
   then their \emph{disjunction} forms the transition relation of the transition system.
 
-\begin{verbatim}
+The \lstinline[language=mypyvy]{invariant} declaration takes a one-state expression
+  and conjoins it to the inductive invariant for the transition system.
+\mypyvy can check that the resulting conjunction is actually an inductive invariant.
+Some invariants can be marked with the The \lstinline[language=mypyvy]{safety} keyword instead,
+  which indicates that these conjuncts are the ``specification'' of the transition system,
+  and that the non-\lstinline[language=mypyvy]{safety} conjuncts are only there
+  to make the invariant inductive.
+For example, consider the following two \lstinline[language=mypyvy]{safety} declarations.
+\begin{lstlisting}[language=mypyvy, xleftmargin=.2\textwidth, xrightmargin=.2\textwidth]
+# oops! not true initially
+safety forall X. r(X) -> exists Y. X = f(Y)
 
-# safety forall X. r(X) -> exists Y. X = f(Y)
+# true and inductive
 safety forall X. r(X) -> X = source | exists Y. X = f(Y)
-\end{verbatim}
-
+\end{lstlisting}
+In the transition system example of this section,
+  the first declaration says that every member of the relation \lstinline[language=mypyvy]{r}
+  is in the image of the function \lstinline[language=mypyvy]{f}.
+This is not true in the initial state, though,
+  since \lstinline[language=mypyvy]{source} might not be in the image of \lstinline[language=mypyvy]{f}.
+The second declaration fixes this problem by saying that
+  every member of the relation \lstinline[language=mypyvy]{r}
+  is either equal to \lstinline[language=mypyvy]{source}
+  or is in the image of the function \lstinline[language=mypyvy]{f}.
 
 \begin{verbatim}
 - sort

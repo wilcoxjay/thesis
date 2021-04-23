@@ -1270,6 +1270,21 @@ The second declaration fixes this problem by saying that
   is either equal to \lstinline[language=mypyvy]{source}
   or is in the image of the function \lstinline[language=mypyvy]{f}.
 
+The immutable symbols of a transition system form a sort of ``background theory'' for the system.
+\mypyvy provides the \lstinline[language=mypyvy]{axiom} declaration,
+  which takes a zero-state formula and adds it as an axiom of the background theory.
+For example, we can use axioms to model the existence of a total order on a sort.
+\begin{lstlisting}[language=mypyvy, xleftmargin=.2\textwidth, xrightmargin=.2\textwidth]
+sort A
+immutable relation le(A, A)
+axiom le(X, X)
+axiom le(X, Y) & le(Y, X) -> X = Y
+axiom le(X, Y) & le(Y, Z) -> le(X, Z)
+axiom le(X, Y) | le(Y, X)
+\end{lstlisting}
+Since the immutable relations are never updated by the transition relation,
+  these axioms are true in every state.
+
 \begin{verbatim}
 - sort
 - immutable/mutable relation/constant/function

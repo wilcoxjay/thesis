@@ -1242,6 +1242,10 @@ transition step(x: A)
 The transition is named \lstinline[language=mypyvy]{step} and takes one parameter
   called \lstinline[language=mypyvy]{x} of type \lstinline[language=mypyvy]{A}.
 Parameters are implicitly existentially quantified in the global transition relation.
+The modifies clause declares which mutable state components are changed by the transition.
+For any mutable state component \emph{not} in the modifies clause,
+  \mypyvy implicitly adds a conjunct to the transition saying that
+  that component does not change.
 If there is more than one \lstinline[language=mypyvy]{transition} declaration in the file,
   then their \emph{disjunction} forms the transition relation of the transition system.
 
@@ -1285,12 +1289,54 @@ axiom le(X, Y) | le(Y, X)
 Since the immutable relations are never updated by the transition relation,
   these axioms are true in every state.
 
+The \lstinline[language=mypyvy]{theorem} declaration takes a $k$-state formula and
+  ensures its validity given the background theory.
+This can be used to prove that two alternate formulations of an invariant are equivalent,
+  for example, or that one invariant or safety property implies another.
+For example, given the background theory about \lstinline[language=mypyvy]{le} above,
+  we could state a simple corollary that \lstinline[language=mypyvy]{le} is ``3-transitive''.
+\begin{lstlisting}[language=mypyvy, xleftmargin=.2\textwidth, xrightmargin=.2\textwidth]
+zerostate theorem
+  le(X, Y) & le(Y, Z) & le(Z, W) -> le(X, W)
+\end{lstlisting}
+\mypyvy can check the validity of these theorems. See the next section.
+
+\subsection{$k$-state expressions}
+
+The expressions of \mypyvy closely follow those of first-order logic.
+When reasoning about a transition system,
+  one often has two copies of the state components in scope,
+  those from the pre-state of a transition, and those from the post-state.
+These two copies of the state components share a single copy of the immutable components;
+  only the mutable components are duplicated.
+An expression can refer to the post-state copy of a mutable symbol
+  using the \lstinline[language=mypyvy]{new} operator,
+  as in \lstinline[language=mypyvy]{new(r(X))}.
+We call such expressions 2-state expressions.
+For example, the body of each transition is a 2-state expression.
+In contrast, many other expressions are
+  more accurately referred to as 1-state expressions,
+  meaning they only have one copy of the mutable symbols in scope.
+For example, safety properties, invariants,
+  and initial conditions all contain 1-state expressions.
+Additionally, some expressions have \emph{no} copies of the mutable symbols in scope.
+We call these 0-state expressions.
+Axioms are the primary example of 0-state expressions;
+  they can only refer to the immutable symbols.
+
+In fact, further generalizations are possible
+  to $k$-state expressions for any natural number $k$.
+For example, one could write a 3-state expression,
+  which describes a sequence of 3 states,
+  where the first state's components are referred to directly,
+  the second state's components use \lstinline[language=mypyvy]{new},
+  and the third state's component use two applications of \lstinline[language=mypyvy]{new}.
+Internally, \mypyvy fully supports $k$-state expressions,
+  but their only in user facing appearance is in trace queries,
+  which allow a customized form of bounded model checking,
+  described in the next section.
+
 \begin{verbatim}
-- sort
-- immutable/mutable relation/constant/function
-- init
-- transition
-- modifies clauses
 - all the expressions, k-stateness
 - zero/one/twostate definitions
 - attributes

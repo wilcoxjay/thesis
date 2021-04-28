@@ -646,7 +646,7 @@ Since the initial condition and the safety condition
 The transition relation, on the other hand, is a \emph{binary relation},
   so it is encoded in logic as a formula over \emph{two} copies of the state variables.
 (We refer to formulas over two copies of the state variables as
-  "two-vocabulary" or "two-state" formulas,
+  "2-vocabulary" or "2-state" formulas,
   and we call the second copy of the variables "primed"
   and write them as $x'$, for example.)
 In the robot example, we can write the transition relation as
@@ -694,8 +694,8 @@ and one to check that the invariant is preserved by the transition relation,
   \mathit{Inv} \land \mathid{Tr} \Rightarrow \mathit{Inv}'.
 \]
 The first of these two formulas is over a single copy of the state.
-But the second formula is a two-vocabulary formula,
-  both because it contains the two-vocabulary formula $\mathid{Tr}$,
+But the second formula is a 2-vocabulary formula,
+  both because it contains the 2-vocabulary formula $\mathid{Tr}$,
   and because we use $\mathit{Inv}'$ to mean ``$\mathit{Inv}$
   with all the state variables changed to their primed copy''.
 In the robot example, there is only one initial state,
@@ -1214,7 +1214,7 @@ followed by a return type (if any; relations always return \lstinline[language=m
 To define the initial conditions,
   \mypyvy provides the \lstinline[language=mypyvy]{init} keyword.
 An \lstinline[language=mypyvy]{init} declaration consists of this keyword
-  followed by a one-state expression of type \lstinline[language=mypyvy]{bool}.
+  followed by a 1-state expression of type \lstinline[language=mypyvy]{bool}.
 For example, the following declaration says that initially
   the relation \lstinline[language=mypyvy]{r} contains only the element \lstinline[language=mypyvy]{source}.
 \begin{lstlisting}[language=mypyvy, xleftmargin=.2\textwidth, xrightmargin=.2\textwidth]
@@ -1228,7 +1228,7 @@ To define the transition relation,
 A \lstinline[language=mypyvy]{transition} declaration consists of this keyword
   followed by a name and some number of comma-separated parameters in parentheses,
   then a modifies clause,
-  and then a two-state expression of type \lstinline[language=mypyvy]{bool}.
+  and then a 2-state expression of type \lstinline[language=mypyvy]{bool}.
 For example, the following transition says that for any element
   currently in the \lstinline[language=mypyvy]{r} relation,
   you can add its image under the function \lstinline[language=mypyvy]{f}
@@ -1249,7 +1249,7 @@ For any mutable state component \emph{not} in the modifies clause,
 If there is more than one \lstinline[language=mypyvy]{transition} declaration in the file,
   then their \emph{disjunction} forms the transition relation of the transition system.
 
-The \lstinline[language=mypyvy]{invariant} declaration takes a one-state expression
+The \lstinline[language=mypyvy]{invariant} declaration takes a 1-state expression
   and conjoins it to the inductive invariant for the transition system.
 \mypyvy can check that the resulting conjunction is actually an inductive invariant.
 Some invariants can be marked with the The \lstinline[language=mypyvy]{safety} keyword instead,
@@ -1276,7 +1276,7 @@ The second declaration fixes this problem by saying that
 
 The immutable symbols of a transition system form a sort of ``background theory'' for the system.
 \mypyvy provides the \lstinline[language=mypyvy]{axiom} declaration,
-  which takes a zero-state formula and adds it as an axiom of the background theory.
+  which takes a 0-state formula and adds it as an axiom of the background theory.
 For example, we can use axioms to model the existence of a total order on a sort.
 \begin{lstlisting}[language=mypyvy, xleftmargin=.2\textwidth, xrightmargin=.2\textwidth]
 sort A
@@ -1607,7 +1607,7 @@ Transition systems are defined by annotating a standard SMT-LIB function definit
 with a special keyword marking it as the definition of the
 initial conditions or transition relation.
 %
-Since transition relations are two-state formulas,
+Since transition relations are 2-state formulas,
 as discussed in~\todo{refer back to mypyvy discussion},
 VMT again uses special keywords to declare that a SMT-LIB variable is
 the ``next'' variable corresponding to another variable.

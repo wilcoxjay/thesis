@@ -604,7 +604,7 @@ Most of the art and skill of working with transition systems
   might be good ideas to get it to be inductive.
 
 
-\subsection{First-order logic for transition systems}
+\subsection{First-order logic for transition systems}\label{ssec:fol-tr}
 
 We are on a journey to more and more formally specify the robot example
   and to prove its safety more and more automatically.
@@ -1347,6 +1347,47 @@ Internally, \mypyvy fully supports $k$-state expressions,
 \end{verbatim}
 
 \section{Queries on Transition Systems}\label{sec:mypyvy-queries}
+
+\mypyvy supports several solver-aided queries over transition systems.
+
+\paragraph{Inductiveness checking.}
+The most common query is to check that
+  the invariant specified in the file is an inductive invariant
+  of the transition system.
+As described at a high level in \cref{ssec:fol-tr},
+  checking inductiveness consists of proving validity of the two formulas:
+\[
+  \mathit{Init} \Rightarrow \mathit{Inv},
+\]
+and
+\[
+  \mathit{Inv} \land \mathid{Tr} \Rightarrow \mathit{Inv}'.
+\]
+In the context of \mypyvy,
+  $\mathit{Init}$ is the conjunction of all \lstinline[language=mypyvy]{init} declarations,
+  $\mathit{Inv}$ is the conjunction of all \lstinline[language=mypyvy]{invariant} declarations, and
+  $\mathit{Tr}$ is the \emph{disjunction} of all \lstinline[language=mypyvy]{transition} declarations.
+Also, the prime symbol ($'$) is written \lstinline[language=mypyvy]{new(...)} in \mypyvy.
+These two high-level queries can easily be directly expressed to the underlying solver.
+As usual, to prove validity using a satisfiability solver,
+  we negate the formula and hope for an \texttt{unsat} result.
+In fact, \mypyvy performs one small optimization,
+  which is to expand all top-level disjunctions outside the solver.
+Most straightforwardly, instead of issuing a single query for the entire transition relation,
+  \mypyvy issues separate queries for each transition.
+Similarly, though perhaps less obviously,
+  since the right-hand side of each query's implication is a conjunction,
+  after the validity-to-satisfiability negation,
+  this also becomes a disjunction at the solver level,
+  and \mypyvy issues separate queries for each conjunct in the invariant.
+So in total, if there are $n$ invariants and $m$ transitions,
+  \mypyvy issues $n$ 1-state queries to check that the initial states satisfy the invariant,
+  plus $mn$ 2-state queries to check that all invariants are preserved by all transitions.
+In our anecdotal experience,
+  splitting these disjunctions outside the solver improves performance and reliability,
+  and, best of all, when something is taking a long time (usually because something is not inductive),
+  the user can see what transition and invariant conjunct the solver is stuck on,
+  improving transparency of the tool.
 
 \begin{verbatim}
 - trace/bmc; the trace declaration; sat/unsat qualifier

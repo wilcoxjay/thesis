@@ -1354,6 +1354,8 @@ Internally, \mypyvy fully supports $k$-state expressions,
 The most common query is to check that
   the invariant specified in the file is an inductive invariant
   of the transition system.
+\mypyvy performs this query on a file
+  when run with the \texttt{mypyvy verify} subcommand.
 As described at a high level in \cref{ssec:fol-tr},
   checking inductiveness consists of proving validity of the two formulas:
 \[
@@ -1373,7 +1375,7 @@ As usual, to prove validity using a satisfiability solver,
   we negate the formula and hope for an \texttt{unsat} result.
 In fact, \mypyvy performs one small optimization,
   which is to expand all top-level disjunctions outside the solver.
-Most straightforwardly, instead of issuing a single query for the entire transition relation,
+Instead of issuing a single query for the entire transition relation,
   \mypyvy issues separate queries for each transition.
 Similarly, though perhaps less obviously,
   since the right-hand side of each query's implication is a conjunction,
@@ -1388,6 +1390,13 @@ In our anecdotal experience,
   and, best of all, when something is taking a long time (usually because something is not inductive),
   the user can see what transition and invariant conjunct the solver is stuck on,
   improving transparency of the tool.
+
+\paragraph{Bounded model checking.}
+Given a transition system and a safety property,
+  bounded model checking asks,
+  ``Is there a counterexample to safety in up to $k$ transitions?''
+
+\paragraph{Trace queries.}
 
 \begin{verbatim}
 - trace/bmc; the trace declaration; sat/unsat qualifier

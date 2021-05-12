@@ -1393,8 +1393,24 @@ In our anecdotal experience,
 
 \paragraph{Bounded model checking.}
 Given a transition system and a safety property,
-  bounded model checking asks,
+  bounded model checking (BMC) asks,
   ``Is there a counterexample to safety in up to $k$ transitions?''
+\mypyvy expresses this query to the underlying solver by ``unrolling,''
+  that is, by making $k+1$ copies of the mutable state variables such that:
+  (1) the first copy satisfies the initial conditions;
+  (2) the last copy \emph{violates} safety;
+  (3) all adjacent pairs of states are related by the transition relation.
+If the solver finds a model for this query,
+  it can be interpreted as an execution trace
+  that starts in an initial states, and takes some sequence of transitions
+  until it reaches a state that violates safety.
+Such an example indicates a problem with
+  either the transition system or the safety property.
+
+The na\"{i}ve approach to bounded model checking described here does not scale
+  as $k$ grows and as the transition relation becomes more and more disjunctive (\ie, more transitions).
+Partially to workaround these scalability problems,
+  \mypyvy also supports ``trace queries.''
 
 \paragraph{Trace queries.}
 

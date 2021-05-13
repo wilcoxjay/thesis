@@ -1413,6 +1413,47 @@ Partially to workaround these scalability problems,
   \mypyvy also supports ``trace queries.''
 
 \paragraph{Trace queries.}
+A trace query is ``just'' a $k$-state formula,
+  whose satisfiability encodes some kind of restricted reachability property
+  that the user is interested in.
+For example, in a model of a distributed system with many actions,
+  na\"{i}ve BMC will only scale to a small depth, say 5 actions,
+  in a reasonable amount of time,
+  but many interesting behaviors of the system may not occur until a much greater depth,
+  say 10 or 15 actions.
+Of course, to gain confidence about all reachable states, no matter how deep,
+  the user should prove an inductive invariant that implies safety.
+But during testing, it can be convenient to explore deeper into the state space
+  without needing to come up with an invariant.
+The user can write a trace query which pares down the set of transitions
+  to explore at each step.
+For example, if the distributed system starts by electing a leader
+  before accepting further requests,
+  the user can create a trace query list a sequence of transitions
+  that result in a leader being elected,
+  followed by a sequence of transitions to accept a request.
+At the end of this sequence, the user can include an assertion,
+  such as ``the final state reached on this trace violates safety.''
+The resulting $k$-state expression can be checked for satisfiability.
+If it is unsatisfiable, then there is no execution violating safety.
+Trace queries can be solved at a much higher depth than BMC
+  because each step of the execution is constrained to execute
+  a single kind of transition (or just a handful of transitions),
+  rather than the disjunction of all possible transitions.
+This helps the solver not get confused
+  enumerating many different possible combinations.
+
+In addition to trace queries that are expected to be unsatisfiable,
+  it is also useful to make trace queries that are expected to be satisfiable,
+  to check, \eg, that there is at least one execution where a leader gets elected successfully.
+This latter kind of query is especially useful for detecting vacuity bugs,
+  where some typo in the formal model causes one or more transitions
+  to be equivalent to \textsf{false}.
+Vacuity bugs are impossible to detect by proving inductive invariants,
+  because every invariant is preserved by \textsf{false}!
+So trace queries become a crucial tool to ensure a transition system
+  accurately reflects its author's understanding and intentions.
+
 
 \begin{verbatim}
 - trace/bmc; the trace declaration; sat/unsat qualifier

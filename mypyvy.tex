@@ -1164,7 +1164,7 @@ Decidability of EPR follows as a corollary, after the following lemma.
 % stratified functions
 
 
-\section{Expressing Transition Systems in \mypyvy}
+\section{Expressing Transition Systems in \mypyvy}\label{sec:mypyvy-expressing-ts}
 
 \mypyvy consists of a language for expressing transition systems (this section)
   and a tool for answering queries about such systems (\cref{sec:mypyvy-queries}).
@@ -1447,19 +1447,37 @@ In addition to trace queries that are expected to be unsatisfiable,
   it is also useful to make trace queries that are expected to be satisfiable,
   to check, \eg, that there is at least one execution where a leader gets elected successfully.
 This latter kind of query is especially useful for detecting vacuity bugs,
-  where some typo in the formal model causes one or more transitions
+  where a typo in the formal model causes one or more transitions
   to be equivalent to \textsf{false}.
 Vacuity bugs are impossible to detect by proving inductive invariants,
   because every invariant is preserved by \textsf{false}!
 So trace queries become a crucial tool to ensure a transition system
   accurately reflects its author's understanding and intentions.
 
+\paragraph{Theorems.}
+\mypyvy's \lstinline[language=mypyvy]{theorem} declaration checks
+  the validity of a $k$-state formula in the background theory of the transition system,
+  as discussed in \cref{sec:mypyvy-expressing-ts}.
+Although the syntax is quite different from trace queries,
+  the implementation is very similar.
+A trace query is a $k$-state formula that the user declares to be
+  ``expected satisfiable'' or ``expected unsatisfiable''.
+On the other hand, a theorem is $k$-state formula that the user
+  declares is ``expected valid'', \ie, its negation is expected to be unsatisfiable.
+
+Together, trace queries and the \lstinline[language=mypyvy]{theorem} declaration
+  cover three out of the four possibilities
+  of the satisfiable/unsatisfiable and negated/not-negated dimensions.
+The remaining possibility would be a formula whose negation is expected to be satisfiable.
+A reasonable name for this idea would be ``nonvacous,''
+  and it seems in principle that it could be as useful as satisfiable trace queries are.
+A future version of \mypyvy may unify trace queries and theorems
+  into one syntactic declaration form,
+  and allow for ``nonvacuous'' queries as well.
 
 \begin{verbatim}
-- trace/bmc; the trace declaration; sat/unsat qualifier
 - how to read states printed by mypyvy
-- verify: invariant/safety
-- zero/one/twostate theorem
+
 - side note: custom printers using attributes
 - updr
 \end{verbatim}

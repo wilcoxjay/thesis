@@ -1475,12 +1475,36 @@ A future version of \mypyvy may unify trace queries and theorems
   into one syntactic declaration form,
   and allow for ``nonvacuous'' queries as well.
 
-\begin{verbatim}
-- how to read states printed by mypyvy
+\paragraph{Universal Property-Directed Reachability (\updr).}
+\mypyvy includes an implementation of \updr,
+  which can infer universally quantified inductive invariants
+  in pure first-order logic (\ie, without arithmetic)~\cite{updr-jacm}.
+\updr takes a transition system and a desired safety property
+  and tries to construct an inductive invariant which implies safety.
+The space of possible invariants inferred by \updr are
+  conjunctions of universally quantified clauses of pure literals.
+By pure literal, we mean either a pure atom or its negation,
+  and by pure atom we mean either a relational fact over variables,
+  an equation between a constant and a variable,
+  or an equation between a function applied to variables and a variable.
+The reason for this seemingly obscure search space is
+  due to the way \updr constructs candidate invariants,
+  which is by finding backwards reachable states and then ``blocking'' them
+  by computing a ``forbidden sub-state'' that
+  rules out all states with a certain pattern of relation/constant/function facts.
+By default, when asked to perform \updr,
+  \mypyvy uses the invariants in the file marked \lstinline[language=mypyvy]{safety}
+  as the target property.
+\mypyvy's implementation of \updr has been a useful baseline
+  for other invariant inference research to compare against,
+  see, \eg, Phase-\updr~\cite{phase-updr}.
 
-- side note: custom printers using attributes
-- updr
-\end{verbatim}
+\paragraph{Answers to queries, or, how to read counterexamples.}
+
+\paragraph{Attributes, plugins, and custom printers for states.}
+
+Ack dricketts.
+
 
 \section{Internals of \mypyvy}
 

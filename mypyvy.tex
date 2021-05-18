@@ -1481,6 +1481,15 @@ A future version of \mypyvy may unify trace queries and theorems
   in pure first-order logic (\ie, without arithmetic)~\cite{updr-jacm}.
 \updr takes a transition system and a desired safety property
   and tries to construct an inductive invariant which implies safety.
+If it succeeds, it returns the inductive invariant.
+If it does not succeed,
+  \updr can either loop forever or return a ``relaxed  counterexample''.
+A relaxed counterexample \emph{proves} that
+  there is no universally quantified inductive invariant that implies safety.
+A relaxed counterexample consists of a sequence of interleaved
+  transitions from the transition system and ``relaxation steps'',
+  which are steps where some elements of some sorts get deleted.
+
 The space of possible invariants inferred by \updr are
   conjunctions of universally quantified clauses of pure literals.
 By pure literal, we mean either a pure atom or its negation,
@@ -1500,10 +1509,29 @@ By default, when asked to perform \updr,
   see, \eg, Phase-\updr~\cite{phase-updr}.
 
 \paragraph{Answers to queries, or, how to read counterexamples.}
+While each of the above queries is quite different,
+  they all occasionally return answers
+  that involve models of $k$-state formulas.
+For example, when inductiveness checking fails,
+  it returns either
+    a $1$-state model demonstrating a violation of safety in an initial state,
+    or a $2$-state model demonstrating a counterexample to induction.
+As another example,
+  when bounded model checking finds an execution that violates safety,
+    it returns a $k$-state model witnessing the executions trace.
+Queries often have other possible outputs besides $k$-state models,
+  \eg, ``verified'' or ``no trace found'' or,
+  for \updr, a formula that is an inductive invariant proving safety.
+But these other outputs are either simple
+  or have well understood existing output formats.
+We now describe \mypyvy's output format for displaying $k$-state models.
+
+\todo{describe the format}
+
 
 \paragraph{Attributes, plugins, and custom printers for states.}
 
-Ack dricketts.
+\todo{Ack dricketts.}
 
 
 \section{Internals of \mypyvy}

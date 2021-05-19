@@ -1524,12 +1524,25 @@ Queries often have other possible outputs besides $k$-state models,
   for \updr, a formula that is an inductive invariant proving safety.
 But these other outputs are either simple
   or have well understood existing output formats.
-We now describe \mypyvy's output format for displaying $k$-state models.
 
-\todo{describe the format}
-
+We have already seen one example
+  of \mypyvy's output format for displaying $k$-state models:
+  the bottom half of \cref{fig:robot-mypyvy-output}
+  shows a CTI (\ie, a 2-state model) for the robot system.
+In that example, the 2-state model is printed
+  by showing the values of all the variables
+  in state 0 and in state 1.
+More generally, for a model with $k$ states,
+  \mypyvy first displays the values of all the \emph{immutable} symbols,
+  and then, for each state, the values of the mutable symbols in that state.
+For relational symbols,
+  by default \mypyvy only prints positive literals,
+  \ie, the tuples that are in the relation.
 
 \paragraph{Attributes, plugins, and custom printers for states.}
+
+To improve the readability of the model format,
+  \mypyvy supports custom formatting via printer plugins.
 
 \todo{Ack dricketts.}
 

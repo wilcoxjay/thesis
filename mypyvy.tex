@@ -1339,7 +1339,7 @@ Internally, \mypyvy fully supports $k$-state expressions,
 \begin{verbatim}
 - models of k-state formulas
 - definitions (zero/one/twostate)
-- attributes and custom printing
+- annotations and custom printing
 - typechecking/inference
 - implicit quantification of capitalized vars at outer scope
 - note on implicit existential on transition params, but *not* defn params
@@ -1539,13 +1539,56 @@ For relational symbols,
   by default \mypyvy only prints positive literals,
   \ie, the tuples that are in the relation.
 
-\paragraph{Attributes, plugins, and custom printers for states.}
+\paragraph{Annotations, plugins, and custom printers for states.}
 
+\mypyvy answers queries by calling Z3,
+  and \mypyvy prints whatever model Z3 returns, translated into \mypyvy syntax.
+Often, solver models are strange and hard to read.
+For example, if a transition system uses a total order relation on one of its sorts,
+  it would make sense to always print that with names that are ordered by the total order,
+  but Z3 is unlikely to do this by chance.
 To improve the readability of the model format,
   \mypyvy supports custom formatting via printer plugins.
 
-\todo{Ack dricketts.}
+Every declaration in \mypyvy can be tagged with \emph{annotations},
+  which have no inherent meaning,
+  but can be detected by plugins to cause things to be printed differently.
+Annotations come after the declaration they are attached to,
+  are written with an at-sign (\lstinline[language=mypyvy]{@}),
+  and can take arguments in parentheses, as in the following example.
+\begin{lstlisting}[language=mypyvy, xleftmargin=.2\textwidth, xrightmargin=.2\textwidth]
+  sort node @printed_by(ordered_by_printer, le)
+\end{lstlisting}
+This annotation tells \mypyvy that the sort \lstinline[language=mypyvy]{node}
+  should be printed in the order given by the total order \lstinline[language=mypyvy]{le}.
+The annotation name \lstinline[language=mypyvy]{printed_by}
+  is detected by \mypyvy's model printing logic,
+  and when such an annotation is found,
+  it calls a plugin named by the first argument in the annotation,
+  in this case \lstinline[language=mypyvy]{ordered_by_printer}.
+That plugin uses the second expression as a relation name
+  to look up the total order in the model,
+  which is then used to order the elements of sort \lstinline[language=mypyvy]{node}
+  before printing them.
 
+\mypyvy supports several other custom printers,
+  including one for printing sorts
+  that represent sets of elements coming from another sort.
+Users can also define their own printers by defining a printing plugin.
+\mypyvy's proof of the Raft protocol comes with a custom printer
+  for displaying Raft's logs in a readable way.
+
+\mypyvy also supports a handful of other annotations.
+\lstinline[language=mypyvy]{@no_print} instructs \mypyvy
+  not to print a sort, relation, constant, or function at all,
+  which can be useful either
+  because a custom printer for another symbol also handles printing this symbol, or
+  temporarily because the model is large and the symbol is irrelevant to the current debugging session.
+\lstinline[language=mypyvy]{@no_minimize} is used
+  to instruct \mypyvy's model minimizer not to minimize elements of a certain sort or relation.
+
+The annotation framework is extensible, and we expect other uses of annotations will come up in the future.
+We would like to thank Daniel Ricketts for his contributions to this aspect of \mypyvy.
 
 \section{Internals of \mypyvy}
 

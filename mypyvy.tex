@@ -1603,8 +1603,53 @@ We would like to thank Daniel Ricketts for his contributions to this aspect of \
 
 \section{Using \mypyvy}
 
+We have used \mypyvy as a platform to support several research projects
+  in the general area of automated verification and invariant inference.
+
+\paragraph{Another proof of Raft.}
+In \cref{sec:verdi:casestudy-raft}, we discussed a Coq proof of
+  the safety of Raft consensus protocol.
+That effort involved over 50000 lines of proof for about 500 lines of code.
+Using the automation of \mypyvy,
+  and based on ideas from our collaborators on
+  how to encode the proofs of Paxos and MultiPaxos/Raft in first-order logic~\cite{Padon-al:OOPSLA17, pldi18-mfd},
+  we were able to produce another proof of Raft's safety in \mypyvy.
+The \mypyvy proof is under 500 lines total,
+  including both the model of the protocol and its invariants.
+The primary difficulty that remains in the proof is
+  just to \emph{state} the inductive invariant that implies safety.
+We hope to continue to improve the state of the art here
+  through work on invariant inference,
+  which would allow the proof to get even shorter and easier.
+
+There are some important differences and tradeoffs between
+  the Coq proof of Raft from \cref{chap:verdi}
+  and the \mypyvy proof presented here.
+First, the Coq proof yielded an executable implementation of the protocol
+  via extraction to OCaml, which we were able to run and benchmark.
+In contrast, the \mypyvy proof is merely about a logical model of the system.
+Neither is clearly a better approach in all circumstances,
+  given the massive effort-reward tradeoff present.
+Second, the Coq proof more \emph{foundational},
+  meaning that any needed theory is developed from first principles.
+For example, we developed a theory of linearizability and
+  used it to prove Raft linearizable.
+In contrast, the \mypyvy proof \emph{bakes in} many assumptions about linearizability, induction, and safety proofs.
+Finally, the specifications are somewhat different.
+The Coq proof proves linearizability,
+  which is a property of the set of traces that make up the behaviors of the system.
+In contrast, \mypyvy ``only'' proves what the Raft paper calls ``State Machine Safety''.
+This safety property is still a deep result about the protocol,
+  but it is somewhat simpler than the trace reasoning required to prove linearizability.
+Overall, the proofs make different tradeoffs in the effort-results space,
+  and we believe both are valuable.
+Speaking anecdotally, we learned much from both efforts.
+The fact that the Coq proof yielded an implementation meant
+  that we were forced to consider practical concerns of efficiency, ensuring we didn't cut too many corners.
+On the other hand, the \mypyvy proof gave us higher-level insight into ``why'' the protocol works,
+  because the edit-verify-debug cycle was so much tighter, we were able to optimize our proof and really understand its guts.
+
 \begin{verbatim}
-- our port of the raft proof
 - yotam's cav19
 - jason's plid20
 - pd

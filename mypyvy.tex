@@ -1649,13 +1649,39 @@ The fact that the Coq proof yielded an implementation meant
 On the other hand, the \mypyvy proof gave us higher-level insight into ``why'' the protocol works,
   because the edit-verify-debug cycle was so much tighter, we were able to optimize our proof and really understand its guts.
 
-\begin{verbatim}
-- yotam's cav19
-- jason's plid20
-- pd
-- derived relations?
-- yotam's looking back algorithm or whatever it's called
-\end{verbatim}
+\paragraph{Phase Invariants.}
+Several projects have used \mypyvy's implementation of \updr as a baseline
+  which can be extended and compared against in the hopes of improving invariant inference.
+In one such project, we extended \updr with the idea of a \emph{phase automaton},
+  a finite state machine whose states are labeled with invariants and
+  whose edges are synchronized with transitions of the underlying transition system~\cite{phase-updr}.
+Such an automaton captures the ``phase structure'' of the protocol,
+  \eg, first elect a leader, then commit some log entries.
+A labeled phase automaton is \emph{inductive} if, roughly speaking,
+  the transitions on all edges in the automaton preserve the invariants on their incident nodes.
+An \emph{unlabeled} or partially (noninductively) phase automaton
+  poses a generalization of the invariant inference problem,
+  where the goal is to infer a strengthening of the labels to make the automaton inductive.
+This label inference problem can be solved by a generalization of \updr
+  that simultaneously solves for the invariants of each node,
+  passing proof obligations between them.
+By providing a partial phase automaton,
+  the user can help make the invariant inference problem easier,
+  thus improving performance.
+
+\paragraph{First-order Quantified Separators.}
+Another project which uses \mypyvy as a platform
+  to build improved invariant inference techniques,
+  but which the author was not directly involved in,
+  is \citeauthor{folic3}'s FOL-IC3 algorithm~\cite{folic3}.
+\updr extends the propositional IC3/PDR algorithms to work on universal formulas.
+Similarly, FOL-IC3 extends the same propositional algorithms to work on arbitrary quantified formulas.
+The key insight of this work is to reduce the invariant inference problem to a \emph{separation} problem,
+  which asks for a (quantified) first-order formula that can distinguish two given sets of example structures.
+
+In addition to the three projects mentioned above,
+  we have several ongoing pieces of work that use \mypyvy as a platform.
+So far, it seems to be working out well!
 
 \section{Related Work}
 
@@ -1925,6 +1951,7 @@ which is the focus of \mypyvy.
 \begin{verbatim}
 - future directions in internals:
   - collapsing the many kinds of queries into one
+  - collapsing function/relation/constant
   - handling transition declarations more uniformly (exists, modifies)
   - introducing a "logic" layer or other IR, or do less at z3 level
   - revisiting the "one program" mindset

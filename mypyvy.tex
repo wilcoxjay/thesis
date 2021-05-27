@@ -1590,16 +1590,16 @@ Users can also define their own printers by defining a printing plugin.
 The annotation framework is extensible, and we expect other uses of annotations will come up in the future.
 We would like to thank Daniel Ricketts for his contributions to this aspect of \mypyvy.
 
-\section{Internals of \mypyvy}
-
-\begin{verbatim}
-- a tour of main()
-- the mental model of k-state formulas (correctly handling immutable)
-  - evaluating a k-state formula on a trace
-- philosophy on interacting with z3, the Solver class
-- how to write a mypyvy "plugin"
-- syntax.the_program and its consequences
-\end{verbatim}
+% \section{Internals of \mypyvy}
+%
+% \begin{verbatim}
+% - a tour of main()
+% - the mental model of k-state formulas (correctly handling immutable)
+%   - evaluating a k-state formula on a trace
+% - philosophy on interacting with z3, the Solver class
+% - how to write a mypyvy "plugin"
+% - syntax.the_program and its consequences
+% \end{verbatim}
 
 \section{Using \mypyvy}
 
@@ -1629,7 +1629,7 @@ First, the Coq proof yielded an executable implementation of the protocol
   via extraction to OCaml, which we were able to run and benchmark.
 In contrast, the \mypyvy proof is merely about a logical model of the system.
 Neither is clearly a better approach in all circumstances,
-  given the massive effort-reward tradeoff present.
+  given the massive effort-guarantee tradeoff present.
 Second, the Coq proof more \emph{foundational},
   meaning that any needed theory is developed from first principles.
 For example, we developed a theory of linearizability and
@@ -1946,21 +1946,69 @@ about finite-state systems, especially those derived from hardware designs.
 Thus, neither supports infinite or unbounded sorts,
 which is the focus of \mypyvy.
 
-\section{Future Work}
-
-\begin{verbatim}
-- future directions in internals:
-  - collapsing the many kinds of queries into one
-  - collapsing function/relation/constant
-  - handling transition declarations more uniformly (exists, modifies)
-  - introducing a "logic" layer or other IR, or do less at z3 level
-  - revisiting the "one program" mindset
-\end{verbatim}
-
 \section{Conclusion}
 
-\begin{verbatim}
-- call to arms for collaborators, builders-on-toppers, and users
-- vision blah blah about verification UX and "exploration" of a TS,
-  saving progress from run to run, "workbench"
-\end{verbatim}
+In this chapter, we described \mypyvy, a language and tool
+  for analyzing symbolic transition systems expressed in first-order logic.
+\mypyvy has already outgrown its original purpose\footnote{}
+  and has had a surprisingly successful beginning to its life.
+There are several directions for future work, both internally facing and external.
+
+\paragraph{Future Work.}
+
+On the internals side, there are conceptual design choices
+  that should be revisited in the interests of cleanliness.
+For example, \mypyvy currently separately represents constants, relations, and functions
+  as distinct kinds of objects,
+  but it would be cleaner to represent everything as a function.
+A similar kind of conceptual simplification seems possible with queries,
+  since essentially every query (except for invariant inference queries)
+  can be phrased as asking a satisfiability question about a $k$-state formula.
+It would be nice to capture this insight into a more general query language
+  that unifies inductiveness checking, background theory theorem proving,
+  bounded model checking, and trace queries.
+Another minor internal nit is that \mypyvy currently assumes
+  that there is one global transition system under analysis.
+This assumption makes sense in the context of a command line tool
+  that is asked a simple query about a single file.
+But in more sophisticated cases, the assumption breaks down.
+For example, any kind of program transformation of the transition system itself
+  causes there to be two transition systems in scope,
+  which is currently difficult to work with, and we end up hacking around it.
+It would be nice to remove this limitation.
+
+Another aspect of \mypyvy's design worth revisiting is its interface to the underlying SMT solver.
+\mypyvy was originally designed to use Z3's Python API,
+  which was initially convenient and allowed rapid prototyping,
+  but this has the downside that we cannot easily use other SMT solvers.
+We have actually hacked in support for CVC4,
+  but the mechanism for doing so it very unsavory:
+  we use the Z3 API to build the query and then ask Z3 to print it in SMT-LIB format,
+  which we then ship to CVC4.
+A better solution would be to introduce some kind of mid-level solver interface,
+  probably based on SMT-LIB,
+  which would allow us to use multiple solvers easily.
+An important design constraint here is that
+  we don't want to give up the performance benefits
+  of using the API for expensive queries such as \updr,
+  which builds many ASTs with sharing efficiently using the API.
+
+
+On the external side, there are endless possibilities for tools to build using \mypyvy.
+For example, we have several ongoing projects related to invariant inference and improving \updr.
+More generally, we are interested in building an ``IDE for transition systems,''
+  which is able to give real-time feedback on the model as the user develops it.
+Relatedly, we'd like to make invariant inference more interactive.
+Currently, the execution model of \updr is a batch processing job,
+  and a rather expensive one at that.
+When \updr fails to find an invariant, it often seems to loop forever,
+  giving no intermediate results or feedback to the user.
+Instead, it would be nice to have an approach that
+  could be stopped midway through inference
+  and have its state inspected by the user,
+  who could then guide the search.
+
+Besides our own interests, there are also many other possible tools to build on top of \mypyvy.
+We encourage readers to join us in the quest for user-friendly symbolic reasoning about transitions
+  that is fast and works on interesting and practical examples.
+These are hard problems, and there is much work to do. We need your help!

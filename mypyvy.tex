@@ -1332,19 +1332,15 @@ For example, one could write a 3-state expression,
   the second state's components use \lstinline[language=mypyvy]{new},
   and the third state's component use two applications of \lstinline[language=mypyvy]{new}.
 Internally, \mypyvy fully supports $k$-state expressions,
-  but their only in user facing appearance is in trace queries,
-  which allow a customized form of bounded model checking,
-  described in the next section.
+  but their only user-facing appearance is in trace queries,
+  which allow a customized form of bounded model checking.
 
-\begin{verbatim}
-- models of k-state formulas
-- definitions (zero/one/twostate)
-- annotations and custom printing
-- typechecking/inference
-- implicit quantification of capitalized vars at outer scope
-- note on implicit existential on transition params, but *not* defn params
-- note on modifies clauses/frame conjuncts
-\end{verbatim}
+A $k$-state formula can be thought of as a first-order formula
+  over an extended vocabulary with $k$ copies of the mutable symbols.
+A model for a $k$-state formula is a model for this first-order formula,
+  \ie, a first-order structure that assigns interpretations to $k$ copies of the mutable symbols.
+Models of $k$-state formulas often arise in the answers to queries over transition systems, 
+  described in the next section.
 
 \section{Queries on Transition Systems}\label{sec:mypyvy-queries}
 

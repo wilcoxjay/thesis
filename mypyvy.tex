@@ -608,9 +608,9 @@ Most of the art and skill of working with transition systems
 
 We are on a journey to more and more formally specify the robot example
   and to prove its safety more and more automatically.
-The next step on this journey is through first-order logic,
+Our next stop is first-order logic,
   which we assume the reader is at least passingly familiar with.
-\todo{rephrase since we decided to add a background section}
+(See \cref{sec:fol-background} for a formal presentation.)
 The basic idea is to make the states of a transition system
   \emph{first-order structures} over \emph{state variables}, and
   to use formulas to describe the initial states,
@@ -900,11 +900,10 @@ The CTI in \cref{fig:robot-mypyvy-output} corresponds
 
 \section{Background on first-order logic}\label{sec:fol-background}
 
-\todo{this section is out of place here}
-
-Many of the ideas of first-order logic are not complicated,
+In this section, we return to the basics of first-order logic.
+These ideas logic are not complicated,
   but they are tedious to set up formally.
-In this section, we do our best.
+We will do our best.
 
 \begin{figure}[t]
   \begin{gather*}
@@ -968,7 +967,7 @@ A \emph{first-order structure} $A$ over a vocabulary $\sigma$ is
   $A_{\mathsf{bool}} = \mathbb{B}$,
   \ie, every first-order structure interprets $\mathsf{bool}$
   as the set $\set{\top,\bot}$.)
-We call $\bigcup{u\in\mathsf{usorts}(\sigma)} A_u$ the \emph{universe} of $A$.
+We call $\bigcup_{u\in\mathsf{usorts}(\sigma)} A_u$ the \emph{universe} of $A$.
 
 Given a vocabulary $\sigma$,
   a first-order structure $A$ over $\sigma$,

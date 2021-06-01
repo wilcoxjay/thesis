@@ -674,6 +674,7 @@
       {\uwsinglespace\Large
       \lineskip 3ex
       \@Title\par}
+      Draft of \today
       \par\vskip\z@ plus4fill\relax
       \@Author
       \par\vskip\z@ plus4fill\relax

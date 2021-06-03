@@ -1320,7 +1320,6 @@ confidence in the end-to-end guarantees \Verdi provides.
     property holds on the transformed system.}
   \label{fig:vst}
 \end{figure}
-\todo{Incorporate \cref{fig:vst}.}
 
 \Verdi's spectrum of network semantics enable the programmer to reason
 about their system running in the fault model corresponding to their
@@ -1340,8 +1339,8 @@ number to every message and ignoring previously received messages,
 systems can handle packet duplication. \Verdi supports such
 standard fault-tolerance mechanisms through verified system transformers,
 which \emph{transform} systems from one semantics to another while
-guaranteeing that analogous system properties are preserved. For
-example, in the transformer that handles deduplication, any property
+guaranteeing that analogous system properties are preserved. See \cref{fig:vst}.
+For example, in the transformer that handles deduplication, any property
 that holds on the underlying system is true of the transformed
 system when sequence numbers are stripped away.
 

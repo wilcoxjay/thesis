@@ -1857,14 +1857,19 @@ leaving liveness for future work.
 
 \subsection{Raft Implementation}\label{ssec:verdi:raft-impl}
 
-\begin{figure}[ht!]
+\begin{figure}[t!]
   \centering
   \small
+\begin{minipage}{0.4\linewidth}
 \begin{lstlisting}[language=caml,basicstyle=\scriptsize\tt,morekeywords={output,send,nop}]
-input := ClientRequest (c : cmd) (uid : nat)...
+input :=
+  ClientRequest
+    (c : cmd) (uid : nat) ...
 
-output := ClientResponse (uid : nat) (r : result) ...
-        | NotLeader
+output :=
+  ClientResponse
+    (uid : nat) (r : result) ...
+| NotLeader
 
 handleInput (i : input) :=
   match i with
@@ -1888,7 +1893,10 @@ handleMessage (m : msg) :=
   end;
   leaderHeartbeat();
   executeEntries()
-
+\end{lstlisting}
+\end{minipage}
+\begin{minipage}{0.5\linewidth}
+\begin{lstlisting}[language=caml,basicstyle=\scriptsize\tt,morekeywords={output,send,nop}]
 handleTimeout :=
    ...; leaderHeartbeat(); executeEntries()
 
@@ -1919,6 +1927,7 @@ init : data := { log := [];
                  type := Follower;
                  sm := initialStateMachine; ... }
 \end{lstlisting}
+\end{minipage}
   \caption{Signatures of key parts of our Raft implementation.}
 \label{fig:raft-pseudocode}
 \end{figure}

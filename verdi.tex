@@ -1960,8 +1960,8 @@ There are two classes of messages:
 Raft has three kinds of external messages.
 Nodes running Raft receive \texttt{ClientRequest} messages from external clients;
 each such message contains a command of type \texttt{cmd},
-which is a parameter of the system. These are delivered in the
-\texttt{step\_input} step in \cref{fig:failure-semantics}.\todo{is this the right figure to cite}
+which is a parameter of the system. These are delivered by the
+\textsc{Input} rule in \cref{fig:async-semantics}.
 Nodes respond with \texttt{NotLeader}
 to indicate that the client should find the current leader
 or \texttt{ClientResponse}, containing the result of the command,
@@ -2032,59 +2032,6 @@ Our verified implementation of Raft in Coq
   log compaction. It also includes more data on \texttt{Acknowledgment}
   messages than is necessary. These limitations are not fundamental,
   but addressing them would increase the proof burden.
-
-
-\hrule\todo{merge with old PLDI text below}
-
-\begin{table}
-  \centering
-  \caption{Messages, inputs, and outputs used in \Verdi's implementation of Raft.}\vspace{6pt}
-  \begin{tabular}{lll}\toprule
-    & \textbf{Name} & \textbf{Purpose} \\\midrule
-    \multirow{4}{*}{\textbf{Messages}} & \mytt{AppendEntries} &
-                                         \multirow{2}{*}{Log Replication} \\
-                      & \mytt{AppendEntriesReply} & \\
-                      & \mytt{RequestVote} & \multirow{2}{*}{Leader Election} \\
-                      & \mytt{RequestVoteReply} & \\\midrule
-    \textbf{Inputs}   & \mytt{ClientRequest} & Client inputs \\\midrule
-    \multirow{2}{*}{\textbf{Outputs}}  & \mytt{ClientResponse} &
-                                                                   Successful execution \\
-                      & \mytt{NotLeader} & Resubmit \\\bottomrule
-  \end{tabular}
-\label{fig:raft-messages}
-\end{table}
-
-Raft is structured as a set of remote procedure calls (RPCs). In
-\Verdi, we implement each RPC as a pair of messages. Raft's
-\mytt{message} type is shown in \cref{fig:raft-messages}. Raft
-divides time into \textit{terms} of arbitrary length, and guarantees
-that there can be at most one leader per term. If a node $n$ suspects
-that the leader has failed, that node advances its term and attempts
-to become the leader by sending \mytt{RequestVote} messages to every
-other node in the system. If a quorum of nodes votes for $n$, then $n$
-becomes the leader for its term. Since nodes can only vote for one
-leader in a given term, there is guaranteed to be at most one leader per
-term.
-
-Once a leader has been elected, it can begin replicating log
-entries. A log entry stores a command (\ie an input) for the
-underlying state machine, as well as the term in which it was created
-and a monotonically increasing \mytt{index}. Entries are created by
-the leader in response to \mytt{ClientRequest} inputs. When the
-leader creates an entry $e$, it sends \mytt{AppendEntries} messages
-to every other node in order to replicate $e$ in other nodes'
-logs. Once $e$ is in a quorum of logs, its command can safely be
-executed against the underlying state machine. More details about Raft
-can be found in the original Raft paper~\cite{ongaro:raft} and
-Ongaro's thesis~\shortcite{ongaro:phd}.
-
-The \Verdi implementation of Raft includes the basic Raft algorithm,
-but does not include extensions of Raft which are described in the
-paper and useful in practice. In particular, it does not include log
-compaction, which allows a server to garbage-collect old log entries
-to save space, or membership changes, which allow nodes to be added
-and removed from a Raft cluster. We leave these features for future
-work.
 
 \subsection{Raft Proof}\label{ssec:verdi:raft-proof}
 The behavior of a Verdi system is described by \emph{traces},
@@ -2302,76 +2249,6 @@ Completeness is available in \texttt{raft-proofs/\allowbreak LeaderCompletenessP
   majority. That node must have voted for both of them at that term,
   so they must be the same node. Therefore, Election Safety holds.
 \end{proof}
-
-\hrule\todo{merge with PLDI15 text below}
-
-\begin{figure}[t]
-  \centering
-  \input{linearizability-diagram}
-
-  \caption{An example trace, with permitted and forbidden operation
-    orderings. Since $O_1$ happens before $I_2$ and $I_3$,
-    $\mathrm{op}_1$ must happen before $\mathrm{op}_2$ and
-    $\mathrm{op}_3$. The operations $\mathrm{op}_2$ and
-    $\mathrm{op}_3$, however, can happen in either order.}
-
-\label{fig:linearizability-diagram}
-\end{figure}
-
-
-As discussed above, the indistinguishability result for Raft is
-linearizability. Linearizability~\cite{herlihy:linearizability}
-guarantees that clients see a consistent view of the state machine:
-clients see a consistent order in which operations were executed, and
-any request issued after a particular response is guaranteed to be
-ordered after that response.
-
-We verified linearizability of the \Verdi Raft implementation as a
-consequence of Raft's state machine safety property, which
-states that every node applies the same state machine command at a
-given index. We believe that this is the first formal proof
-(machine-checked or otherwise) of Raft's linearizability. A proof that
-state machine safety holds for our implementation
-has also been completed~\cite{verdi-repo}.
-The state machine safety proof was considerably more challenging
-than initially estimated and led to reusable insights on the
-broader challenge of ``proof engineering''~\cite{Woos-al:CPP16}.
-A pencil and paper proof of state machine
-safety for a TLA model of Raft was given in Ongaro's
-thesis~\shortcite{ongaro:phd}.
-
-We formalized a general theory of linearizable systems in Coq as
-follows. A trace $\tau$ of requests $I_1,\dots,I_n$ and responses
-$O_1,\dots,O_m$ (where there is a total ordering on requests and
-responses) is linearizable with respect to an underlying state machine
-if there exists a trace of \textit{operations} (\ie request and
-response pairs) $\tau'$ such that: (1) $\tau'$ is a valid, sequential
-execution of the underlying state machine (meaning that each response
-is the one produced by running the state machine on the trace); (2)
-every response in $\tau$ has a corresponding operation in $\tau'$; and
-(3) if a response to an operation $\mathrm{op}_1$ occurs before a
-request for an operation $\mathrm{op}_2$ in $\tau$, then
-$\mathrm{op}_1$ occurs before $\mathrm{op}_2$ in $\tau'$. Some
-examples of permitted and forbidden $\tau'$ for a particular $\tau$
-are shown in \cref{fig:linearizability-diagram}. Note that the
-primary-backup transformer described in \cref{sec:verdi:casestudy-pbj}
-trivially provides linearizability: its traces are traces of the
-underlying system and it does no reordering.
-
-Raft's I/O trace consists of \mytt{ClientRequest}s and
-\mytt{ClientResponse}s. The key to the proof is that Raft's internal
-log contains a linearized ordering of operations. The desired
-underlying trace, then, is just the list of operations in the order of
-the log. The rest of the proof involves showing that this order of
-operations satisfies the conditions above. To prove condition (1), we
-show that the state machine state is correctly managed by Raft and
-that entries are applied in the order they appear in the
-log. Condition (2) follows from the fact that Raft never issues a
-\mytt{ClientResponse} before the corresponding log entry is applied to
-the state machine. Finally, condition (3) holds because Raft only
-appends entries to the log: if a \mytt{ClientResponse} has already
-been issued, then that entry is already in the log, so any subsequent
-\mytt{ClientRequest} will be ordered after it in the log.
 
 \section{Evaluation}
 \label{sec:verdi:eval}

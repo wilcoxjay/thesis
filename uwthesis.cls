@@ -826,9 +826,9 @@
 %
 %   Dedication
 %
-\def\textofDed#1{\gdef\@textofDed{#1}}  \textofDed{Dedication}
+\def\textofDed#1{\gdef\@textofDed{#1}}  \textofDed{}
 \long\def\dedication#1{\chapter*{\@textofDed\@mkboth{}{}}
-   \thispagestyle{plain}
+   \thispagestyle{empty}
    #1\par
    \vfill
    \let\dedication\relax}

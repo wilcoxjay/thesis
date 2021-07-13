@@ -1,2 +1,32 @@
 \chapter{Conclusion}
 \label{chap:conclusion}
+
+\Cref{chap:verdi,chap:disel,chap:mypyvy} presented programming languages techniques
+  to address complexity in verifying distributed systems implementations.
+Verdi and \disel both address forms of system complexity:
+  Verdi separates fault tolerance mechanisms from application logic,
+  while \disel separates reasoning between cooperating services.
+While successful at reducing system complexity,
+  both Verdi and \disel still suffer from high \emph{proof} complexity,
+  in large part because of the need to manually state and prove inductive invariants.
+This motivated us to build tools for automated verification and invariant inference
+  on top of the \mypyvy toolbox.
+In particular, we have used \mypyvy to implement the \updr algorithm,
+  which can automatically infer certain classes of inductive invariants
+  for symbolic transition systems.
+When applicable, such automated tools greatly reduce proof effort and complexity.
+
+Despite all this progress, it remains challenging to use verification tools
+  to verify real protocols and implementations.
+For example, if a system's inductive invariant cannot be expressed
+  in the logic supported by the solver underlying \mypyvy,
+  then \mypyvy will be of little use when verifying the system.
+In this case, the simplification and automation that would come from using \mypyvy is not available.
+This example shows that \mypyvy is
+  a tool for \emph{simplifying away} a certain kind of complexity
+  that comes from stating and proving inductive invariants.
+In contrast, another approach is \emph{embracing complexity},
+  to use a phrase coined by Jean Yang.\footnote{See \url{https://twitter.com/jeanqasaur/status/1389645922183696384}.}
+Such tools make the verification engineer's life easier not by completely solving (and hiding) the problem,
+  but rather by efficiently presenting the engineer with the information they need.
+We look forward building complexity-embracing tools that go beyond what current automated solvers can handle.

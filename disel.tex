@@ -602,9 +602,9 @@ To summarize, this chapter makes the following contributions:
 
 \end{itemize}
 %
-The implementation of \disel, including its mechanized metatheory and
-proofs of all examples from this chapter, is available online:
-{\small{\href{https://github.com/DistributedComponents/disel}{\texttt{https://github.com/DistributedComponents/disel}}}}.
+% The implementation of \disel, including its mechanized metatheory and
+% proofs of all examples from this chapter, is available online:
+% {\small{\href{https://github.com/DistributedComponents/disel}{\texttt{https://github.com/DistributedComponents/disel}}}}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2911,10 +2911,11 @@ Finding such inductive invariants is the art of verification, and the
 process typically requires several iterations before converging on a
 property that is inductive and implies the desired spec.
 %
-Tools such as Ivy~\cite{Padon-al:PLDI16} make the process of finding
+Tools such as Ivy~\cite{Padon-al:PLDI16} and \mypyvy~(\cref{chap:mypyvy}) make the process of finding
 an inductive invariant much more pleasant by providing automatic
-assistance in debugging and correcting invariants, and it would be
-interesting to connect \disel to Ivy, which we leave to the future work.
+assistance in debugging and correcting invariants, or even inferring invariants automatically.
+%
+For now, though, we proceed to manually construct an invariant.
 
 {
 \setlength{\belowcaptionskip}{-10pt}
@@ -3510,7 +3511,7 @@ invariants, and lacks a formal metatheory and soundness proof.
 %
 
 To the best of our knowledge, none of the existing concurrency logics
-features \emph{both} foundational soundness proof (\ie, the proof that
+features \emph{both} a foundational soundness proof (\ie, the proof that
 the entire logic, not just its toy subset, is sound as a verification
 tool), \emph{and} a mechanism to extract and run verified
 applications.
@@ -3608,11 +3609,6 @@ by client code, such as consensus, are encoded in \disel via
 parametrized Hoare types and abstract predicates, as shown in
 \cref{sec:composing-two-phase}.
 
-Verdi~\cite{Wilcox-al:PLDI15, Woos-al:CPP16} provides a form of
-\emph{vertical compositionality} by means of verified system
-transformers, which allow systems to be decomposed into layers of
-functionality (\eg, sequence numbers or state machine replication).
-%
 The Chapar framework by~\citet{Lesani-al:POPL16} is tailored to
 causally consistent key-value stores, and also provides verified model
 checking for client programs using the verified KV stores.
@@ -3645,9 +3641,8 @@ about horizontally composed systems~\textbf{(2)} and elaborated
 protocols~\textbf{(3)}, stated in the introduction of this chapter.
 
 Arguably, our Two-Phase Commit implementation is a relatively small
-case study when compared to the systems verified in IronFleet, Verdi,
-and EventML. Nevertheless, we are sure that, given enough time and
-manpower, we can conduct safety proofs of
+case study when compared to the systems verified in Verdi (\cref{chap:verdi}) or in other frameworks including IronFleet and EventML.
+Nevertheless, given enough time and effort, we are confident we could conduct safety proofs of
 Raft~\cite{ongaro:raft} and
 MultiPaxos~\cite{vanRenesse-Altinbuken:ACS15} in \disel, as their
 implementations and invariants are based on the same semantic
@@ -3680,9 +3675,8 @@ reason, in a modular way, about local system
 faults~\cite{Ntzik-al:APLAS15} and liveness properties under fairness
 assumptions~\cite{Liang-Feng:POPL16}.
 %
-Finally, we are going to investigate possibilities for automating
-proofs of inductive
-invariants~\cite{Padon-al:PLDI16,Padon-al:OOPSLA17}.
+Finally, \cref{chap:mypyvy} will describe the \mypyvy library for symbolic transition systems,
+and it would be interesting to try to more directly connect \mypyvy and \disel together.
 
 \vspace{-5pt}
 
@@ -3737,4 +3731,3 @@ open-world systems today's reality.
 %   in this material are those of the authors and do not necessarily
 %   reflect the views of the National Science Foundation.
 % \end{acks}
-

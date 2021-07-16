@@ -128,6 +128,7 @@ The Verdi framework was originally described in a PLDI 15 paper~\cite{Wilcox-al:
 These papers were produced by a fantastic team of coauthors:
   Doug Woos, Pavel Panchekha, Steve Anton, Zachary Tatlock, Xi Wang, Michael D.\ Ernst, and Thomas Anderson.
 \Cref{chap:verdi} is a combined narrative of these two papers with minor improvements.
+The Verdi code is publicly available at \url{https://github.com/uwplse/verdi}.
 
 %whose key insight is to treat the network as analogous to the heap in
 %sequential programming.
@@ -174,6 +175,7 @@ Thus, \disel separates the network messages
   coauthored with Ilya Sergey and Zachary Tatlock.
 Miranda Edwards also contributed several examples.
 \Cref{chap:disel} is a polished version of these papers.
+The \disel code is publicly available at \url{https://github.com/DistributedComponents/disel}.
 
 Experience in \disel and Verdi showed
   that the manual effort required
@@ -198,11 +200,10 @@ The difficulty of deriving these invariants
 
 \Cref{chap:mypyvy} describes \mypyvy,
   a tool for automated reasoning
-  about symbolic transition systems in first-order logic
-  that supports a variety of automated reasoning tools to analyze systems.
+  about symbolic transition systems in first-order logic.
 \mypyvy takes an input file
   describing a symbolic transition system
-  and performs the analysis requested by the user.
+  and can perform a variety analyses, as requested by the user.
 Three of the most interesting analyses include
   inductive invariant checking,
   invariant inference, and
@@ -210,14 +211,16 @@ Three of the most interesting analyses include
 In all cases, \mypyvy loads the transition system
   and compiles it together with the user-requested analysis
   to a (sequence of) SMT queries,
-  which are dispatched by Z3.
+  which are dispatched to Z3.
 \mypyvy was originally developed to support a CAV 19 paper~\cite{phase-updr},
   but that paper was not about \mypyvy per se.
 \Cref{chap:mypyvy} contains previously unpublished material describing \mypyvy itself
   and will become the primary reference for \mypyvy.
 The development of \mypyvy has benefited greatly from many contributors,
   especially Oded Padon, Yotam Feldman, Sharon Shoham, Mooly Sagiv, Jason R.\ Koenig,
+  Ken McMillan, Alex Aiken, Giuliano Losa,
   Daniel Ricketts, Shachar Itzhaky, Lindsey Kuper, William Schultz, and Aaron Weiss.
+\mypyvy is actively developed at \url{https://github.com/wilcoxjay/mypyvy}.
 
 Distributed systems remain a crucial topic
   with many potential avenues for future work.

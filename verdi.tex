@@ -323,8 +323,7 @@ tolerates faults in an unreliable network~(e.g., machine crashes).
 \para{Contributions}
 This chapter makes the following contributions:
 %
-(1) \Verdi, a publicly available~\cite{verdi-repo} toolchain for
-building provably correct distributed systems,
+(1) \Verdi, a toolchain for building provably correct distributed systems,
 %
 (2) a set of formal network semantics with different fault models,
 %
@@ -340,7 +339,7 @@ and (5) an evaluation showing that these implementations
 can provide reasonable performance.
 %
 Our key conceptual contribution is the use of verified
-systems transformers to enable modular implementation and end-to-end
+systems transformers to enable modular implementation and
 verification of systems.
 
 The rest of the chapter is organized as follows.
@@ -868,7 +867,7 @@ system in another network semantics.
 This allows a programmer to build and verify their system against an
 idealized semantics and use a verified system transformer to obtain a
 version of the system that provably tolerates more realistic faults while
-guaranteeing end-to-end system correctness properties.
+guaranteeing system correctness properties.
 
 % The current lock service application cannot tolerate server crashes.
 \para{Tolerating machine crashes}
@@ -880,7 +879,7 @@ This changes the number of nodes when transforming a system, which we
 discuss further in \cref{sec:verdi:casestudy-raft}.
 %
 (By contrast, transmission transformers like the one described above
-generally preserve the number of nodes and the relationships between them
+generally preserve the number of nodes and the relationships among them
 when transforming a distributed system.)
 
 
@@ -923,7 +922,7 @@ Byzantine fault models.
 We believe that \Verdi could be extended to support these features:
 liveness properties could be verified by supporting infinite traces and
 adding fairness hypotheses as axioms as in TLA~\cite{lamport:tla}, while
-Byzantine fault models can be supported by adding more non-determinism in
+Byzantine fault models can be supported by adding more nondeterminism in
 the network semantics.
 
 %%  LocalWords:  implementing-in-verdi init initState getState putState.
@@ -995,7 +994,7 @@ raw TCP does not support.
   (\sigma',\ T \appop \traceelt{i,\ o})$ to reflect that the node has updated
   its state to $\sigma'$ and sent outputs $o$ in response to input $i$.
   %
-  Verifying properties of such single-node systems (\ie state machines) is
+  Verifying properties of such single-node systems (\ie, state machines) is
 useful when they are replicated over a network to provide fault tolerance.}
 
 \label{fig:state-machine-semantics}
@@ -1017,7 +1016,7 @@ handler functions.
 Below we detail several of the network semantics \Verdi currently provides.
 
 \paragraph{Single-node semantics} We begin with a simple semantics for
-single-node systems that do not use the network, \ie state machines.
+single-node systems that do not use the network, \ie, state machines.
 %
 This semantics is useful for proving properties of single-node systems;
 these can be extended, using a verified system transformer based on Raft,
@@ -1068,7 +1067,7 @@ output $o$.
   The derivation rules above encode the behavior of systems running on
   networks that may arbitrarily reorder packet delivery.
   %
-  The network is modeled as a bag (\ie a multiset) $P$ of \textit{packets}, which
+  The network is modeled as a bag (\ie, a multiset) $P$ of \textit{packets}, which
   contain source and destination node names as well as a message.
   The state at each node in the network is a map
   $\Sigma$ from node names to system-defined data.
@@ -1127,7 +1126,7 @@ trace $T$.
 %
 The two rules in the reordering semantics, \textsc{Input} and
 \textsc{Deliver}, respectively, model input from other processes on
-the node's host (\ie the ``outside world'') and delivery of a packet
+the node's host (\ie, the ``outside world'') and delivery of a packet
 from the network, where the corresponding handler function executes
 as described above.
 %
@@ -1273,14 +1272,14 @@ failed.
 %
 \Verdi's semantics for node failure, illustrated in
 \cref{fig:failure-semantics} assumes that nodes can return to the system
-and that all, some, or none of their state will be preserved (\ie read back
+and that all, some, or none of their state will be preserved (\ie, read back
 in from non-volatile storage).
 %
 The state of the world in the node failure semantics includes a set $F$
 containing the nodes which have failed.
 %
 The rules from the drop semantics are included in the failure semantics,
-but each with an added precondition to ensure that only live nodes (\ie
+but each with an added precondition to ensure that only live nodes (\ie,
 nodes that are not in $F$) can receive external input, network packets, or
 timeouts.
 %
@@ -1305,7 +1304,7 @@ Lower-level semantics could be developed and connected to the semantics
 presented here via system transformers, as described in the next section.
 %
 This would further reduce \Verdi's trusted computing base and increase our
-confidence in the end-to-end guarantees \Verdi provides.
+confidence in the guarantees \Verdi provides.
 
 \section{Verified System Transformers}
 \label{sec:verdi:libraries}
@@ -1496,7 +1495,7 @@ state properties are proved by induction on the execution.
 
 Many program verification frameworks support
 \textit{ghost variables}: state which is never read during
-program execution, but which is necessary for verification (\eg to
+program execution, but which is necessary for verification (\eg, to
 provide sufficiently strong induction hypotheses). In \Verdi, ghost
 variables are implemented via a system transformer. Like the sequence
 numbering transformer, the ghost variable transformer adds information
@@ -1555,7 +1554,7 @@ approximately 280 lines long.
 In the next section, we will see how a state-machine replication
 system can be implemented and verified using \Verdi. Combining the
 key-value store with the replication transformer provides an
-end-to-end guarantee for a replicated key-value store without
+combined guarantee for a replicated key-value store without
 requiring the programmer to simultaneously reason about both
 application correctness and fault tolerance.
 
@@ -1674,10 +1673,10 @@ system into a new semantics. The consensus transformer provides an
 indistinguishability result for \textit{linearizability}, which states
 that any possible trace of the replicated system is equivalent to some
 valid trace of the underlying system under particular constraints
-about when operations can be re-ordered. We have proved that Raft's
+about when operations can be re-ordered. We have proved linearizability
+in two steps. First, we show that Raft's
 \textit{state machine safety} property implies linearizability.
-We also verified the (much more difficult) state machine safety property
-for Raft~\cite{Woos-al:CPP16}.
+Second, we verify the (much more difficult) state machine safety property.
 We discuss these results further in~\cref{ssec:verdi:raft-proof}.
 
 \subsection{Raft Background}\label{ssec:verdi:raft-background}
@@ -2283,7 +2282,7 @@ Verdi                  &  148           & 220            & 2364      \\
   \end{tabular}
 \end{table}
 
-\cref{tab:effort} shows the size of the
+\Cref{tab:effort} shows the size of the
 specification, implementation, and proof of each case study.
 The \Verdi row shows
 the number of lines in the shim,
@@ -2410,10 +2409,10 @@ works correctly under those semantics. Unlike in \Verdi, the proofs
 for the system under failure conditions were done only on paper.
 
 \Verdi's system transformers enable decomposing both systems and proofs.
-This allows developers to establish end-to-end correctness guarantees of
+This allows developers to establish correctness guarantees of
 the implementation of their distributed systems, from the low-level network
 semantics to a high-level replicated key-value store, while retaining
-flexibility and modularity. The system transformer abstraction could
+flexibility and modularity. The system transformer abstraction could be
 integrated into these other approaches; for example, ShadowDB's consensus
 layer could be implemented as a system transformer along the lines of
 \Verdi's Raft implementation.
@@ -2436,7 +2435,7 @@ and the formalization, eliminating the formality gap.
 
 \para{Verified SDN} Formal verification has previously been applied to
 software-defined networking, which allows routing configurations to be
-flexibly specified using a simple domain specific language (see, \eg
+flexibly specified using a simple domain specific language (see, \eg,
 Verified NetCore~\cite{guha:verified-openflow}).  As in \Verdi,
 verifying SDN controllers involves giving a semantics for OpenFlow,
 switch hardware, and network communication. The style of formalization
@@ -2511,7 +2510,7 @@ This chapter presented \Verdi, a framework for building formally
 verified distributed systems.  \Verdi's key conceptual contribution is
 the use of verified system transformers to separate concerns of
 application correctness and fault tolerance, which simplifies the task
-of implementing and verifying distributed systems end-to-end. This
+of implementing and verifying distributed systems. This
 modularity is enabled by \Verdi's encoding of distinct fault models as
 separate network semantics.  We demonstrated how to apply \Verdi to
 writing and verifying several practical applications, including the

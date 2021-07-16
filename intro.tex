@@ -122,6 +122,12 @@ Using transformers, the engineer can
   then automatically transform the system into one
   that provably works in a more adversarial fault model
   with relatively more faults.
+The Verdi framework was originally described in a PLDI 15 paper~\cite{Wilcox-al:PLDI15},
+  and an extended case study proving
+  the safety of the Raft consensus protocol was published in CPP 16~\cite{Woos-al:CPP16}.
+These papers were produced by a fantastic team of coauthors:
+  Doug Woos, Pavel Panchekha, Steve Anton, Zachary Tatlock, Xi Wang, Michael D.\ Ernst, and Thomas Anderson.
+\Cref{chap:verdi} is a combined narrative of these two papers with minor improvements.
 
 %whose key insight is to treat the network as analogous to the heap in
 %sequential programming.
@@ -164,6 +170,10 @@ Thus, \disel separates the network messages
   between protocols with \emph{hooks},
   which allow one protocol's actions
   to be conditioned on another protocol's state.
+\disel was originally published in SNAPL 17 and POPL 18~\cite{Wilcox-al:SNAPL17, disel-popl18},
+  coauthored with Ilya Sergey and Zachary Tatlock.
+Miranda Edwards also contributed several examples.
+\Cref{chap:disel} is a polished version of these papers.
 
 Experience in \disel and Verdi showed
   that the manual effort required
@@ -201,6 +211,13 @@ In all cases, \mypyvy loads the transition system
   and compiles it together with the user-requested analysis
   to a (sequence of) SMT queries,
   which are dispatched by Z3.
+\mypyvy was originally developed to support a CAV 19 paper~\cite{phase-updr},
+  but that paper was not about \mypyvy per se.
+\Cref{chap:mypyvy} contains previously unpublished material describing \mypyvy itself
+  and will become the primary reference for \mypyvy.
+The development of \mypyvy has benefited greatly from many contributors,
+  especially Oded Padon, Yotam Feldman, Sharon Shoham, Mooly Sagiv, Jason R.\ Koenig,
+  Daniel Ricketts, Shachar Itzhaky, Lindsey Kuper, William Schultz, and Aaron Weiss.
 
 Distributed systems remain a crucial topic
   with many potential avenues for future work.

@@ -2,7 +2,7 @@ publish: thesis.pdf
 	scp thesis.pdf jamesrwilcox.com:/var/www/jamesrwilcox.com/thesis.pdf
 
 thesis.pdf: *.tex *.cls
-	latexmk -pdf -interaction=nonstopmode thesis
+	latexmk -pdflua -interaction=nonstopmode thesis
 
 clean:
 	latexmk -C

@@ -1,0 +1,20 @@
+\documentclass[tikz,crop,margin=8pt]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage{tikz}
+\usetikzlibrary{positioning,calc,shapes.geometric}
+
+\usepackage{emoji}
+\setemojifont{TwemojiMozilla.ttf}[Path=./fonts/]
+\begin{document}
+\begin{tikzpicture}
+  \node[draw, minimum height=1cm, minimum width=2.5cm] (kv) {Key-Value};
+  \node[draw, minimum width=2.5cm, anchor=north, yshift=\pgflinewidth] (kv-sem) at (kv.south) {\emoji{smiling-face-with-halo}\,\,Semantics};
+  \node[draw, minimum height=1cm, minimum width=2.5cm, right=2cm of kv] (lock) {LockServ};
+  \node[draw, minimum width=2.5cm, anchor=north, yshift=\pgflinewidth] (lock-sem) at (lock.south) {\emoji{smiling-face-with-halo}\,\,Semantics};
+  \node[draw, minimum height=1cm, minimum width=2.5cm, below=2cm of kv, align=center]
+    (kv-vst) {Seq \#\\\vdots\\Consensus};
+  \node[draw, minimum height=1cm, minimum width=2.5cm, below=2cm of lock, align=center]
+    (lock-vst) {Seq \#\\\vdots\\Consensus};
+
+\end{tikzpicture}
+\end{document}

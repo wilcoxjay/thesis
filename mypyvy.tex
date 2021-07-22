@@ -921,7 +921,7 @@ We will do our best.
   \label{fig:fol-syntax}
 \end{figure}
 
-\todo{bummer that running example uses integers, which are not formalized in this section}
+%\todo{bummer that running example uses integers, which are not formalized in this section}
 
 \Cref{fig:fol-syntax} describes the syntax of first-order logic.
 A \emph{sort} $s$ is either $\mathsf{bool}$ or an uninterpreted symbol $u$.
@@ -971,23 +971,28 @@ We call $\bigcup_{u\in\mathsf{usorts}(\sigma)} A_u$ the \emph{universe} of $A$.
 
 Given a vocabulary $\sigma$,
   a first-order structure $A$ over $\sigma$,
+  an environment $\rho \in \mathrm{String} \rightharpoonup \bigcup_{u\in\mathsf{usorts}(\sigma)} A_u$,
   and a first-order expression $e$ of sort $s$,
-  we define $\denote{e}_A$,
+  we define $\denote{e}_A^\rho$,
   the interpretation of $e$ in $A$, as follows.
 \begin{gather*}
   \begin{array}{rcl}
-  \denote{e}_A &\in& A_s\\
-  \denote{\mathsf{true}}_A &=& \top\\
-  \denote{\mathsf{false}}_A &=& \bot\\
-  \denote{\lnot e}_A &=& \lnot \denote{e}_A\\
-  \denote{e_1 \Rightarrow e_2}_A &=& \denote{e_1}_A \Rightarrow \denote{e_2}_A\\
-%e\land e\mid e\lor e \mid e \Rightarrow e \mid \\
-%      &   & e = e \mid f(e,\dots,e) \mid x \mid \forall x : s.\, e \mid \exists x : s.\, e
+  \denote{e}_A^\rho &\in& A_s\\
+  \denote{\mathsf{true}}_A^\rho &=& \top\\
+  \denote{\mathsf{false}}_A^\rho &=& \bot\\
+  \denote{\lnot e}_A^\rho &=& \lnot \denote{e}_A^\rho\\
+  \denote{e_1 \land e_2}_A^\rho &=& \denote{e_1}_A^\rho \land \denote{e_2}_A^\rho\\
+  \denote{e_1 \lor e_2}_A^\rho &=& \denote{e_1}_A^\rho \lor \denote{e_2}_A^\rho\\
+  \denote{e_1 \Rightarrow e_2}_A^\rho &=& \denote{e_1}_A^\rho \Rightarrow \denote{e_2}_A^\rho\\
+  \denote{e_1 = e_2}_A^\rho &=& \denote{e_1}_A^\rho = \denote{e_2}_A^\rho\\
+  \denote{f(e_1, \dots, e_n)}_A^\rho &=& A_f(\denote{e_1}_A^\rho, \dots, \denote{e_n}_A^\rho)  \\
+  \denote{x}_A^\rho &=& \rho(x) \\
+  \denote{\forall x : s.\, e}_A^\rho &=& \forall a\in A_s.\, \denote{e}_A^{\rho[x\mapsto a]}\\
+  \denote{\exists x : s.\, e}_A^\rho &=& \exists a\in A_s.\, \denote{e}_A^{\rho[x\mapsto a]}\\
   \end{array}
 \end{gather*}
-\todo{finish this definition}
 
-If $e : \mathsf{bool}$ and $\denote{e}_A = \top$,
+If $e : \mathsf{bool}$ and $\denote{e}_A^\rho = \top$,
   then we say that $A$ is a \emph{model} of $e$,
   and we write $A \models e$.
 We say that $e$ is \emph{satisfiable} if there exists a first order structure $A$ over $\sigma$ such that $A\models e$.
@@ -1024,7 +1029,7 @@ as shown by the following lemma.
   Let $e_0$ be quantifier free (not necessarily of sort $\mathsf{bool}$),
   and let $A$ and $B$ be first-order structures over $\sigma$
   such that $B$ is a substructure of $A$.
-  Also, let $\rho \in \mathrm{String} \rightharpoonup \bigcup_{s\in\mathsf{usorts}\sigma} B_s$.
+  Also, let $\rho \in \mathrm{String} \rightharpoonup \bigcup_{s\in\mathsf{usorts}(\sigma)} B_s$.
   Then $\denote{e}_B^\rho = \denote{e}_A^\rho$.
 
   Intuitively, a quantifier-free formula can only ``see'' elements
@@ -1184,7 +1189,7 @@ While not officially part of the definition of the transition system,
 For example, there is a query to check that all the invariants in a file
   actually are invariants.
 
-\todo{mypyvy should really not use the word \texttt{invariant} when we mean \emph{inductive}}
+% \todo{mypyvy should really not use the word \texttt{invariant} when we mean \emph{inductive}}
 
 A transition system consists of a state space, a set of initial states, and a transition relation.
 \mypyvy has one or more declarations corresponding to each of these components.
@@ -1680,7 +1685,7 @@ So far, it seems to be working out well!
 
 \section{Related Work}
 
-\todo{introduce the expressiveness-automation spectrum, and place everybody on it}
+% \todo{introduce the expressiveness-automation spectrum, and place everybody on it}
 
 \mypyvy is directly inspired by \ivy~\cite{Padon-al:PLDI16}.\footnote{
   \ivy's code is available on Github at \url{https://github.com/kenmcmil/ivy}.
@@ -1785,7 +1790,7 @@ so with careful design, one can greatly reduce manual proof effort.
 constraining what the programmer can write to a first-order transition system,
 and in return, giving essentially full automation.
 %
-\todo{move the rest of this somewhere reasonable}
+%\todo{move the rest of this somewhere reasonable}
 %
 My own journey as a researcher has taken me through many points
 on this spectrum.
@@ -1855,7 +1860,7 @@ following the approach of \citet{padon:reducing-liveness}.
 nuSMV and nuXmv are symbolic model checkers,
 originally based on BDDs and SAT solvers,
 and later adopted to infinite-domain systems
-by using SMT solvers~\todo{nusmv,nuxmv}.
+by using SMT solvers~\cite{nusmv,nusmv2,nuxmv}.
 %
 These tools are ``workbenches'' that implement many different techniques
 to attack the model checking problem.
@@ -1907,7 +1912,7 @@ with a special keyword marking it as the definition of the
 initial conditions or transition relation.
 %
 Since transition relations are 2-state formulas,
-as discussed in~\todo{refer back to mypyvy discussion},
+as discussed in \cref{sec:mypyvy-expressing-ts},
 VMT again uses special keywords to declare that a SMT-LIB variable is
 the ``next'' variable corresponding to another variable.
 %

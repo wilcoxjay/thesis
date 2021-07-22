@@ -1,40 +1,6 @@
 \chapter{Introduction}
 \label{chap:intro}
 
-% \begin{verbatim}
-% New intro outline:
-% - Barkley :D
-% - distributed systems
-%   - pervasive
-%   - critical
-%   - fail often
-%   - hard to get right
-% - fail often + hard to get right because:
-%   - concurrency
-%   - forced locality (data is distributed!)
-%   - failure
-%   - the combination of forced locality and failure -> partial failure
-%     - ie, cannot observe globally who has definitely failed vs not
-% - very difficult to test thoroughly
-%   - interleavings of concurrent actions
-%   - whether and when certain failures occur
-%   - not to mention the usual testing difficulties for sequential programs
-%     - data coverage, etc
-% - since testing is not enough, formal methods make sense
-% - primary challenge: system/proof complexity
-% - solution: system/proof compositionality
-% - thesis: PL techniques for compositionality lay the foundations for effective
-%   verification of distributed systems implementations.
-% - remainder of thesis in three parts
-%   - challenge 1: fault tolerance
-%     solution 1: VSTs to decompose tolerance from app
-%   - challenge 2: many components
-%     solution 2: separation logic with composition theorem
-%   - challenge 3: proof effort
-%     solution 3: proof automation that takes advantage of small components to
-%                 bring decidability/high automation
-% \end{verbatim}
-
 Distributed systems are widely used
   in everything from web infrastructure to airplanes,
   and their correctness is critical.
@@ -122,10 +88,13 @@ Using transformers, the engineer can
   then automatically transform the system into one
   that provably works in a more adversarial fault model
   with relatively more faults.
+We used Verdi to study the Raft consensus protocol~\cite{ongaro:raft},
+  producing the first formal proof of safety
+  and the first verified implementation.
 The Verdi framework was originally described in a PLDI 15 paper~\cite{Wilcox-al:PLDI15},
   and an extended case study proving
   the safety of the Raft consensus protocol was published in CPP 16~\cite{Woos-al:CPP16}.
-These papers were produced by a fantastic team of coauthors:
+These papers were written together with a fantastic team of coauthors:
   Doug Woos, Pavel Panchekha, Steve Anton, Zachary Tatlock, Xi Wang, Michael D.\ Ernst, and Thomas Anderson.
 \Cref{chap:verdi} is a combined narrative of these two papers with minor improvements.
 The Verdi code is publicly available at \url{https://github.com/uwplse/verdi}.
@@ -172,8 +141,8 @@ Thus, \disel separates the network messages
   which allow one protocol's actions
   to be conditioned on another protocol's state.
 \disel was originally published in SNAPL 17 and POPL 18~\cite{Wilcox-al:SNAPL17, disel-popl18},
-  coauthored with Ilya Sergey and Zachary Tatlock.
-Miranda Edwards also contributed several examples.
+  and would not have been possible without my wonderful collaborators,
+  Ilya Sergey, Zachary Tatlock, and Miranda Edwards.
 \Cref{chap:disel} is a polished version of these papers.
 The \disel code is publicly available at \url{https://github.com/DistributedComponents/disel}.
 

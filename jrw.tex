@@ -1,20 +1,54 @@
 \documentclass[tikz,crop,margin=8pt]{standalone}
 \usepackage[utf8]{inputenc}
 \usepackage{tikz}
-\usetikzlibrary{positioning,calc,shapes.geometric}
+\usetikzlibrary{positioning,calc,shapes.geometric,shapes.symbols}
 
 \usepackage{emoji}
 \setemojifont{TwemojiMozilla.ttf}[Path=./fonts/]
+
+\newcommand{\disel}{{\sc Disel}}
+\newcommand{\mypyvy}{\texttt{mypyvy}}
+\def\mytiny#1{\scalebox{.8}{#1}}
+
 \begin{document}
-\begin{tikzpicture}
-  \node[draw, minimum height=1cm, minimum width=2.5cm] (kv) {Key-Value};
-  \node[draw, minimum width=2.5cm, anchor=north, yshift=\pgflinewidth] (kv-sem) at (kv.south) {\emoji{smiling-face-with-halo}\,\,Semantics};
-  \node[draw, minimum height=1cm, minimum width=2.5cm, right=2cm of kv] (lock) {LockServ};
-  \node[draw, minimum width=2.5cm, anchor=north, yshift=\pgflinewidth] (lock-sem) at (lock.south) {\emoji{smiling-face-with-halo}\,\,Semantics};
-  \node[draw, minimum height=1cm, minimum width=2.5cm, below=2cm of kv, align=center]
+\begin{tikzpicture}[box/.style={draw, minimum width=2.5cm}]
+  \node[box, minimum height=1cm] (kv) {Key-Value};
+  \node[box, anchor=north, yshift=\pgflinewidth]
+    (kv-sem) at (kv.south) {\emoji{smiling-face-with-halo}\,\,Semantics};
+  \node[box, minimum height=1cm, right=2cm of kv] (lock) {LockServ};
+  \node[box, anchor=north, yshift=\pgflinewidth]
+    (lock-sem) at (lock.south) {\emoji{smiling-face-with-halo}\,\,Semantics};
+  \node[box, below=1.5cm of kv, align=center]
     (kv-vst) {Seq \#\\\vdots\\Consensus};
-  \node[draw, minimum height=1cm, minimum width=2.5cm, below=2cm of lock, align=center]
+  \node[box, below=1.5cm of lock, align=center]
     (lock-vst) {Seq \#\\\vdots\\Consensus};
+  \node[box, anchor=north, yshift=\pgflinewidth]
+    (kv-sem2) at (kv-vst.south) {\emoji{smiling-imp}\,\,Semantics};
+  \node[box, anchor=north, yshift=\pgflinewidth]
+    (lock-sem2) at (lock-vst.south) {\emoji{smiling-imp}\,\,Semantics};
+
+  \draw[<->, shorten >=1mm, shorten <=1mm]
+    ($(kv-sem.south)+(-5mm,0)$) --
+      node[right=1mm,align=left] {Verdi\\Proof \emoji{white-check-mark}}
+    ($(kv-vst.north)+(-5mm,0)$);
+  \draw[<->, shorten >=1mm, shorten <=1mm]
+    ($(lock-sem.south)+(-5mm,0)$) --
+      node[right=1mm,align=left] {Verdi\\Proof \emoji{white-check-mark}}
+    ($(lock-vst.north)+(-5mm,0)$);
+  \draw[<->, shorten >=1mm, shorten <=1mm]
+    (kv) -- node[below,align=center] {\disel\\Proof \emoji{white-check-mark}} (lock);
+
+  \node[draw,fill=white, cloud, cloud ignores aspect, align=center, inner sep=1.5pt]
+    (kv-spec) at ($(kv.north west)+(-1mm, 3mm)$) {\mytiny{Spec and}\\[-4pt]\mytiny{Invariants}};
+  \node[draw,fill=white, cloud, cloud ignores aspect, align=center, inner sep=1.5pt]
+    (lock-spec) at ($(lock.north east)+(1mm, 3mm)$) {\mytiny{Spec and}\\[-4pt]\mytiny{Invariants}};
+
+  \node[align=center,anchor=south]
+    (kv-mypyvy) at ($(kv-spec.north)+(0mm,-1mm)$)
+    {\mytiny{\mypyvy{}}\\[-2pt]\mytiny{~~~~Analysis }\emoji{white-check-mark}};
+  \node[align=center,anchor=south]
+    (lock-mypyvy) at ($(lock-spec.north)+(0mm,-1mm)$)
+    {\mytiny{\mypyvy{}}\\[-2pt]\mytiny{~~~~Analysis }\emoji{white-check-mark}};
 
 \end{tikzpicture}
 \end{document}

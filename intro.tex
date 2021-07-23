@@ -40,6 +40,8 @@ First, a truly compositional proof
 Second, sufficiently decomposed pieces can
   be analyzed fully automatically using decision procedures.
 
+\clearpage
+
 The central claim of this dissertation is:
 \begin{center}
 \emph{Programming languages techniques for compositionality
@@ -48,7 +50,13 @@ The central claim of this dissertation is:
 }
 \end{center}
 
-\includegraphics[width=\textwidth]{intro-cartoon.png}
+\begin{figure}[t]
+  \centering
+  %\includegraphics[width=\textwidth]{intro-cartoon.png}
+  \includegraphics[width=\textwidth]{intro-figure.pdf}
+  \caption{How to build a verified distributed system}
+  \label{fig:intro}
+\end{figure}
 
 The remainder of this dissertation addresses three challenges in system complexity
   by applying programming languages techniques to decompose the problem,

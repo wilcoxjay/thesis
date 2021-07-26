@@ -40,16 +40,6 @@ First, a truly compositional proof
 Second, sufficiently decomposed pieces can
   be analyzed fully automatically using decision procedures.
 
-\clearpage
-
-The central claim of this dissertation is:
-\begin{center}
-\emph{Programming languages techniques for compositionality
-  lay the foundations for effective, automated verification of
-  distributed systems implementations.
-}
-\end{center}
-
 \begin{figure}[t]
   \centering
   %\includegraphics[width=\textwidth]{intro-cartoon.png}
@@ -57,6 +47,30 @@ The central claim of this dissertation is:
   \caption{How to build a verified distributed system}
   \label{fig:intro}
 \end{figure}
+
+For example, consider a system that consists of
+  a replicated key-value store
+  and a highly available lock-based resource manager service.
+(See \cref{fig:intro}.)
+Both subsystems use consensus for reliability,
+  and the key-value store uses the locking service to manage cross-key transactions.
+To verify such a system, we can decompose the proof along two dimensions.
+First, each subsystem's proof can be decomposed vertically,
+  by separating the replication mechanism from the application logic.
+Second, the entire system's proof can be constructed
+  by horizontally composing the subsystem proofs.
+Lastly, the application logic is expressed at a high enough level of abstraction
+  that its specification can be analyzed fully automatically.
+
+\clearpage
+
+These considerations lead us to the central claim of this dissertation:
+\begin{center}
+\emph{Programming languages techniques for compositionality
+  lay the foundations for effective, automated verification of
+  distributed systems implementations.
+}
+\end{center}
 
 The remainder of this dissertation addresses three challenges in system complexity
   by applying programming languages techniques to decompose the problem,
@@ -115,10 +129,10 @@ The Verdi code is publicly available at \url{https://github.com/uwplse/verdi}.
   a concurrent separation logic for distributed systems.
 Whereas
   Verdi separates fault tolerance reasoning from application logic
-  (which we call vertical compositionality),
+  (the vertical dimension of \cref{fig:intro}),
   \disel separates reasoning about cooperating services
   by defining interfaces that capture protocol-specific invariants
-  (which we call horizontal compositionality).
+  (the horizontal dimension).
 This supports verifying modern distributed systems
   which are typically built by composing several services
   to provide a high-level application.

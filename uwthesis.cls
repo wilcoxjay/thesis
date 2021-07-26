@@ -660,7 +660,7 @@
     \vspace{7pc}
     \begin{center}
       \par\vskip\z@ plus4fill\relax
-      \copyright Copyright \@Year
+      \copyright{} Copyright \@Year
       \par
       \@Author
       \par\vskip\z@ plus2fill\relax

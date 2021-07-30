@@ -483,7 +483,7 @@ HandleMsg (n: Name) (s: State n) (src: Name) (msg: Msg) :=
     match msg with
     | LockMsg => (* if lock not held, immediately grant *)
       if s == [] then send (src, GrantMsg);;
-      s := s ++ [src] (* add requestor to end of queue *)
+      s := s ++ [src] (* add requester to end of queue *)
     | UnlockMsg => (* head of queue no longer holds lock *)
       s := tail s;;
       (* grant lock to next waiting agent, if any *)

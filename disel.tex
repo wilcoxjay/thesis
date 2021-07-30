@@ -381,7 +381,7 @@ interaction protocol.
   %
   This decomposition between core protocols and elaborated client
   invariants reduces and parallelizes the proof engineering effort:
-  the core system implementor verifies basic properties of the
+  the core system implementer verifies basic properties of the
   protocol and correctness of the implementation, while the system's
   client proves the validity of their context-specific invariants.
 
@@ -431,7 +431,7 @@ properties~\cite{Wilcox-al:PLDI15,rahli:eventml-avocs}, and \disel
 facilitates these proofs by providing a number of higher-order lemmas
 and libraries of auxiliary facts.
 
-From the point of view of a system implementor, \disel is a
+From the point of view of a system implementer, \disel is a
 \emph{higher-order} programming language, featuring a complete toolset
 of programming abstractions, such as first-class functions, algebraic
 datatypes, and pattern matching, as well as \emph{low-level}
@@ -2357,8 +2357,8 @@ One can notice the similarity between the network semantic rules
 \Rule{SendWrap} and \Rule{ReceiveWrap} from
 \cref{fig:semass}. This should not come as a surprise: indeed, the
 two mentioned inference rules provide a way to symbolically account
-for corresponding local executions of send- receive-transtions by a
-specific node, consistend with the network semantics.
+for corresponding local executions of send- receive-transitions by a
+specific node, consistent with the network semantics.
 
 {
 \begin{figure}[t]
@@ -2868,7 +2868,7 @@ transaction data to be processed in this round.
 %
 The type \code{\{r\ log\} DHT [cn, TPC] (...)} represents a Hoare
 spec, whose logical variables are \code{r} and \code{log}. The spec is
-parametrized by the dedicated coordinator node id \code{cn} and a
+parameterized by the dedicated coordinator node id \code{cn} and a
 world with a single protocol instance \code{TPC}, with no hooks.
 %
 The pre/postconditions (in parentheses) are encoded as Coq functions
@@ -3198,7 +3198,7 @@ $W = \angled{\text{\code{TPC}}, \emptyset}$, $C = \text{\code{Query}}$ and
 $H = \text{\code{QHook}}$. Since \code{QHook} does not restrict the
 transitions of \code{TPC}, $\NHooked$ holds.
 %
-Thanks to the parametrization of querying programs with abstract
+Thanks to the parameterization of querying programs with abstract
 predicates and hypotheses from \cref{fig:hook-ap}, we can compose
 them with any other instance of a consensus protocol, \eg,
 Paxos~\cite{Lamport:TOPLAS98} or Raft~\cite{ongaro:raft},
@@ -3398,7 +3398,7 @@ following reasons:
 Our fixpoint definition (available in our Coq sources) admits
 non-terminating executions, ``approximating'' them iteratively by sets
 of incomplete post-safe traces. It is extracted into OCaml's general
-fixpoint operator, with a somewhat ad-hoc tail-call optimisation
+fixpoint operator, with a somewhat ad hoc tail-call optimisation
 described above in this Section. This means that our logic proves only
 partial correctness: verified programs may loop at runtime, but they
 will never violate the protocol.
@@ -3606,7 +3606,7 @@ transitions.
 %
 Abstract specifications and the corresponding system properties, usable
 by client code, such as consensus, are encoded in \disel via
-parametrized Hoare types and abstract predicates, as shown in
+parameterized Hoare types and abstract predicates, as shown in
 \cref{sec:composing-two-phase}.
 
 The Chapar framework by~\citet{Lesani-al:POPL16} is tailored to

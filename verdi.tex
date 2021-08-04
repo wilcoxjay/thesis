@@ -1945,8 +1945,14 @@ The Raft transformer produces a system that is proven correct in
 an environment in which
 all messages can be arbitrarily reordered, duplicated, delayed, or dropped,
 and in which nodes can crash and reboot.
-These faults correspond to the real world failure scenarios
+We chose this set of faults to be as small as possible, while covering all real world failure scenarios
 that Raft is designed to tolerate.
+Other scenarios that are not explicitly included in our model
+can be simulated by existing scenarios.
+For example, a network partition, where a set of nodes cannot send or receive messages
+from the remaining nodes can be simulated by dropping all such messages.
+While there is nothing wrong with adding explicit support for network partitions,
+keeping the set of explicitly modeled failures minimal reduces proof burden.
 
 \cref{fig:raft-pseudocode} shows signatures for key parts of
 Raft as implemented in Verdi.\footnote{For

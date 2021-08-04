@@ -472,7 +472,7 @@ HandleInp (n: Name) (s: State n) (inp: Inp) :=
     | Lock => (* if client requests lock, forward to Server *)
       send (Server, LockMsg)
     | Unlock => (* if client requests unlock and lock held... *)
-      if s == true then (
+      if s then (
         (* update state and tell Server lock freed *)
         s := false;;
         send (Server, UnlockMsg))

@@ -1553,7 +1553,7 @@ approximately 280 lines long.
 
 In the next section, we will see how a state-machine replication
 system can be implemented and verified using \Verdi. Combining the
-key-value store with the replication transformer provides an
+key-value store with the replication transformer provides a
 combined guarantee for a replicated key-value store without
 requiring the programmer to simultaneously reason about both
 application correctness and fault tolerance.
@@ -1784,7 +1784,7 @@ In log replication,
   containing that command to its local log.
 Then the leader sends an \emph{AppendEntries} message
   containing the entry to the other nodes in the Raft system.
-Each other node appends the entries to its log
+Each follower appends the entries to its log
   (\eg, at \cref{event:request-received} in \cref{fig:raft-overview}),
   and responds to the leader with an acknowledgment.
 To ensure that follower logs stay consistent

@@ -687,7 +687,7 @@ protocols are defined as \emph{state-transition systems}.
 
 \Cref{fig:ctrans} depicts the state-transition system for the
 calculator example with two send-transitions and two
-receive-transition.
+receive-transitions.
 %
 Each transition is named in the first column: $s$-transitions are for
 sending and $r$-ones for receiving. Their pre- and postconditions
@@ -1259,7 +1259,7 @@ $\False$ postcondition due to non-termination):
 }
 \]
 %
-Having a server loop assigned a specification~\eqref{eq:ostype}
+Having a server loop assigned the specification~\eqref{eq:ostype}
 ensures that it faithfully follows the protocol's transitions and does
 not terminate.
 
@@ -1344,7 +1344,7 @@ not terminate.
 
 With the elaborated protocol $\cpr'_{\lab}$, we can now develop and
 verify a variety of system components, reusing the previously
-developed libraries and enjoying the compositionality of specs,
+developed libraries and enjoying the compositionality of specs
 afforded by Hoare types quantifying over a distributed state and
 sent/received messages.
 %
@@ -1600,7 +1600,7 @@ assigned) and provide an initial distributed configuration that
 instantiates the local state for each participant in each protocol and
 satisfies all imposed state-space invariants (\eg,~\eqref{eq:inv1}
 and~\eqref{eq:inv2}). The semantics of Hoare types in \disel, defined
-in \cref{sec:soundness}, specifies what does it mean for a
+in \cref{sec:soundness}, specifies what it means for a
 program to be type-safe (\ie, \emph{correct}) in a distributed
 setting: postconditions (even those constraining the global state) of
 well-typed programs are not affected by execution of programs running
@@ -1827,7 +1827,7 @@ in $C$.
 %
 When defining a protocol, it is a programmer's responsibility to show
 that all its transitions preserve the global protocol-specific state
-coherence, a fact that can be then used freely in the proofs about
+coherence, a fact that can then be used freely in the proofs about
 programs.
 
 \subsection{Language, Specifications and Selected Inference Rules}
@@ -2269,7 +2269,7 @@ of $W$ and $H$, just by checking the ``intersection'' of their
 ``footprints'', very much in the spirit of ordinary Separation
 Logic.\footnote{This definition of $\NHooked$ is a syntactic
   approximation of ``framing \wrt transitions'' that suffices for our
-  purposes. More elaborated checks could be devised for tracking
+  purposes. More elaborate checks could be devised for tracking
   fine-grained dependencies between the core and the client protocols
   by considering the ``transition footprint'' instead of a ``protocol
   footprint''.}
@@ -2639,7 +2639,7 @@ commands, such as \Rule{SendWrap}, \Rule{ReceiveWrap}.
 While the logic does not enforce the stability of a precondition
 imposed by the client at each proof rule (as those can be strengthened
 arbitrarily), it is \emph{impossible} to prove an unstable
-postcondition (as those can be only weakened). Since having an
+postcondition (as those can be only weakened). Since having a
 non-stable precondition $P$ \wrt a node $n$ means an inconsistent
 \emph{specification} (\ie,
 $s \vDash P \aand \ninf{W}{n}{s}{s'} \aand s' \vDash P \Rightarrow
@@ -2787,8 +2787,8 @@ the acknowledgements, eventually returning to the $\cinit$ state with
 an updated log.
 %
 The participants follow a similar pattern to the coordinators's,
-except that a participant sends messages to or receives messages only
-from the coordinator before changing its state.
+except that a participant sends messages to or receives messages
+from only the coordinator before changing its state.
 
 {
 \begin{figure}[t!]
@@ -3405,7 +3405,7 @@ will never violate the protocol.
 
 \paragraph{Information hiding and separation.~}
 
-One might wonder, whether we can \emph{hide} implementation-specific
+One might wonder whether we can \emph{hide} implementation-specific
 parts of local state from the clients, \eg, when reasoning about other
 nodes' implementations?
 %

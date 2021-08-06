@@ -17,7 +17,7 @@ This challenge has led researchers to investigate
 This chapter describes \mypyvy
   a tool for automated reasoning
   about symbolic transition systems in first-order logic
-  that supports a variety of automated reasoning tools to analyze systems.
+  that supports a variety of automated reasoning techniques to analyze systems.
 \mypyvy takes an input file
   describing a symbolic transition system
   and performs the analysis requested by the user.
@@ -152,7 +152,7 @@ This chapter is more modest in scope,
   \end{minipage}
 \end{figure}
 
-Imagine robot in a 2-dimensional world.
+Imagine a robot in a 2-dimensional world.
 The robot starts at position $(0, 5)$,
   and can take steps to integer grid points either
  due north or diagonally southeast of its current position.
@@ -403,7 +403,7 @@ For the invariants represented in
 
 It is instructive to see what happens when
   the set $I$ selected in proof step (1)
-  fails to proof steps (2) or (3).
+  fails due to proof steps (2) or (3).
 When proof step (3) fails,
   $I$ intersects the red circle,
   as in \cref{fig:robot-unsafe}.
@@ -901,7 +901,7 @@ The CTI in \cref{fig:robot-mypyvy-output} corresponds
 \section{Background on first-order logic}\label{sec:fol-background}
 
 In this section, we return to the basics of first-order logic.
-These ideas logic are not complicated,
+The ideas of first-order logic are not complicated,
   but they are tedious to set up formally.
 We will do our best.
 
@@ -1429,7 +1429,8 @@ The user can write a trace query which pares down the set of transitions
   to explore at each step.
 For example, if the distributed system starts by electing a leader
   before accepting further requests,
-  the user can create a trace query list a sequence of transitions
+  the user can create a trace query,
+  which lists a sequence of transitions
   that result in a leader being elected,
   followed by a sequence of transitions to accept a request.
 At the end of this sequence, the user can include an assertion,
@@ -1630,7 +1631,7 @@ First, the Coq proof yielded an executable implementation of the protocol
 In contrast, the \mypyvy proof is merely about a logical model of the system.
 Neither is clearly a better approach in all circumstances,
   given the massive effort-guarantee tradeoff present.
-Second, the Coq proof more \emph{foundational},
+Second, the Coq proof is more \emph{foundational},
   meaning that any needed theory is developed from first principles.
 For example, we developed a theory of linearizability and
   used it to prove Raft linearizable.

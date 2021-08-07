@@ -1616,7 +1616,8 @@ Using the automation of \mypyvy,
   how to encode the proofs of Paxos and MultiPaxos/Raft in first-order logic~\cite{Padon-al:OOPSLA17, pldi18-mfd},
   we were able to produce another proof of Raft's safety in \mypyvy.
 The \mypyvy proof is under 500 lines total,
-  including both the model of the protocol and its invariants.
+  including both the model of the protocol and its invariants.%
+\footnote{\url{https://github.com/wilcoxjay/mypyvy/blob/5b5cb9f3be8a990ed14837638d541f5eebdfe88f/examples/raft.pyv}}
 The primary difficulty that remains in the proof is
   just to \emph{state} the inductive invariant that implies safety.
 We hope to continue to improve the state of the art here
@@ -1880,7 +1881,16 @@ specific interpreted operations over numbers,
 and instead are naturally expressed over uninterpreted sorts
 using axioms for, e.g. a total order.
 
-AVR is a recent word-level symbolic model checker
+Historically, many model checkers intended for hardware have worked on the bit level,
+\ie, treating each bit as a separate boolean variable.
+%
+This encoding allows the use of off-the-shelf SAT solvers,
+but loses mujch of the high-level structure present in the original problem.
+%
+Recently, the community has developed several \emph{word-level} techniques,
+that maintain this high-level information during solving.
+%
+AVR is one such word-level symbolic model checker
 that has shown promise in the hardware model checking community~\cite{goel-avr}.
 %
 At its core, AVR uses syntax-guided abstraction to compute a

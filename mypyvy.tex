@@ -6,11 +6,18 @@
 Our experience with \Verdi and \disel has been
   that the most challenging aspect of distributed systems verification
   is discovering inductive invariants.
-An inductive invariant is a property of system states that simultaneously
-  (1) summarizes all the reachable states of the system,
-  (2) is closed under all steps the system can take, and
-  (3) ensures the absence of safety violations.
-This challenge has led researchers to investigate
+An inductive invariant is a property of system states that
+  is true in all initial states and preserved by all steps the system can take.
+Such a property is guaranteed to be true in all reachable states of the system
+  by a simple inductive argument on executions.
+A common verification task is to prove that there is no reachable state
+  that violates some specified \emph{safety property}.
+The basic approach to this task is
+  to find an inductive invariant that implies the safety property,
+  which is sufficient because any reachable state satisfies the inductive invariant,
+  so it must also satisfy the safety property.
+The challenge in this approach is finding such an inductive invariant,
+  which has led researchers to investigate
   techniques for automatically inferring inductive invariants,
   given a description of a system and its safety property.
 
@@ -38,13 +45,18 @@ We have ongoing projects that use the \mypyvy foundation
 In this context, \mypyvy can be seen as a sort of intermediate language
   that captures the right level of abstraction for implementing
   invariant inference techniques.
-Higher level languages, such as \ivy~\cite{Padon-al:PLDI16}
-  that want to leverage invariant inference
-  can express their queries in \mypyvy and
-  use the available inference algorithms.
-There is much exciting work to be done here.
-This chapter is more modest in scope,
-  describing the core of \mypyvy in theory and implementation.
+Higher level languages can access the invariant inference capabilities of \mypyvy
+  by compiling their problems into \mypyvy's query language.
+For example, \ivy~\cite{Padon-al:PLDI16} is a modular high level imperative-logical language
+  for verifying implementations or models of concurrent and distributed systems.
+A typical \ivy program consists of many verification tasks of the form described above,
+  at least one per module in the program.
+Each task could be translated to \mypyvy to find an inductive invariant,
+  and the result could be translated back to \ivy.
+We are working with collaborators to implement such translations for \ivy.
+There is much exciting work to be done here,
+  but this chapter is more modest in scope,
+  describing just the core of \mypyvy in theory and implementation.
 
 \section{Background on Transition Systems}
 
@@ -737,8 +749,12 @@ mutable constant x: int
 mutable constant y: int
 \end{lstlisting}
 In \mypyvy, we spell ``variable'' as ``\lstinline[language=mypyvy]{mutable constant}'',
-  following the logical terminology of a constant symbol.
-(We discuss mutability in more detail in the next section.)
+  following the logical terminology of a constant symbol.\footnote{%
+Logicians use the terminology of relations, constants, and functions,
+and \mypyvy has both immutable and mutable versions of each of these.
+Unfortunately, the combined terminology clashes badly, and we end up with
+the somewhat strange sounding phrase ``\lstinline[language=mypyvy]{mutable constant}''.}
+We discuss mutability in more detail in the next section.
 All the state declarations together
   define the state space of the transition system.
 
@@ -790,7 +806,7 @@ In this case the name is \texttt{no\_fall\_in}.
 \mypyvy will use this name to refer to this invariant.
 If no name is given, \mypyvy will refer to a line number instead.
 If the program has more than one \lstinline[language=mypyvy]{safety} declaration,
-  the safety property is the conjunction of all the declarations.
+  the safety property is the \emph{conjunction} of all the declarations.
 The \lstinline[language=mypyvy]{safety} keyword is our first example of
   a declaration that is a \emph{query}.
 When processing the program, \mypyvy will attempt to prove that
@@ -805,7 +821,16 @@ invariant x + y >= 5
 \end{lstlisting}
 Invariants can also be named, but here we choose to not name the invariant.
 All the \lstinline[language=mypyvy]{invariant} declarations in a program are
-  implicitly conjoined.
+  implicitly conjoined.\footnote{
+One could imagine wanting to check that two different invariants are separately inductive.
+We have thus far chosen not to support this use case in \mypyvy
+because: (1) it seems more common that one cares about \emph{invariance}
+rather than \emph{inductiveness}, and there is no such thing as ``invariance, separately'',
+unlike inductiveness; and (2) supporting separate checking would require a more
+verbose syntax for verification queries, whereas the current approach allows a \mypyvy
+file to contain a single implicit verification query of inductiveness of the whole invariant.
+}
+
 
 \begin{figure}[t]
 %  \centering
@@ -904,6 +929,8 @@ In this section, we return to the basics of first-order logic.
 The ideas of first-order logic are not complicated,
   but they are tedious to set up formally.
 We will do our best.
+There are many other presentations of first-order logic in the literature,
+  see, \eg, \citeauthor{libkin2013elements}'s book on finite model theory~\cite{libkin2013elements}.
 
 \begin{figure}[t]
   \begin{gather*}
@@ -992,7 +1019,7 @@ Given a vocabulary $\sigma$,
   \end{array}
 \end{gather*}
 
-If $e : \mathsf{bool}$ and $\denote{e}_A^\rho = \top$,
+If $e : \mathsf{bool}$ and $\denote{e}_A^\rho$ holds,
   then we say that $A$ is a \emph{model} of $e$,
   and we write $A \models e$.
 We say that $e$ is \emph{satisfiable} if there exists a first order structure $A$ over $\sigma$ such that $A\models e$.
@@ -1061,13 +1088,13 @@ Universal formulas have a special relationship with substructures, as shown by t
 \begin{proof}
   Write $e = \forall y_1 : s_1,\dots y_n : s_n.\, e_0$, where $e_0$ is quantifier free.
   Since $A\models e$, we know that for all $a_1\in A_{s_1}, \dots, a_n\in A_{s_n}$,
-  $\denote{e_0}_A^{[y_1\mapsto a_1, \dots, y_n\mapsto a_n]} = \top$
+  $\denote{e_0}_A^{[y_1\mapsto a_1, \dots, y_n\mapsto a_n]}$ holds.
   Now let $b_1\in B_{s_1}, \dots, b_n\in B_{s_n}$ be arbitrary.
-  We need to show that $\denote{e_0}_B^{[y_1\mapsto b_1, \dots, y_n\mapsto b_n]} = \top$.
+  We need to show that $\denote{e_0}_B^{[y_1\mapsto b_1, \dots, y_n\mapsto b_n]}$ holds.
 
   Since $B$ is a substructure of $A$, we also have $b\in A_s$,
-  and so we have $\denote{e_0}_A^{[y_1\mapsto b_1, \dots, y_n\mapsto b_n]} = \top$.
-  Then by \cref{lem:qf-denote-substruct}, the left-hand side is equal to
+  and so we have $\denote{e_0}_A^{[y_1\mapsto b_1, \dots, y_n\mapsto b_n]}$ holds.
+  Then by \cref{lem:qf-denote-substruct}, this is the same as
   $\denote{e_0}_B^{[y_1\mapsto b_1, \dots, y_n\mapsto b_n]}$, which completes the proof.
 \end{proof}
 
@@ -1114,8 +1141,9 @@ The reasons for defining these classes of formulas is that there are
   Then peeling apart the interpretation of $e$ in $A$, we find that there must exist elements $a_1, \dots, a_m$
   of $A$ such that interpreting the $x_i$ as $a_i$ causes $e$ to come out true, \ie,
   \[
-    \denote{\forall y_1, \dots, y_k.\, e_0}_A^{[x_1\mapsto a_1, \dots, x_m \mapsto a_m]} = \top.
+    \denote{\forall y_1, \dots, y_k.\, e_0}_A^{[x_1\mapsto a_1, \dots, x_m \mapsto a_m]}
   \]
+  must hold.
 
   Now let $B$ be the restriction of $A$ to the set $X = \set{a_1, \dots, a_m, A_{c_1}, \dots, A_{c_l}}$.
   We claim $B$ is a model of $e$.
@@ -1128,9 +1156,9 @@ The reasons for defining these classes of formulas is that there are
 
   By \cref{lem:univ-model-substruct},
   \[
-    \denote{\forall y_1, \dots, y_k.\, e_0}_B^{[x_1\mapsto a_1, \dots, x_m \mapsto a_m]} = \top,
+    \denote{\forall y_1, \dots, y_k.\, e_0}_B^{[x_1\mapsto a_1, \dots, x_m \mapsto a_m]}
   \]
-  and the result follows.
+  holds, and the result follows.
 \end{proof}
 
 Decidability of EPR follows as a corollary, after the following lemma.
@@ -1343,7 +1371,7 @@ A $k$-state formula can be thought of as a first-order formula
   over an extended vocabulary with $k$ copies of the mutable symbols.
 A model for a $k$-state formula is a model for this first-order formula,
   \ie, a first-order structure that assigns interpretations to $k$ copies of the mutable symbols.
-Models of $k$-state formulas often arise in the answers to queries over transition systems, 
+Models of $k$-state formulas often arise in the answers to queries over transition systems,
   described in the next section.
 
 \section{Queries on Transition Systems}\label{sec:mypyvy-queries}
@@ -1395,8 +1423,11 @@ In our anecdotal experience,
 Given a transition system and a safety property,
   bounded model checking (BMC) asks,
   ``Is there a counterexample to safety in up to $k$ transitions?''
-\mypyvy expresses this query to the underlying solver by ``unrolling,''
-  that is, by making $k+1$ copies of the mutable state variables such that:
+\mypyvy expresses this query to the underlying solver by successively ``unrolling''
+  up to $k$ copies of the transition relation and asking whether there is a violation in exactly
+  that many steps.
+More precisely, to check whether there is a counterexample in exactly $i$ transitions,
+  \mypyvy sets up $i+1$ copies of the mutable state variables such that:
   (1) the first copy satisfies the initial conditions;
   (2) the last copy \emph{violates} safety;
   (3) all adjacent pairs of states are related by the transition relation.
@@ -1406,6 +1437,8 @@ If the solver finds a model for this query,
   until it reaches a state that violates safety.
 Such an example indicates a problem with
   either the transition system or the safety property.
+To check for counterexamples \emph{up to} $k$ transitions,
+  \mypyvy separately checks for counterexamples with exactly $i$ steps for each $i$ from 1 to $k$.
 
 The na\"{i}ve approach to bounded model checking described here does not scale
   as $k$ grows and as the transition relation becomes more and more disjunctive (\ie, more transitions).
@@ -1613,7 +1646,7 @@ In \cref{sec:verdi:casestudy-raft}, we discussed a Coq proof of
 That effort involved over 50000 lines of proof for about 500 lines of code.
 Using the automation of \mypyvy,
   and based on ideas from our collaborators on
-  how to encode the proofs of Paxos and MultiPaxos/Raft in first-order logic~\cite{Padon-al:OOPSLA17, pldi18-mfd},
+  how to encode the proofs of Paxos and MultiPaxos/Raft in first-order logic (in fact, in EPR)~\cite{Padon-al:OOPSLA17, pldi18-mfd},
   we were able to produce another proof of Raft's safety in \mypyvy.
 The \mypyvy proof is under 500 lines total,
   including both the model of the protocol and its invariants.%
@@ -1650,6 +1683,39 @@ The fact that the Coq proof yielded an implementation meant
   that we were forced to consider practical concerns of efficiency, ensuring we didn't cut too many corners.
 On the other hand, the \mypyvy proof gave us higher-level insight into ``why'' the protocol works,
   because the edit-verify-debug cycle was so much tighter, we were able to optimize our proof and really understand its guts.
+
+\paragraph{Discussion of the small-model property.}
+We encoded our proof of Raft in the EPR fragment of first-order logic (see \cref{sec:fol-background}).
+Since EPR satisfies the small model property (\cref{lem:epr-small-model-property}),
+  whenever there is a counterexample to safety,
+  there must be a counterexample of some bounded size,
+  where the bound is a function of the syntax of the safety formula.
+In the concrete case of Raft,
+  where we have uninterpreted sorts for nodes, terms, values, logs, \etc,
+  this means that all counterexamples are guaranteed to have a bounded number of nodes,
+  although the na\"{i}ve bound is quite bad
+  (roughly doubly exponential in the size of the safety formula).
+Thus, the small model property of EPR hints at two interesting benefits for verification in practice.
+First, it is the crucial step in proving decidability,
+  and often for SMT solvers, decidability is a decent proxy for tractability.
+Having tractable automated solving of verification queries makes the user experience
+  much nicer, since users have a clear job: encode their queries in EPR.
+If they do this, they can typically expect reasonable performance from the solvers.
+The second benefit of the small model property is
+  that it is a sort of formalization of the ``small world hypothesis,''
+  which is a heuristic often discussed in the context of bounded model checking.
+The idea is that if a protocol is wrong,
+  then we expect there to be a relatively small example demonstrating the bug.
+The small world hypothesis is an empirical pattern of the kinds of systems
+  that humans design---they aren't pathological.
+On the other hand,
+  the small model property says that the small world hypothesis is just \emph{true}
+  for EPR formulas.
+In other words, it lifts the small world hypothesis from an empirical pattern to a theorem.
+Returning to the proof of Raft,
+  the amazing thing about the small model property is that it guarantees
+  safety \emph{for any number of nodes},
+  by showing that it suffices to check up to a bounded number of nodes.
 
 \paragraph{Phase Invariants.}
 Several projects have used \mypyvy's implementation of \updr as a baseline

@@ -479,9 +479,8 @@ Thus, we address challenge \textbf{(1)} by ensuring that any
 construction, independently of which and how many of the imposed
 protocols' transitions are taken and of any imperative state the
 program might use.
-%
-This type-based verification method for distributed systems, which we
-originally described our motivation for in a vision paper at SNAPL '17~\cite{Wilcox-al:SNAPL17}, is
+%a
+This type-based verification method for distributed systems is
 different from more traditional techniques for establishing
 \emph{refinement}~\cite{Abadi-Lamport:LICS88,Hawblitzel-al:SOSP15}
 between an actual implementation (the code) and a specification (an
@@ -1626,7 +1625,9 @@ composite context of two protocols.
 Our accompanying Coq development provides the complete implementation
 of the described programs in \disel DSL, their extracted executable
 counterparts in OCaml, and mechanized proofs of all of the mentioned
-invariants and specifications.
+invariants and specifications.~\footnote{Our GitHub repository
+\url{https://github.com/DistributedComponents/disel} contains a \texttt{README.md}
+file that describes how to check the proofs and run the code.}
 
 \section{Distributed Separation Logic}
 \label{sec:logic}

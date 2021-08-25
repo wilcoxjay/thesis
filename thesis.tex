@@ -35,7 +35,9 @@ keywordstyle=\small\ttfamily\bfseries,
 %\usepackage{libertine}
 \usepackage[T1]{fontenc}
 
-\usepackage[numbers]{natbib}
+%\usepackage[numbers]{natbib}
+\usepackage[mincrossrefs=99, style=numeric-comp, natbib=true]{biblatex}
+\addbibresource{refs.bib}
 
 \usepackage{graphicx}
 \usepackage{pifont}
@@ -145,8 +147,8 @@ keywordstyle=\small\ttfamily\bfseries,
 %  Vita
 %}
 
-\bibliographystyle{plainnat}
-\bibliography{refs}
-
+%\bibliographystyle{numeric-comp}
+%\bibliography{refs}
+\printbibliography
 
 \end{document}

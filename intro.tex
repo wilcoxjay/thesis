@@ -29,8 +29,24 @@ It is not uncommon, \eg,
   consistency, fault tolerance, and high performance.
 The primary challenge to applying verification to distributed systems is
   high system complexity, which leads to high proof complexity.
-To verify a system such as a distributed file system,
-  one must break the problem down into smaller parts.
+
+We seek to address the challenge of proof complexity in verified distributed systems
+  while meeting the following goals.
+\begin{enumerate}
+\item Our solutions should produce \emph{running code}, not just models.
+  (Note that this is different from saying
+     we want to analyze \emph{existing} implementations
+     that were not designed for verification.)
+\item Our solutions should support expressing \emph{optimizations}
+    that are essential for good performance in practice,
+    such as efficient data structures
+      and optimized protocols with, \eg, batching and piggybacking.
+\item Our solutions should minimize developer effort.
+\end{enumerate}
+
+Our approach is to use compositional reasoning to break down
+  the verification problem into smaller parts,
+  and then to apply automated decision procedures to the resulting pieces.
 In the face of high system complexity,
   decomposing the problem reduces proof complexity and increases automation.
 Decomposing proofs leads to two benefits.
@@ -62,19 +78,19 @@ Second, the entire system's proof can be constructed
 Lastly, the application logic is expressed at a high enough level of abstraction
   that its specification can be analyzed fully automatically.
 
-\clearpage
-
 These considerations lead us to the central claim of this dissertation:
 \begin{center}
-\emph{Programming languages techniques for compositionality
-  lay the foundations for effective, automated verification of
-  distributed systems implementations.
+\emph{Techniques for composition and automation provide a basis for
+  effective verification of distributed systems implementations.
 }
 \end{center}
 
-The remainder of this dissertation addresses three challenges in system complexity
-  by applying programming languages techniques to decompose the problem,
-  thus increasing automation and decreasing proof complexity.
+The remainder of this dissertation addresses describes three aspects of our approach:
+  composing fault-tolerance mechanisms with application logic (Verdi, \cref{chap:verdi}),
+  composing several protocols to build larger protocols (\disel, \cref{chap:disel}), and
+  automating verification of high-level protocols with SMT solvers (\mypyvy, \cref{chap:disel}).
+These techniques also satisfy our goals described above for working on
+  running code with protocol optimizations while reducing developer effort.
 
 \Cref{chap:verdi} addresses complexity challenges due to fault tolerance
   by introducing Verdi,
@@ -204,9 +220,15 @@ In all cases, \mypyvy loads the transition system
   and compiles it together with the user-requested analysis
   to a (sequence of) SMT queries,
   which are dispatched to Z3.
+The resulting workflow is significantly more automated than using Verdi or \disel
+  to prove inductive invariants, and anecdotally is much more enjoyable to use for verification.
+On the other hand, the automation is sensitive to the complexity of the protocol being analyzed,
+  so it is essential to \emph{first} decompose the system vertically and horizontally
+  and only \emph{then} to apply \mypyvy.
 \mypyvy was originally developed to support a CAV 19 paper~\cite{phase-updr},
   but that paper was not about \mypyvy per se.
 \Cref{chap:mypyvy} contains previously unpublished material describing \mypyvy itself
+  and the theory behind it,
   and will become the primary reference for \mypyvy.
 The development of \mypyvy has benefited greatly from many contributors,
   especially Oded Padon, Yotam Feldman, Sharon Shoham, Mooly Sagiv, Jason R.\ Koenig,

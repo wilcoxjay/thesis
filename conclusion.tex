@@ -1,32 +1,77 @@
 \chapter{Conclusion}
 \label{chap:conclusion}
 
-\Cref{chap:verdi,chap:disel,chap:mypyvy} presented programming languages techniques
-  to address complexity in verifying distributed systems implementations.
-Verdi and \disel both address forms of system complexity:
-  Verdi separates fault tolerance mechanisms from application logic,
-  while \disel separates reasoning between cooperating services.
-While successful at reducing system complexity,
-  both Verdi and \disel still suffer from high \emph{proof} complexity,
-  in large part because of the need to manually state and prove inductive invariants.
-This motivated us to build tools for automated verification and invariant inference
-  on top of the \mypyvy toolbox.
-In particular, we have used \mypyvy to implement the \updr algorithm,
-  which can automatically infer certain classes of inductive invariants
-  for symbolic transition systems.
-When applicable, such automated tools greatly reduce proof effort and complexity.
+\Cref{chap:verdi} and \cref{chap:disel} presented techniques
+  for decomposing proofs of distributed systems,
+  both along the ``vertical axis'' of fault models and fault tolerance mechanisms,
+  and along the ``horizontal axis'' of separating cooperating protocols.
+Once suitably decomposed,
+  the verification of the high-level logic of each protocol,
+  executing in a relatively benign fault model,
+  can be automated (or at least partially automated) using a tool such as \mypyvy,
+  presented in \cref{chap:mypyvy}.
+We have demonstrated that this decompose-and-automate workflow can be applied
+  to distributed systems of roughly the complexity that we would ask an undergraduate
+  to implement (but not verify!) in a senior level course.
 
-Despite all this progress, it remains challenging to use verification tools
-  to verify real protocols and implementations.
-For example, if a system's inductive invariant cannot be expressed
-  in the logic supported by the solver underlying \mypyvy,
-  then \mypyvy will be of little use when verifying the system.
-In this case, the simplification and automation that would come from using \mypyvy is not available.
-This example shows that \mypyvy is
-  a tool for \emph{simplifying away} a certain kind of complexity
-  that comes from stating and proving inductive invariants.
-In contrast, another approach is \emph{embracing complexity},
+Almost two decades ago, \citet{Lamport:COMPOS97} propounded the thesis
+\textbf{Composition: a way to make proofs harder}, favoring
+mathematical models over implementations for real system verification, while eschewing composition:
+%
+``\emph{in 1997, the unfortunate reality is that engineers rarely
+  specify and reason formally about the systems they
+  build. \emph{[...]} It seems unlikely that reasoning about the
+  composition of open-system specifications will be a practical
+  concern within the next 15 years}''.
+%
+Lamport was certainly right in the sense that in the intervening 20+ years,
+  it has not become common for engineers to reason about compositional specifications.
+That said, the results of this dissertation indicate that a compositional approach is key
+  to reasoning about systems of any realistic complexity,
+  especially when faced with verifying implementations, not just models.
+With the compositional, implementation-producing tools and techniques presented here,
+  it is now possible to begin to prove Lamport wrong about the next 15 years.
+
+We are optimistic about the role of formal methods in supporting sophisticated
+  system building, but for the time being,
+  these methods appear inaccessible to those without graduate education in verification.
+
+One of our primary goals for future work is to make these methods more accessible.
+For the compositional aspects of our work,
+  we believe programmers are already well equipped to understand mechanisms for modularity,
+  as these are familiar from similar mechanisms in mainstream languages.
+For the automated aspects,
+  we believe there is a much more significant gap in creating accessible tools,
+  which boils down to a philosophical difficulty.
+Many automated tools attempt to be \emph{complexity-hiding},
+  in the sense that they try to solve the entire problem automatically in all cases,
+  but lack good support for the failure case where the problem can't be solved.
+When these tools do fail,
+  they typically do so completely opaquely,
+  with debugging output only useful to those who implemented the tool.
+Instead, we believe that the correct approach to building automated tools
+  is to \emph{embrace complexity},
   to use a phrase coined by Jean Yang.\footnote{See \url{https://twitter.com/jeanqasaur/status/1389645922183696384}.}
-Such tools make the verification engineer's life easier not by completely solving (and hiding) the problem,
-  but rather by efficiently presenting the engineer with the information they need.
-We look forward building complexity-embracing tools that go beyond what current automated solvers can handle.
+Such tools start by acknowledging that not all instances of the problem will be solved automatically,
+  and they are designed to give the programmer
+    sufficient information to understand the failure and
+    recourse to address it.
+This requires programmers to have a basic mental model
+  for how the tool works,
+  what kinds of problems it can solve, and
+  how to respond to its failures by adjusting the input verification query.
+
+For example, our implementation of \updr in \mypyvy is
+  currently best described as hiding complexity.
+Either it finds an inductive invariant, or it doesn't.
+And when it doesn't, the debugging information produced is
+  difficult to understand and turn into a concrete remedy,
+  and there is no indication if a partial inductive invariant was found.
+But in fact, the \updr algorithm is well positioned for building a complexity embracing tool.
+Any inductive facts discovered could be reported to the user,
+  even though they don't fully verify the safety property.
+And there is especially nice theory about \updr that tells us that its failures
+  can often be explained in terms of an abstract trace of the system
+  that demonstrates the failure explicitly.
+We are excited to build such a complexity-embracing version of \updr,
+  and to explore other invariant inference techniques from this point of view as well.

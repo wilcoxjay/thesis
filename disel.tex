@@ -3654,81 +3654,17 @@ logical mechanisms, is a key to make the results of future
 verification efforts reusable for building even larger verified
 distributed ecosystems.
 
-\subsection{Future Work}
-
-We consider \disel as just the beginning of our journey towards
-building modularly verified and highly reusable distributed
-implementations.
-%
-Our next steps are to investigate more protocol combinators, in
-addition to \Rule{WithInv}, establishing refinement, in the spirit of
-certified abstraction layers~\cite{Gu-al:OSDI16}, of the higher-level
-distributed models (\eg,~round-based register
-by~\cite{Boichat-al:SN03}) by current \disel's protocols, formulated
-in terms of send/receive transitions.
-%
-We are also going to expand the language fragment for local node
-implementations with more imperative features, such as exceptions and
-concurrency.
-%
-We are planning to incorporate the ideas from program logics to
-reason, in a modular way, about local system
-faults~\cite{Ntzik-al:APLAS15} and liveness properties under fairness
-assumptions~\cite{Liang-Feng:POPL16}.
-%
-Finally, \cref{chap:mypyvy} will describe the \mypyvy library for symbolic transition systems,
-and it would be interesting to try to more directly connect \mypyvy and \disel together.
-
-\vspace{-5pt}
-
 \section{Conclusion}
-\label{sec:conclusion}
 
-Almost two decades ago, \citet{Lamport:COMPOS97} propounded the thesis
-\textbf{Composition: a way to make proofs harder}, favoring
-mathematical models over program logics for real system verification:
-%
-``\emph{in 1997, the unfortunate reality is that engineers rarely
-  specify and reason formally about the systems they
-  build. \emph{[...]} It seems unlikely that reasoning about the
-  composition of open-system specifications will be a practical
-  concern within the next 15 years}''.
-%
-He was right: it took two decades of active research in rigorous
-program verification, combining the strengths of mathematical models
-(protocols) and program logics, to make compositional verification of
-open-world systems today's reality.
-
-\vspace{-5pt}
-
-% \begin{acks}
-%   We thank Philippa Gardner, Alexey Gotsman, Yoichi Hirai, Ranjit
-%   Jhala, Luke Nelson, Karl Palmskog, Daniel Ricketts, Doug Woos, and
-%   Nobuko Yoshida for their comments on earlier drafts of this paper.
-%   %
-%   We are grateful to the PLDI'17 reviewers, especially Reviewers~C
-%   and~E, for their feedback regarding insufficient support for
-%   modularity in an earlier version of \disel, which forced us to
-%   revise the approach and introduce the notion of send-hooks.
-%   %
-%   We wish to acknowledge the feedback by the OOPSLA'17 reviewers on
-%   the presentation.
-%   %
-%   We thank the POPL'18 PC and AEC reviewers for the careful reading
-%   and many constructive suggestions on the paper and the implementation.
-%   %
-%   Finally, we thank \'{E}ric Tanter for his dedication to bring out
-%   the best of the paper as our shepherd, and Andrew C. Myers for his
-%   efforts as POPL'18 PC chair.
-%
-%   Sergey's research was supported by EPSRC First Grant EP/P009271/1
-%   ``Program Logics for Compositional Specification and Verification of
-%   Distributed Systems''. Tatlock's research was supported by a
-%   generous gift from Google.
-% %
-%   This material is based upon work supported by the National Science
-%   Foundation Graduate Research Fellowship under Grant No. DGE-1256082.
-%   Any opinion, findings, and conclusions or recommendations expressed
-%   in this material are those of the authors and do not necessarily
-%   reflect the views of the National Science Foundation.
-% \end{acks}
+This chapter presented \disel,
+  a concurrent separation logic for distributed systems.
+\disel's key contribution to this dissertation is
+  \emph{horizontal protocol composition},
+  made possible by our frame rule, with hooks to express protocol dependencies.
+We showed examples of composing protocols,
+  including using two-phase commit mediate access to a distributed resource.
+More generally, \disel allows us to compose separately designed and verified protocols
+  to build more complex systems from existing pieces.
+Together with the vertical decomposition provided by Verdi,
+  one can systematically break down a large distributed system
+  into independently verifiable protocols that add up to a verified whole.

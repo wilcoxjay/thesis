@@ -266,27 +266,23 @@
 \section{Introduction}
 \label{sec:intro}
 
-Real-world software systems, including distributed systems, are rarely
-built as standalone, monolithic pieces of code.
+The previous chapter described techniques for building
+  a single verified distributed system
+  by decomposing the application logic from the fault-tolerance mechanisms.
+Real-world systems, however, rarely consist of just a single monolithic application.
 %
 Rather, they are composed of multiple independent modules, which are
-connected either by the linker or through communication channels.
+then linked together in some way.
 %
-Such a compositional approach enables clean separation of concerns and
+This compositional software development approach enables clean separation of concerns and
 a modular development process: in order to use one component within a
 larger system, one only needs to know \emph{what} it does without
 requiring details on \emph{how} it works.
 %
-Unfortunately, the benefits of modular software development are not
-yet fully realized in the context of verified distributed systems.
+This chapter describes techniques to bring this modularity into verified distributed systems
+  using \emph{horizontal composition}.
 
-Recent work has produced several impressive formal proofs of
-correctness for implementations of core distributed system components,
-ranging from consensus protocols to causally consistent key-value
-stores~\cite{Newcombe-al:CACM14,Woos-al:CPP16,Hawblitzel-al:SOSP15,Lesani-al:POPL16}.
-%
-These artifacts, while formally verified, are not immediately reusable
-in the context of larger verified applications.
+There are several design constraints on such horizontal reasoning.
 %
 For example, to compose a linearizable database with a causally
 consistent cache~\cite{Ahamad-al:DC95}, one would need a framework
@@ -294,11 +290,10 @@ general enough to express both specifications and reason about their
 interaction, possibly in the presence of application-specific
 constraints.
 %
-Furthermore, existing verified systems entangle implementation details
-with abstract protocol definitions, preventing independent evolution
-and requiring extensive refactoring when changes are
-made~\cite{Woos-al:CPP16}.
-
+Furthermore, composable verified systems must disentangle implementation details
+from abstract protocol definitions, allowing independent evolution of components
+without extensive refactoring~\cite{Woos-al:CPP16}.
+%
 Finally, like all software, real-world systems exist in an open world,
 and should be usable in multiple contexts by various clients, each of
 which may make different assumptions.

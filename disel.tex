@@ -494,7 +494,9 @@ for shared-memory
 concurrency~\cite{Nanevski-al:ESOP14,Turon-al:OOPSLA14}, allowing one
 to instrument programs with pre/postconditions and providing a form of
 the \emph{frame rule}~\cite{Reynolds:LICS02} with respect to
-protocols. For example, assuming that the state-spaces of $\ppr_1$ and
+protocols. Thus, there is an analogy between the heap in shared-memory concurrency
+and the set of protocols in \disel.
+For example, assuming that the state-spaces of $\ppr_1$ and
 $\ppr_2$ are disjoint, $\ppr_1 \vdash c_1$ and $\ppr_2 \vdash c_2$
 together with the frame rule imply $\ppr_1, \ppr_2 \vdash C[c_1, c_2]$
 for any well-formed program context $C$.

@@ -184,60 +184,52 @@
 %%   equivalents.
 
 
-Distributed systems serve millions of users in important applications,
-ranging from banking and communications to social networking.
-%
-These systems are difficult to implement correctly because they
-must handle both concurrency and failures: machines may
-crash at arbitrary points and networks may reorder, drop, or duplicate packets.
-Further, the behavior is often too complex to permit exhaustive testing.
-%
-Thus, despite decades of research,
-% into fault-handling techniques such as state machine replication
-% and non-blocking commit protocols
-% ~\cite{oki:viewstamped,lamport:paxos,ongaro:raft},
-real-world implementations
-often go live with critical fault-handling bugs, leading to data loss and
-service outages~\cite{yuan:aspirator,guo:fail-recover}.
-%
-For example, in April 2011 a malfunction of failure recovery in Amazon
-Elastic Compute Cloud (EC2) caused a major outage and brought down several
-web sites, including \mbox{Foursquare}, \mbox{Reddit}, \mbox{Quora},
-and \mbox{PBS}~\cite{amazon:apr11-outage,lohr:amazon-apr11,highscalability}.
+% Distributed systems serve millions of users in important applications,
+% ranging from banking and communications to social networking.
+% %
+% These systems are difficult to implement correctly because they
+% must handle both concurrency and failures: machines may
+% crash at arbitrary points and networks may reorder, drop, or duplicate packets.
+% Further, the behavior is often too complex to permit exhaustive testing.
+% %
+% Thus, despite decades of research,
+% % into fault-handling techniques such as state machine replication
+% % and non-blocking commit protocols
+% % ~\cite{oki:viewstamped,lamport:paxos,ongaro:raft},
+% real-world implementations
+% often go live with critical fault-handling bugs, leading to data loss and
+% service outages~\cite{yuan:aspirator,guo:fail-recover}.
+% %
+% For example, in April 2011 a malfunction of failure recovery in Amazon
+% Elastic Compute Cloud (EC2) caused a major outage and brought down several
+% web sites, including \mbox{Foursquare}, \mbox{Reddit}, \mbox{Quora},
+% and \mbox{PBS}~\cite{amazon:apr11-outage,lohr:amazon-apr11,highscalability}.
 
-Our overarching goal is to ease the burden for programmers to
-implement correct, high-performance, fault-tolerant distributed systems.
-%
-This chapter focuses on a key aspect of this agenda:
-we describe \Verdi, a framework
-for implementing practical fault-tolerant distributed systems and then
-formally verifying that the implementations meet their
-specifications.
-%
-Previous work has shown that formal verification can help produce extremely
-reliable systems, including compilers~\cite{yang:csmith} and
-operating systems~\cite{sel4:CACM10,yang:verve}.
-%
-\Verdi enables the construction of reliable, fault-tolerant distributed
-systems whose behavior has been formally verified.
-%
-This chapter focuses on safety properties for distributed systems;
-we leave proofs of liveness properties for future work.
+This chapter addresses the ``vertical'' dimension of composition
+  that is our first step on our overarching goal of making it easier to verify distributed systems.
+By vertical composition, we mean the separation of application logic
+  from generic fault tolerance mechanisms.
+Our approach is to first describe several different fault models
+  that a distributed system might run in,
+  which we call \emph{network semantics}.
+We can then describe fault tolerance mechanisms as adapters
+  that allow a system designed for one fault model to run in another fault model.
+This separation of concerns allows reasoning about application logic
+  in a relatively ``nice'' fault model (one with fewer failures).
+We have implemented our approach in a framework called \Verdi.
+Later chapters will further compose several protocols horizontally
+  and automate reasoning about application logic
+  to build an entire system.
 
-
-Applying formal verification techniques to distributed system
-implementations is challenging.
+There are several design challenges related to
+  vertical composition of verified distributed systems.
+First, we want to work with executable code rather than mathematical models.
 %
-First, while tools like TLA~\cite{lamport:tla,lamport:specifying-systems} and
-Alloy~\cite{jackson:alloy} provide techniques for reasoning about
-abstract distributed algorithms, few practical distributed
-system \textit{implementations}
-have been formally verified.
+For performance reasons, real-world systems often diverge
+in important ways from their high-level mathematical descriptions~\cite{chandra:paxos-made-live}.
 %
-For performance reasons, real-world implementations often diverge
-in important ways from their high-level
-descriptions~\cite{chandra:paxos-made-live}.
-Thus, our goal with \Verdi is to verify working code.
+If we were to reason only about models,
+  bugs could creep into the \emph{formality gap} between model and implementation.
 %
 Second, distributed systems run in a diverse range of environments. For
 example, some networks may reorder packets, while other networks may also

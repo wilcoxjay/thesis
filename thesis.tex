@@ -36,8 +36,11 @@ keywordstyle=\small\ttfamily\bfseries,
 \usepackage[T1]{fontenc}
 
 %\usepackage[numbers]{natbib}
-\usepackage[mincrossrefs=99, style=numeric-comp, natbib=true]{biblatex}
+\usepackage[mincrossrefs=99, maxbibnames=99, style=numeric-comp, natbib=true]{biblatex}
 \addbibresource{refs.bib}
+\DeclareFieldFormat
+  [article,inbook,incollection,inproceedings,patent,thesis,unpublished]
+  {title}{#1}
 
 \usepackage{graphicx}
 \usepackage{pifont}
